@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cờ Tỉ Phú Di Sản Việt Nam</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg-1:#1a0a00;--bg-2:#2d1200;--bg-3:#3d1a00;
+    --gold:#d4af37;--gold-2:#c8a84b;--gold-soft:#f5e6c8;
+    --red:#a0150e;--ink:#5a3e1b;--muted:#a09070;
+    --p0:#e74c3c;--p1:#3498db;--p2:#2ecc71;--p3:#9b59b6;
+  }
+  html,body{background:var(--bg-1);color:var(--gold-soft)}
+  body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;overflow-x:hidden}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:var(--bg-1)}
+  ::-webkit-scrollbar-thumb{background:var(--gold-2);border-radius:4px;opacity:.5}
+
+  .nav{display:flex;gap:0;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+  .nav .brand{display:flex;align-items:center;gap:10px;padding:12px 20px;color:var(--gold);font-weight:800;letter-spacing:1px;border-right:1px solid rgba(212,175,55,.2)}
+  .nav .brand span{font-size:22px}
+  .nav button{padding:14px 22px;background:none;border:none;color:var(--gold-2);cursor:pointer;font-size:14px;font-weight:600;letter-spacing:.5px;transition:all .25s;flex:1;min-width:120px;position:relative}
+  .nav button::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:3px;background:var(--gold);transition:all .25s;transform:translateX(-50%)}
+  .nav button:hover{color:var(--gold-soft)}
+  .nav button:hover::after{width:60%}
+  .nav button.active{color:var(--gold);background:rgba(212,175,55,.08)}
+  .nav button.active::after{width:80%}
+
+  .page{display:none;animation:fadeIn .35s ease}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* HERO */
+  .hero{background:radial-gradient(ellipse at 30% 40%,rgba(160,21,14,.35),transparent 60%),
+                  radial-gradient(ellipse at 70% 60%,rgba(212,175,55,.18),transparent 60%),
+                  linear-gradient(135deg,#2d1200,#1a0a00 50%,#0a1a00);
+        min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;padding:60px 20px;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent 0 60px,rgba(212,175,55,.025) 60px 61px);pointer-events:none}
+  .hero-badge{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);padding:8px 22px;border-radius:24px;font-size:12px;font-weight:800;letter-spacing:3px;margin-bottom:24px;display:inline-block;box-shadow:0 4px 16px rgba(212,175,55,.3)}
+  .hero h1{font-size:clamp(2.2rem,7vw,4.5rem);font-weight:900;color:var(--gold);line-height:1.15;margin-bottom:18px;text-shadow:0 4px 24px rgba(212,175,55,.35),0 1px 0 #000;letter-spacing:1px}
+  .hero h2{font-size:clamp(1rem,2.6vw,1.4rem);color:var(--gold-soft);opacity:.85;margin-bottom:36px;font-weight:400;letter-spacing:1px}
+  .hero-desc{max-width:640px;font-size:16px;line-height:1.85;color:#e8d8b8;margin-bottom:44px;opacity:.92}
+  .btn-primary{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border:none;padding:16px 44px;font-size:16px;font-weight:800;border-radius:10px;cursor:pointer;transition:all .25s;letter-spacing:1px;box-shadow:0 6px 20px rgba(212,175,55,.35),inset 0 1px 0 rgba(255,255,255,.3);position:relative;z-index:1}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(212,175,55,.5),inset 0 1px 0 rgba(255,255,255,.3)}
+  .btn-primary:active{transform:translateY(-1px)}
+  .heritage-icons{display:flex;gap:16px;margin-top:60px;flex-wrap:wrap;justify-content:center;max-width:900px}
+  .hicon{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--gold-soft);text-align:center;backdrop-filter:blur(6px);transition:all .25s}
+  .hicon:hover{background:rgba(212,175,55,.18);transform:translateY(-3px)}
+  .hicon span{display:block;font-size:28px;margin-bottom:6px}
+
+  /* RULES */
+  .content{max-width:880px;margin:0 auto;padding:48px 20px}
+  .section-title{font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--gold);margin-bottom:32px;padding-bottom:14px;border-bottom:2px solid rgba(212,175,55,.3);text-align:center;letter-spacing:1px}
+  .rule-card{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(212,175,55,.18);border-radius:14px;padding:24px 26px;margin-bottom:18px;transition:all .25s}
+  .rule-card:hover{border-color:rgba(212,175,55,.4);transform:translateX(4px)}
+  .rule-card h3{font-size:17px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:12px;font-weight:700}
+  .rule-num{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;box-shadow:0 2px 8px rgba(212,175,55,.4)}
+  .rule-card p,.rule-card li{color:#d4c4a0;line-height:1.85;font-size:15px}
+  .rule-card ul{padding-left:24px;margin-top:8px}
+  .rule-card li{margin-bottom:6px}
+  .highlight-box{background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(160,21,14,.1));border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:14px 18px;margin-top:14px}
+  .highlight-box p{color:var(--gold);font-weight:600;font-size:14px}
+
+  /* SETUP */
+  .game-container{padding:24px 20px;max-width:1200px;margin:0 auto}
+  .setup-screen{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 20px}
+  .setup-screen h2{font-size:32px;color:var(--gold);margin-bottom:10px;font-weight:800}
+  .setup-screen .subtitle{color:#d4c4a0;margin-bottom:28px;font-size:15px}
+  .num-players{display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;justify-content:center}
+  .np-btn{background:rgba(255,255,255,.05);border:2px solid rgba(212,175,55,.25);border-radius:10px;padding:12px 24px;cursor:pointer;color:var(--gold-2);font-weight:700;transition:all .25s;font-size:15px}
+  .np-btn:hover{border-color:var(--gold)}
+  .np-btn.selected{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border-color:var(--gold)}
+  .player-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:920px;width:100%;margin-bottom:32px}
+  .player-card-setup{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(212,175,55,.22);border-radius:14px;padding:20px;text-align:left;position:relative;overflow:hidden}
+  .player-card-setup::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--player-color,var(--gold))}
+  .player-card-setup.p0::before{background:var(--p0)}
+  .player-card-setup.p1::before{background:var(--p1)}
+  .player-card-setup.p2::before{background:var(--p2)}
+  .player-card-setup.p3::before{background:var(--p3)}
+  .player-card-setup label{display:block;color:var(--gold);font-size:12px;margin-bottom:6px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .player-card-setup input{width:100%;background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.25);border-radius:8px;padding:10px 12px;color:var(--gold-soft);font-size:14px;outline:none;transition:border-color .2s}
+  .player-card-setup input:focus{border-color:var(--gold)}
+  .token-select{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .token-btn{background:rgba(255,255,255,.06);border:2px solid rgba(212,175,55,.18);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:18px;transition:all .2s;color:var(--gold-soft);min-width:38px;text-align:center}
+  .token-btn:hover{border-color:var(--gold-2)}
+  .token-btn.selected{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border-color:var(--gold);transform:scale(1.05)}
+
+  /* GAME BOARD */
+  #board-area{display:none}
+  .game-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(160,21,14,.05));border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px 20px}
+  .game-title{font-size:22px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:10px}
+  .game-status{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(212,175,55,.25)}
+  .header-actions{display:flex;gap:8px;align-items:center}
+  .icon-btn{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.25);color:var(--gold-2);width:38px;height:38px;border-radius:8px;cursor:pointer;font-size:16px;transition:all .2s;display:flex;align-items:center;justify-content:center}
+  .icon-btn:hover{background:rgba(212,175,55,.15);color:var(--gold)}
+
+  .board-layout{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start}
+  @media(max-width:980px){.board-layout{grid-template-columns:1fr}}
+  .board-wrap{position:relative}
+  .board{display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(11,1fr);gap:2px;background:linear-gradient(135deg,#1a0a00,#0a1a00);border:3px solid var(--gold);border-radius:14px;width:100%;max-width:720px;aspect-ratio:1;margin:0 auto;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,.6),inset 0 0 60px rgba(212,175,55,.08)}
+  .cell{background:linear-gradient(180deg,#f5e6c8,#e8d4a0);display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;cursor:pointer;position:relative;transition:transform .15s,box-shadow .15s;overflow:hidden;min-height:0;border-radius:3px}
+  .cell:hover{transform:scale(1.06);z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+  .cell.corner{background:linear-gradient(135deg,#e8d4a0,#d4b87c);border:2px solid var(--gold);justify-content:center;align-items:center}
+  .cell-color{height:8px;width:100%;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,.15)}
+  .cell-name{font-size:6.5px;font-weight:700;color:#1a0a00;text-align:center;padding:2px 2px 0;line-height:1.15;flex:1;display:flex;align-items:center;justify-content:center;word-break:break-word}
+  .cell-price{font-size:5.5px;color:#5a3e1b;font-weight:700;text-align:center;padding-bottom:2px}
+  .cell-icon{font-size:18px;line-height:1;text-align:center;margin:2px 0}
+  .cell.corner .cell-name{font-size:8px;font-weight:800;padding:0 4px}
+  .cell.corner .cell-icon{font-size:24px;margin:4px 0}
+  .center-logo{grid-column:2/11;grid-row:2/11;background:linear-gradient(135deg,#1a4a00,#0a2a00);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gold);text-align:center;padding:20px;border:1px solid rgba(212,175,55,.3);position:relative;overflow:hidden}
+  .center-logo::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(212,175,55,.15),transparent 70%)}
+  .center-logo .star{font-size:clamp(40px,8vw,80px);margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(212,175,55,.6))}
+  .center-logo .title-vn{font-size:clamp(14px,2.4vw,22px);font-weight:900;letter-spacing:2px;margin-bottom:4px}
+  .center-logo .subtitle-vn{font-size:clamp(10px,1.6vw,14px);opacity:.8;font-weight:500}
+  .center-logo .deco{font-size:clamp(10px,1.4vw,12px);color:var(--muted);margin-top:8px}
+
+  .player-token{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid white;font-size:11px;display:flex;align-items:center;justify-content:center;z-index:5;box-shadow:0 2px 6px rgba(0,0,0,.6);transition:left .35s ease,top .35s ease,bottom .35s ease,right .35s ease;font-weight:700}
+  .player-token.moving{animation:bounce .35s ease}
+  @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+  .house-marker{position:absolute;top:2px;left:2px;display:flex;gap:1.5px;z-index:4}
+  .house{width:5px;height:5px;background:#2ecc71;border-radius:1px;border:.5px solid #1a4a00;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+  .resort{width:18px;height:6px;background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:1px;border:.5px solid #5a0a00}
+  .mortgaged{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:16px;z-index:3;pointer-events:none}
+
+  /* SIDE PANEL */
+  .side-panel{display:flex;flex-direction:column;gap:14px}
+  .panel{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:16px}
+  .panel-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;font-weight:700}
+
+  .dice-display{display:flex;gap:14px;justify-content:center;margin:8px 0 14px}
+  .die{width:54px;height:54px;background:linear-gradient(135deg,#fff,#e8d4a0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--bg-1);font-weight:800;border:2px solid var(--gold);transition:transform .3s;box-shadow:0 4px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.6)}
+  .die.rolling{animation:rollDie .5s ease}
+  @keyframes rollDie{0%{transform:rotate(0) scale(1)}25%{transform:rotate(-180deg) scale(1.15)}50%{transform:rotate(180deg) scale(.9)}75%{transform:rotate(360deg) scale(1.1)}100%{transform:rotate(0) scale(1)}}
+  .btn-roll{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border:none;padding:13px 28px;font-size:15px;font-weight:800;border-radius:10px;cursor:pointer;width:100%;transition:all .2s;letter-spacing:1px;box-shadow:0 4px 14px rgba(212,175,55,.35)}
+  .btn-roll:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(212,175,55,.5)}
+  .btn-roll:disabled{opacity:.4;cursor:not-allowed;filter:grayscale(.4)}
+
+  .player-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;border:1px solid transparent;margin-bottom:6px;transition:all .25s}
+  .player-row.current{background:linear-gradient(135deg,rgba(212,175,55,.15),rgba(212,175,55,.05));border-color:rgba(212,175,55,.4);box-shadow:0 2px 10px rgba(212,175,55,.15)}
+  .player-row.bankrupt{opacity:.5;text-decoration:line-through}
+  .player-token-lg{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .player-info{flex:1;min-width:0}
+  .player-name-display{font-size:14px;font-weight:700;color:var(--gold-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .player-money{font-size:14px;color:var(--gold);font-weight:700}
+  .player-pos{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .log-area{background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.18);border-radius:10px;padding:12px;max-height:220px;overflow-y:auto;font-size:12px;color:#d4c4a0;line-height:1.7}
+  .log-entry{margin-bottom:4px;padding:2px 4px;border-radius:3px}
+  .log-entry.highlight{color:var(--gold);font-weight:600;background:rgba(212,175,55,.08)}
+  .log-entry.danger{color:#ff8080;font-weight:600}
+  .log-entry.divider{color:var(--muted);text-align:center;border-top:1px dashed rgba(212,175,55,.2);padding-top:6px;margin-top:6px}
+
+  .action-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .btn-action{background:rgba(255,255,255,.06);border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:11px 8px;color:var(--gold-2);font-size:13px;cursor:pointer;transition:all .2s;font-weight:600;text-align:center}
+  .btn-action:hover{background:rgba(212,175,55,.15);border-color:var(--gold);color:var(--gold-soft)}
+  .btn-action.full{grid-column:span 2}
+  .btn-action.danger{border-color:rgba(220,80,80,.4);color:#ff9090}
+  .btn-action.danger:hover{background:rgba(220,80,80,.15)}
+  .btn-action.success{border-color:rgba(46,204,113,.45);color:#7be395}
+  .btn-action.success:hover{background:rgba(46,204,113,.15)}
+
+  /* Cell ownership highlight */
+  .cell.owned-0{box-shadow:inset 0 0 0 3px var(--p0)}
+  .cell.owned-1{box-shadow:inset 0 0 0 3px var(--p1)}
+  .cell.owned-2{box-shadow:inset 0 0 0 3px var(--p2)}
+  .cell.owned-3{box-shadow:inset 0 0 0 3px var(--p3)}
+
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;animation:fadeIn .2s}
+  .modal{background:linear-gradient(135deg,#2d1200,#1a0a00);border:2px solid var(--gold);border-radius:16px;padding:28px;max-width:480px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(212,175,55,.2);max-height:90vh;overflow-y:auto;animation:modalIn .3s ease}
+  @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .modal h3{font-size:22px;color:var(--gold);margin-bottom:8px;font-weight:800}
+  .modal .modal-body{color:#d4c4a0;font-size:14px;line-height:1.8;margin-bottom:14px;white-space:pre-line}
+  .modal-price{font-size:32px;font-weight:900;color:var(--gold);margin:14px 0;text-shadow:0 2px 12px rgba(212,175,55,.3)}
+  .modal-actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  .btn-yes{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border:none;padding:11px 28px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:.5px;transition:transform .15s;box-shadow:0 4px 14px rgba(212,175,55,.3)}
+  .btn-yes:hover{transform:translateY(-2px)}
+  .btn-no{background:rgba(255,255,255,.08);color:var(--gold-soft);border:1px solid rgba(255,255,255,.18);padding:11px 28px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:background .2s}
+  .btn-no:hover{background:rgba(255,255,255,.15)}
+
+  /* Property card (deed) */
+  .deed{border:2px solid var(--gold);border-radius:10px;overflow:hidden;text-align:left;margin:8px auto;max-width:340px;background:linear-gradient(180deg,#fff8e7,#f0ddb0);color:var(--bg-1)}
+  .deed-header{padding:12px;text-align:center;color:white;font-weight:800;font-size:15px;letter-spacing:.5px}
+  .deed-body{padding:14px}
+  .deed-body .deed-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px dashed rgba(0,0,0,.15)}
+  .deed-body .deed-row:last-child{border-bottom:none}
+  .deed-body .deed-row.featured{color:var(--red);font-weight:700}
+  .deed-meta{font-size:11px;color:#5a3e1b;text-align:center;padding:6px;border-top:1px solid rgba(0,0,0,.15)}
+
+  /* Property management list */
+  .props-list{max-height:380px;overflow-y:auto;text-align:left;margin-top:10px}
+  .prop-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.15);margin-bottom:6px;transition:background .2s}
+  .prop-item:hover{background:rgba(212,175,55,.08)}
+  .prop-color{width:6px;align-self:stretch;border-radius:3px}
+  .prop-info{flex:1;min-width:0}
+  .prop-name{font-size:13px;color:var(--gold-soft);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prop-detail{font-size:11px;color:var(--muted)}
+  .prop-actions{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+  .prop-actions button{background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);color:var(--gold);padding:5px 9px;font-size:11px;border-radius:5px;cursor:pointer;font-weight:600;white-space:nowrap}
+  .prop-actions button:hover:not(:disabled){background:var(--gold);color:var(--bg-1)}
+  .prop-actions button:disabled{opacity:.35;cursor:not-allowed}
+  .prop-actions button.danger{border-color:rgba(220,80,80,.4);color:#ff9090}
+  .prop-actions button.danger:hover{background:#a0150e;color:white}
+
+  /* HERITAGE */
+  .heritage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;padding:0 20px 60px;max-width:1200px;margin:0 auto}
+  .h-card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(212,175,55,.22);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer;display:flex;flex-direction:column}
+  .h-card:hover{transform:translateY(-6px);box-shadow:0 14px 32px rgba(212,175,55,.18);border-color:rgba(212,175,55,.5)}
+  .h-card-img{height:150px;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(160,21,14,.12));position:relative;overflow:hidden}
+  .h-card-img::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(212,175,55,.2),transparent 60%)}
+  .h-card-body{padding:18px;flex:1;display:flex;flex-direction:column}
+  .h-card-body h3{font-size:17px;color:var(--gold);margin-bottom:5px;font-weight:800}
+  .h-card-body .location{font-size:12px;color:var(--muted);margin-bottom:10px;letter-spacing:.5px}
+  .h-card-body p{font-size:13px;color:#d4c4a0;line-height:1.65;flex:1}
+  .h-badge{display:inline-block;background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.1));color:var(--gold);border:1px solid rgba(212,175,55,.4);border-radius:14px;padding:4px 12px;font-size:11px;font-weight:700;margin-top:12px;align-self:flex-start;letter-spacing:.5px}
+
+  /* Toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--bg-2),var(--bg-1));border:1px solid var(--gold);color:var(--gold);padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:2000;animation:toastIn .25s ease;pointer-events:none;max-width:90%}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand"><span>🏛️</span> Cờ Tỉ Phú VN</div>
+  <button class="active" onclick="showPage('intro',this)">Giới Thiệu</button>
+  <button onclick="showPage('rules',this)">Luật Chơi</button>
+  <button onclick="showPage('game',this)">Chơi Cờ</button>
+  <button onclick="showPage('heritage',this)">Di Sản</button>
+</nav>
+
+<!-- INTRO -->
+<div id="intro" class="page active">
+  <div class="hero">
+    <div class="hero-badge">TRÒ CHƠI BÀN ĐỒ</div>
+    <h1>Cờ Tỉ Phú<br>Di Sản Việt Nam</h1>
+    <h2>Khám phá &amp; Chinh phục những kỳ quan</h2>
+    <p class="hero-desc">Hành trình xuyên Việt qua những di sản thiên nhiên và văn hóa nổi tiếng nhất. Mua đất, xây dựng khu nghỉ dưỡng, thu phí du lịch và trở thành tỉ phú du lịch số một Việt Nam!</p>
+    <button class="btn-primary" onclick="showPage('game',document.querySelectorAll('.nav button')[2])">🎲 Bắt Đầu Chơi Ngay</button>
+    <div class="heritage-icons">
+      <div class="hicon"><span>🏝️</span>Vịnh Hạ Long</div>
+      <div class="hicon"><span>🏮</span>Phố Cổ Hội An</div>
+      <div class="hicon"><span>🏯</span>Cố Đô Huế</div>
+      <div class="hicon"><span>🗿</span>Mỹ Sơn</div>
+      <div class="hicon"><span>🦇</span>Phong Nha</div>
+      <div class="hicon"><span>⛩️</span>Tràng An</div>
+      <div class="hicon"><span>🏔️</span>Fansipan</div>
+      <div class="hicon"><span>🌾</span>Mù Cang Chải</div>
+    </div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div id="rules" class="page">
+  <div class="content">
+    <h2 class="section-title">📜 Luật Chơi</h2>
+    <div class="rule-card">
+      <h3><span class="rule-num">1</span> Mục tiêu</h3>
+      <p>Trở thành tỉ phú du lịch bằng cách sở hữu nhiều di sản nhất, xây dựng khu nghỉ dưỡng và khiến những người chơi khác phá sản!</p>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">2</span> Thiết lập ban đầu</h3>
+      <ul>
+        <li>2–4 người chơi, mỗi người nhận <strong>15.000.000đ</strong> khởi điểm</li>
+        <li>Chọn nhân vật đại diện (token) và màu cho mình</li>
+        <li>Tất cả bắt đầu từ ô <strong>Xuất Phát</strong></li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">3</span> Lượt chơi</h3>
+      <ul>
+        <li>Tung hai con xúc xắc, di chuyển số ô tương ứng</li>
+        <li>Nếu hai xúc xắc bằng nhau (đôi), được tung thêm 1 lần</li>
+        <li>Đi qua hoặc dừng ở <strong>Xuất Phát</strong> nhận <strong>2.000.000đ</strong> tiền thưởng</li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">4</span> Mua di sản</h3>
+      <ul>
+        <li>Dừng ở ô di sản chưa có chủ → có thể mua theo giá niêm yết</li>
+        <li>Sở hữu toàn bộ <strong>nhóm màu</strong> → thu phí <strong>gấp đôi</strong></li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">5</span> Xây dựng &amp; Nâng cấp</h3>
+      <ul>
+        <li>Có đủ nhóm màu (không cầm cố) → có thể xây <strong>Nhà Khách</strong> (tối đa 4)</li>
+        <li>4 Nhà Khách → nâng cấp thành <strong>Resort 5 sao</strong></li>
+        <li>Phải xây <strong>đều</strong> giữa các ô trong nhóm</li>
+        <li>Càng nhiều nhà/resort, tiền thuê càng cao (đến hàng chục triệu)</li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">6</span> Cầm cố &amp; Bán</h3>
+      <ul>
+        <li>Cầm cố di sản để nhận <strong>50% giá mua</strong> (không thu được phí khi bị cầm cố)</li>
+        <li>Hủy cầm cố mất <strong>55% giá mua</strong> (lãi 10%)</li>
+        <li>Bán nhà/resort: nhận lại <strong>50%</strong> giá xây</li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">7</span> Các ô đặc biệt</h3>
+      <ul>
+        <li>🎰 <strong>Cơ Hội Khám Phá</strong> – Rút thẻ sự kiện may mắn</li>
+        <li>💰 <strong>Quỹ Di Sản</strong> – Rút thẻ cộng đồng</li>
+        <li>🎟️ <strong>Nộp Tiền Vé</strong> – Phí tham quan 1.000.000đ</li>
+        <li>🛍️ <strong>Mua Đồ Lưu Niệm</strong> – Phí mua sắm 2.000.000đ</li>
+        <li>🌿 <strong>Bị Kiểm Lâm Bắt</strong> – Vào trạm, nghỉ tối đa 3 lượt</li>
+        <li>🚂 <strong>Tàu Hỏa Bắc-Nam</strong> – Thu phí theo số ga sở hữu</li>
+        <li>⛵🚲 <strong>Tiện Ích</strong> – Phí dựa trên xúc xắc &amp; số tiện ích sở hữu</li>
+      </ul>
+    </div>
+    <div class="rule-card">
+      <h3><span class="rule-num">8</span> Phá sản &amp; Kết thúc</h3>
+      <ul>
+        <li>Không đủ tiền → bán nhà / cầm cố để cứu vãn</li>
+        <li>Tài sản về 0 và còn nợ → <strong>phá sản</strong>, rời cuộc chơi</li>
+        <li>Người cuối cùng còn lại = <strong>Tỉ Phú Du Lịch Việt Nam!</strong> 🏆</li>
+      </ul>
+      <div class="highlight-box"><p>💡 Mẹo: Mua đủ nhóm màu rồi tập trung xây nhà / resort sớm để tối đa hóa thu nhập!</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="page">
+  <div class="game-container">
+    <div id="setup-area" class="setup-screen">
+      <h2>🎲 Thiết Lập Trò Chơi</h2>
+      <div class="subtitle">Chọn số người chơi và nhập tên nhân vật</div>
+      <div class="num-players">
+        <button class="np-btn selected" onclick="setNumPlayers(2,this)">2 người</button>
+        <button class="np-btn" onclick="setNumPlayers(3,this)">3 người</button>
+        <button class="np-btn" onclick="setNumPlayers(4,this)">4 người</button>
+      </div>
+      <div id="player-setup" class="player-setup"></div>
+      <button class="btn-primary" onclick="startGame()">▶ Bắt Đầu Trò Chơi</button>
+    </div>
+
+    <div id="board-area">
+      <div class="game-header">
+        <div class="game-title">🏛️ Cờ Tỉ Phú Di Sản Việt Nam</div>
+        <div id="game-status" class="game-status">Lượt của: -</div>
+        <div class="header-actions">
+          <button class="icon-btn" id="btn-mute" onclick="toggleMute()" title="Tắt/Bật âm thanh">🔊</button>
+        </div>
+      </div>
+      <div class="board-layout">
+        <div class="board-wrap">
+          <div id="board" class="board"></div>
+        </div>
+        <div class="side-panel">
+          <div class="panel">
+            <div class="panel-title">👥 Người Chơi</div>
+            <div id="players-panel"></div>
+          </div>
+          <div class="panel" style="text-align:center">
+            <div class="panel-title">🎲 Tung Xúc Xắc</div>
+            <div class="dice-display">
+              <div class="die" id="d1">?</div>
+              <div class="die" id="d2">?</div>
+            </div>
+            <button class="btn-roll" id="btn-roll" onclick="rollDice()">🎲 Tung Xúc Xắc</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">⚙️ Hành Động</div>
+            <div class="action-btns">
+              <button class="btn-action success" onclick="openManageModal()">🏛️ Tài sản</button>
+              <button class="btn-action" onclick="endTurn()">Kết lượt ➜</button>
+              <button class="btn-action danger full" onclick="confirmReset()">🔄 Chơi lại từ đầu</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📜 Nhật Ký</div>
+            <div class="log-area" id="log-area"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERITAGE -->
+<div id="heritage" class="page">
+  <div class="content" style="max-width:1200px;padding-bottom:20px">
+    <h2 class="section-title">🏛️ Di Sản Việt Nam Trong Trò Chơi</h2>
+  </div>
+  <div class="heritage-grid" id="heritage-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-overlay" style="display:none">
+  <div class="modal" id="modal-inner"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+// ============== AUDIO ==============
+let audioCtx=null,muted=false;
+function initAudio(){if(audioCtx)return;try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+function beep(freq,dur,type,vol){
+  if(muted||!audioCtx)return;
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type||'sine';o.frequency.value=freq;
+  g.gain.setValueAtTime(vol||.15,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);
+  o.connect(g);g.connect(audioCtx.destination);
+  o.start();o.stop(audioCtx.currentTime+dur);
+}
+function sfxDice(){beep(420,.08,'square',.12);setTimeout(()=>beep(540,.1,'square',.12),80);setTimeout(()=>beep(660,.15,'square',.14),180);}
+function sfxBuy(){beep(523,.1,'triangle',.18);setTimeout(()=>beep(659,.1,'triangle',.18),100);setTimeout(()=>beep(784,.18,'triangle',.2),200);}
+function sfxCoin(){beep(880,.07,'sine',.16);setTimeout(()=>beep(1100,.12,'sine',.18),70);}
+function sfxPay(){beep(440,.08,'sawtooth',.14);setTimeout(()=>beep(330,.18,'sawtooth',.14),80);}
+function sfxBuild(){beep(300,.1,'square',.16);setTimeout(()=>beep(380,.1,'square',.16),100);setTimeout(()=>beep(480,.16,'square',.18),200);}
+function sfxBankrupt(){beep(220,.2,'sawtooth',.18);setTimeout(()=>beep(180,.25,'sawtooth',.18),200);setTimeout(()=>beep(120,.5,'sawtooth',.2),450);}
+function sfxWin(){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.18,'triangle',.2),i*120));}
+function sfxClick(){beep(700,.04,'square',.08);}
+function toggleMute(){muted=!muted;document.getElementById('btn-mute').textContent=muted?'🔇':'🔊';}
+
+// ============== DATA ==============
+const BOARD_DATA = [
+  {id:0,name:'Xuất Phát',type:'corner',icon:'🚀'},
+  {id:1,name:'Bãi Biển Mỹ Khê',type:'property',color:'#8B4513',price:1200000,rent:[60000,300000,900000,2500000,4200000,5000000],group:0,houseCost:500000},
+  {id:2,name:'Cơ Hội Khám Phá',type:'chance',icon:'🎰'},
+  {id:3,name:'Mũi Né Phan Thiết',type:'property',color:'#8B4513',price:1400000,rent:[70000,350000,1000000,3000000,4500000,5500000],group:0,houseCost:500000},
+  {id:4,name:'Nộp Tiền Vé',type:'tax',icon:'🎟️',fee:1000000},
+  {id:5,name:'Tàu Hỏa Hà Nội',type:'railroad',icon:'🚂',price:2000000},
+  {id:6,name:'Đảo Phú Quý',type:'property',color:'#87CEEB',price:1600000,rent:[80000,400000,1100000,3300000,4900000,6000000],group:1,houseCost:500000},
+  {id:7,name:'Quỹ Di Sản',type:'chest',icon:'💰'},
+  {id:8,name:'Côn Đảo',type:'property',color:'#87CEEB',price:1800000,rent:[90000,450000,1250000,3750000,5500000,7000000],group:1,houseCost:500000},
+  {id:9,name:'Bãi Dài Phú Quốc',type:'property',color:'#87CEEB',price:2000000,rent:[100000,500000,1500000,4500000,6250000,7500000],group:1,houseCost:500000},
+  {id:10,name:'Trạm Kiểm Lâm',type:'corner',icon:'🌿',sub:'(Ghé qua)'},
+  {id:11,name:'Phố Cổ Hội An',type:'property',color:'#FF69B4',price:2200000,rent:[110000,550000,1650000,5000000,7500000,9000000],group:2,houseCost:1000000},
+  {id:12,name:'Xe Đạp Hội An',type:'utility',icon:'🚲',price:1500000},
+  {id:13,name:'Tháp Chàm Mỹ Sơn',type:'property',color:'#FF69B4',price:2400000,rent:[120000,600000,1800000,5500000,8000000,9500000],group:2,houseCost:1000000},
+  {id:14,name:'Phố Cổ Đồng Văn',type:'property',color:'#FF69B4',price:2600000,rent:[130000,650000,1950000,5900000,8750000,10500000],group:2,houseCost:1000000},
+  {id:15,name:'Tàu Hỏa Đà Nẵng',type:'railroad',icon:'🚂',price:2000000},
+  {id:16,name:'Cố Đô Huế',type:'property',color:'#FFA500',price:2800000,rent:[150000,750000,2250000,6750000,10000000,12000000],group:3,houseCost:1000000},
+  {id:17,name:'Quỹ Di Sản',type:'chest',icon:'💰'},
+  {id:18,name:'Đại Nội Huế',type:'property',color:'#FFA500',price:3000000,rent:[160000,800000,2400000,7200000,10500000,12500000],group:3,houseCost:1000000},
+  {id:19,name:'Chùa Thiên Mụ',type:'property',color:'#FFA500',price:3200000,rent:[180000,900000,2700000,8000000,11500000,14000000],group:3,houseCost:1000000},
+  {id:20,name:'Nghỉ Chân Ngắm Cảnh',type:'corner',icon:'🌄'},
+  {id:21,name:'Thánh Địa Mỹ Sơn',type:'property',color:'#FF0000',price:3600000,rent:[200000,1000000,3000000,9000000,12500000,15000000],group:4,houseCost:1500000},
+  {id:22,name:'Cơ Hội Khám Phá',type:'chance',icon:'🎰'},
+  {id:23,name:'Phong Nha-Kẻ Bàng',type:'property',color:'#FF0000',price:3800000,rent:[220000,1100000,3300000,9900000,14000000,17500000],group:4,houseCost:1500000},
+  {id:24,name:'Hang Sơn Đoòng',type:'property',color:'#FF0000',price:4000000,rent:[240000,1200000,3600000,10800000,15000000,18000000],group:4,houseCost:1500000},
+  {id:25,name:'Tàu Hỏa Huế',type:'railroad',icon:'🚂',price:2000000},
+  {id:26,name:'VQG Cúc Phương',type:'property',color:'#FFFF00',price:4400000,rent:[260000,1300000,3900000,11750000,16000000,20000000],group:5,houseCost:1500000},
+  {id:27,name:'Tràng An Ninh Bình',type:'property',color:'#FFFF00',price:4600000,rent:[280000,1400000,4200000,12500000,17500000,21000000],group:5,houseCost:1500000},
+  {id:28,name:'Kayak Hạ Long',type:'utility',icon:'⛵',price:1500000},
+  {id:29,name:'Vịnh Lan Hạ',type:'property',color:'#FFFF00',price:4800000,rent:[300000,1500000,4500000,13000000,18000000,22000000],group:5,houseCost:1500000},
+  {id:30,name:'Bị Kiểm Lâm Bắt',type:'gotojail',icon:'👮'},
+  {id:31,name:'Sa Pa Lào Cai',type:'property',color:'#00AA00',price:5200000,rent:[350000,1750000,5000000,14000000,20000000,25000000],group:6,houseCost:2000000},
+  {id:32,name:'Mù Cang Chải',type:'property',color:'#00AA00',price:5400000,rent:[380000,1900000,5700000,17000000,22500000,27500000],group:6,houseCost:2000000},
+  {id:33,name:'Cơ Hội Khám Phá',type:'chance',icon:'🎰'},
+  {id:34,name:'Đỉnh Fansipan',type:'property',color:'#00AA00',price:5600000,rent:[400000,2000000,6000000,18000000,25000000,30000000],group:6,houseCost:2000000},
+  {id:35,name:'Tàu Hỏa TP.HCM',type:'railroad',icon:'🚂',price:2000000},
+  {id:36,name:'Quỹ Di Sản',type:'chest',icon:'💰'},
+  {id:37,name:'Vịnh Hạ Long',type:'property',color:'#0000FF',price:6200000,rent:[450000,2250000,6750000,20000000,27500000,35000000],group:7,houseCost:2000000},
+  {id:38,name:'Mua Đồ Lưu Niệm',type:'tax',icon:'🛍️',fee:2000000},
+  {id:39,name:'Hồ Hoàn Kiếm',type:'property',color:'#0000FF',price:6400000,rent:[500000,2500000,7500000,22000000,30000000,40000000],group:7,houseCost:2000000},
+];
+
+const CHANCE_CARDS = [
+  {text:'Du khách tìm đến ồ ạt! Nhận 2.000.000đ',effect:'money',amount:2000000},
+  {text:'Phát hiện hang động mới! Nhận 3.000.000đ',effect:'money',amount:3000000},
+  {text:'Bị mất hành lý. Trả 1.500.000đ',effect:'money',amount:-1500000},
+  {text:'Được lên báo du lịch! Nhận 2.500.000đ',effect:'money',amount:2500000},
+  {text:'Trả tiền bồi thường cảnh quan. Trả 2.000.000đ',effect:'money',amount:-2000000},
+  {text:'Tiến về Xuất Phát, nhận 2.000.000đ',effect:'move',target:0},
+  {text:'Mưa lớn, tour bị hủy. Trả 1.000.000đ',effect:'money',amount:-1000000},
+  {text:'Review 5 sao trên mạng! Nhận 3.500.000đ',effect:'money',amount:3500000},
+  {text:'Bay đến Vịnh Hạ Long ngay!',effect:'move',target:37},
+  {text:'Đến thẳng Cố Đô Huế!',effect:'move',target:16},
+];
+const CHEST_CARDS = [
+  {text:'Quỹ bảo tồn di sản trao thưởng! Nhận 2.000.000đ',effect:'money',amount:2000000},
+  {text:'Mùa lễ hội, khách đông. Nhận 4.000.000đ',effect:'money',amount:4000000},
+  {text:'Đóng phí môi trường. Trả 1.000.000đ',effect:'money',amount:-1000000},
+  {text:'Được hoàn thuế. Nhận 1.500.000đ',effect:'money',amount:1500000},
+  {text:'Sửa cơ sở hạ tầng. Trả 2.500.000đ',effect:'money',amount:-2500000},
+  {text:'Khai trương khu du lịch mới! Nhận 3.000.000đ',effect:'money',amount:3000000},
+  {text:'Bị kiểm lâm bắt!',effect:'gotojail'},
+  {text:'Trúng giải thiết kế tour. Nhận 5.000.000đ',effect:'money',amount:5000000},
+];
+
+const TOKENS=['🦅','🐉','🎎','🏮','🐢','🐅','🦌','🦋'];
+const COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6'];
+const GROUP_NAMES=['Biển Nam','Đảo','Phố Cổ','Cố Đô','Hang Động','Sinh Thái','Tây Bắc','Biểu Tượng'];
+const PROP_TYPES={property:'Di sản',railroad:'Ga tàu',utility:'Tiện ích'};
+
+// ============== STATE ==============
+let numPlayers=2;
+let players=[];
+let currentPlayer=0;
+let properties={}; // cellId -> ownerIdx
+let houses={};     // cellId -> 0..5 (5 = resort)
+let mortgaged={};  // cellId -> true
+let rolled=false;
+let lastRoll=[0,0];
+let jailTurns={};
+let doublesCount=0;
+let isMoving=false;
+const selectedTokens=[0,1,2,3];
+
+// ============== PAGE NAV ==============
+function showPage(id,btnEl){
+  initAudio();sfxClick();
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(e=>e.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btnEl) btnEl.classList.add('active');
+  else{
+    const idx=['intro','rules','game','heritage'].indexOf(id);
+    if(idx>=0) document.querySelectorAll('.nav button')[idx].classList.add('active');
+  }
+}
+
+// ============== SETUP ==============
+function setNumPlayers(n,btn){
+  initAudio();sfxClick();
+  numPlayers=n;
+  document.querySelectorAll('.np-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderSetup();
+}
+function renderSetup(){
+  const el=document.getElementById('player-setup');
+  const names=['Người chơi 1','Người chơi 2','Người chơi 3','Người chơi 4'];
+  let html='';
+  for(let i=0;i<numPlayers;i++){
+    const tokensHtml=TOKENS.map((t,j)=>`<button class="token-btn ${j===selectedTokens[i]?'selected':''}" onclick="selectToken(${i},${j},this)">${t}</button>`).join('');
+    html+=`<div class="player-card-setup p${i}">
+      <label>Tên người chơi ${i+1}</label>
+      <input id="pname${i}" value="${names[i]}" maxlength="16" placeholder="Nhập tên...">
+      <label style="margin-top:14px">Chọn nhân vật</label>
+      <div class="token-select">${tokensHtml}</div>
+    </div>`;
+  }
+  el.innerHTML=html;
+}
+function selectToken(player,tokenIdx,btn){
+  sfxClick();
+  selectedTokens[player]=tokenIdx;
+  btn.closest('.player-card-setup').querySelectorAll('.token-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function startGame(){
+  initAudio();sfxBuild();
+  players=[];
+  for(let i=0;i<numPlayers;i++){
+    const name=(document.getElementById('pname'+i)?.value||'').trim()||`Người chơi ${i+1}`;
+    players.push({name,token:TOKENS[selectedTokens[i]],color:COLORS[i],pos:0,money:15000000,inJail:false,bankrupt:false,owned:[]});
+    jailTurns[i]=0;
+  }
+  properties={};houses={};mortgaged={};
+  currentPlayer=0;rolled=false;doublesCount=0;isMoving=false;
+  document.getElementById('setup-area').style.display='none';
+  document.getElementById('board-area').style.display='block';
+  document.getElementById('log-area').innerHTML='';
+  document.getElementById('d1').textContent='?';
+  document.getElementById('d2').textContent='?';
+  renderBoard();renderPlayers();updateStatus();
+  addLog('🎉 Trò chơi bắt đầu! Chúc mọi người vui vẻ',true);
+  addLog(`Bắt đầu với ${players[0].token} ${players[0].name}`);
+}
+
+// ============== BOARD RENDER ==============
+function getBoardXY(idx){
+  if(idx<=10) return {r:10,c:10-idx};
+  if(idx<=20) return {r:10-(idx-10),c:0};
+  if(idx<=30) return {r:0,c:idx-20};
+  return {r:idx-30,c:10};
+}
+function renderBoard(){
+  const board=document.getElementById('board');
+  board.innerHTML='';
+  const grid=Array(11).fill(null).map(()=>Array(11).fill(null));
+  for(let i=0;i<40;i++){const p=getBoardXY(i);grid[p.r][p.c]=i;}
+  for(let r=0;r<11;r++){
+    for(let c=0;c<11;c++){
+      const idx=grid[r][c];
+      if(idx===null){
+        if(r===1&&c===1){
+          const center=document.createElement('div');
+          center.className='center-logo';
+          center.innerHTML=`<div class="star">⭐</div>
+            <div class="title-vn">VIỆT NAM</div>
+            <div class="subtitle-vn">Heritage Tour Tycoon</div>
+            <div class="deco">— Vẻ đẹp bất tận —</div>`;
+          board.appendChild(center);
+        }
+        continue;
+      }
+      const cell=BOARD_DATA[idx];
+      const div=document.createElement('div');
+      div.className='cell'+(cell.type==='corner'||cell.type==='gotojail'?' corner':'');
+      div.id='cell-'+idx;
+      div.onclick=()=>showCellInfo(idx);
+      let inner='';
+      if(cell.color&&cell.type==='property'){inner+=`<div class="cell-color" style="background:${cell.color}"></div>`;}
+      if(cell.icon){inner+=`<div class="cell-icon">${cell.icon}</div>`;}
+      inner+=`<div class="cell-name">${cell.name}</div>`;
+      if(cell.price){inner+=`<div class="cell-price">${(cell.price/1000000).toFixed(1)}M đ</div>`;}
+      else if(cell.fee){inner+=`<div class="cell-price">-${(cell.fee/1000000).toFixed(1)}M đ</div>`;}
+      else if(cell.sub){inner+=`<div class="cell-price">${cell.sub}</div>`;}
+      div.innerHTML=inner;
+      board.appendChild(div);
+    }
+  }
+  renderTokens();
+  renderOwnership();
+}
+
+function renderTokens(){
+  document.querySelectorAll('.player-token').forEach(e=>e.remove());
+  players.forEach((p,i)=>{
+    if(p.bankrupt)return;
+    const cell=document.getElementById('cell-'+p.pos);
+    if(!cell)return;
+    const tok=document.createElement('div');
+    tok.className='player-token';
+    tok.style.background=p.color;
+    tok.style.bottom=(4+Math.floor(i/2)*22)+'px';
+    tok.style.right=(4+(i%2)*22)+'px';
+    tok.textContent=p.token;
+    cell.appendChild(tok);
+  });
+}
+
+function renderOwnership(){
+  BOARD_DATA.forEach(cell=>{
+    const el=document.getElementById('cell-'+cell.id);
+    if(!el)return;
+    el.classList.remove('owned-0','owned-1','owned-2','owned-3');
+    el.querySelectorAll('.house-marker, .mortgaged').forEach(e=>e.remove());
+    if(properties[cell.id]!==undefined){
+      el.classList.add('owned-'+properties[cell.id]);
+      const h=houses[cell.id]||0;
+      if(h>0){
+        const marker=document.createElement('div');
+        marker.className='house-marker';
+        if(h===5){marker.innerHTML='<div class="resort"></div>';}
+        else{for(let i=0;i<h;i++)marker.innerHTML+='<div class="house"></div>';}
+        el.appendChild(marker);
+      }
+      if(mortgaged[cell.id]){
+        const m=document.createElement('div');
+        m.className='mortgaged';
+        m.textContent='💤';
+        el.appendChild(m);
+      }
+    }
+  });
+}
+
+function renderPlayers(){
+  const panel=document.getElementById('players-panel');
+  panel.innerHTML='';
+  players.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.className='player-row'+(i===currentPlayer?' current':'')+(p.bankrupt?' bankrupt':'');
+    row.innerHTML=`<div class="player-token-lg" style="background:${p.color}">${p.token}</div>
+      <div class="player-info">
+        <div class="player-name-display">${p.name}${p.bankrupt?' 💀':''}</div>
+        <div class="player-money">${formatMoney(p.money)}</div>
+        <div class="player-pos">📍 ${BOARD_DATA[p.pos]?.name||''}${p.inJail?' 🌿':''}</div>
+      </div>`;
+    panel.appendChild(row);
+  });
+}
+
+function updateStatus(){
+  const p=players[currentPlayer];
+  document.getElementById('game-status').textContent=`Lượt: ${p?.token} ${p?.name}`;
+  document.getElementById('btn-roll').disabled=rolled||isMoving;
+}
+
+// ============== DICE & MOVEMENT ==============
+function rollDice(){
+  if(rolled||isMoving)return;
+  initAudio();sfxDice();
+  const p=players[currentPlayer];
+  const d1=Math.ceil(Math.random()*6),d2=Math.ceil(Math.random()*6);
+  lastRoll=[d1,d2];
+  const d1el=document.getElementById('d1'),d2el=document.getElementById('d2');
+  d1el.classList.add('rolling');d2el.classList.add('rolling');
+  setTimeout(()=>{d1el.classList.remove('rolling');d2el.classList.remove('rolling');},500);
+  d1el.textContent=d1;d2el.textContent=d2;
+  const total=d1+d2;
+  const isDouble=d1===d2;
+  addLog(`${p.token} ${p.name} tung ${d1} + ${d2} = ${total}${isDouble?' (đôi!)':''}`);
+
+  if(p.inJail){
+    if(isDouble){
+      p.inJail=false;jailTurns[currentPlayer]=0;
+      addLog(`✨ ${p.name} thoát khỏi trạm kiểm lâm nhờ đôi xúc xắc!`,true);
+      doublesCount=0;
+      animateMove(currentPlayer,total,false);
+    } else {
+      jailTurns[currentPlayer]++;
+      if(jailTurns[currentPlayer]>=3){
+        p.inJail=false;jailTurns[currentPlayer]=0;
+        chargeMoney(currentPlayer,500000,null);
+        addLog(`${p.name} bị phạt 500.000đ để ra khỏi trạm`);
+        if(!p.bankrupt) animateMove(currentPlayer,total,false);
+        else{rolled=true;updateStatus();}
+      } else {
+        addLog(`${p.name} vẫn ở trạm kiểm lâm (${jailTurns[currentPlayer]}/3)`);
+        rolled=true;updateStatus();
+      }
+    }
+    return;
+  }
+
+  if(isDouble){
+    doublesCount++;
+    if(doublesCount>=3){
+      addLog(`⚠️ Tung 3 đôi liên tiếp! ${p.name} bị kiểm lâm bắt!`,true);
+      sendToJail(currentPlayer);
+      doublesCount=0;rolled=true;updateStatus();
+      return;
+    }
+  } else {
+    doublesCount=0;
+  }
+  animateMove(currentPlayer,total,isDouble);
+}
+
+function animateMove(pi,steps,isDouble){
+  isMoving=true;updateStatus();
+  const p=players[pi];
+  let i=0;
+  const step=()=>{
+    if(i>=steps){
+      isMoving=false;
+      const cell=BOARD_DATA[p.pos];
+      addLog(`${p.token} ${p.name} đến: ${cell.name}`);
+      rolled=!isDouble;
+      updateStatus();renderPlayers();
+      setTimeout(()=>handleLanding(pi,cell),250);
+      return;
+    }
+    const old=p.pos;
+    p.pos=(p.pos+1)%40;
+    if(p.pos===0&&old!==0){
+      p.money+=2000000;sfxCoin();
+      addLog(`💰 ${p.name} đi qua Xuất Phát, nhận 2.000.000đ!`,true);
+      renderPlayers();
+    }
+    renderTokens();
+    i++;
+    setTimeout(step,140);
+  };
+  step();
+}
+
+function sendToJail(pi){
+  const p=players[pi];
+  p.inJail=true;p.pos=10;jailTurns[pi]=0;
+  renderTokens();renderPlayers();
+  addLog(`👮 ${p.name} bị đưa vào Trạm Kiểm Lâm!`,true);
+}
+
+// ============== LANDING ==============
+function handleLanding(pi,cell){
+  const p=players[pi];
+  if(cell.type==='property'||cell.type==='railroad'||cell.type==='utility'){
+    const owner=properties[cell.id];
+    if(owner===undefined){
+      if(pi===currentPlayer) showBuyModal(pi,cell);
+    } else if(owner!==pi&&!mortgaged[cell.id]&&!players[owner].bankrupt){
+      const rent=calcRent(cell,owner);
+      addLog(`💸 ${p.name} trả ${formatMoney(rent)} cho ${players[owner].name}`,true);
+      sfxPay();
+      const paid=chargeMoney(pi,rent,owner);
+    } else if(owner!==pi&&mortgaged[cell.id]){
+      addLog(`💤 ${cell.name} đang bị cầm cố — không thu phí`);
+    }
+  } else if(cell.type==='tax'){
+    addLog(`🎟️ ${p.name} nộp ${formatMoney(cell.fee)}`);
+    sfxPay();
+    chargeMoney(pi,cell.fee,null);
+  } else if(cell.type==='chance'){
+    const card=CHANCE_CARDS[Math.floor(Math.random()*CHANCE_CARDS.length)];
+    drawCard(pi,card,'🎰 Cơ Hội Khám Phá');
+  } else if(cell.type==='chest'){
+    const card=CHEST_CARDS[Math.floor(Math.random()*CHEST_CARDS.length)];
+    drawCard(pi,card,'💰 Quỹ Di Sản');
+  } else if(cell.type==='gotojail'){
+    sendToJail(pi);
+  }
+  renderPlayers();
+}
+
+function calcRent(cell,ownerIdx){
+  if(cell.type==='railroad'){
+    const owned=BOARD_DATA.filter(c=>c.type==='railroad'&&properties[c.id]===ownerIdx).length;
+    return [0,500000,1000000,2000000,4000000][owned]||0;
+  }
+  if(cell.type==='utility'){
+    const owned=BOARD_DATA.filter(c=>c.type==='utility'&&properties[c.id]===ownerIdx).length;
+    const dice=lastRoll[0]+lastRoll[1]||7;
+    return dice*(owned===2?200000:100000);
+  }
+  const h=houses[cell.id]||0;
+  if(h>0) return cell.rent[h];
+  const groupProps=BOARD_DATA.filter(c=>c.group===cell.group&&c.type==='property');
+  const allOwned=groupProps.every(c=>properties[c.id]===ownerIdx);
+  return allOwned?cell.rent[0]*2:cell.rent[0];
+}
+
+function chargeMoney(pi,amount,toIdx){
+  const p=players[pi];
+  p.money-=amount;
+  if(toIdx!==null&&toIdx!==undefined&&!players[toIdx].bankrupt){
+    players[toIdx].money+=amount;
+  }
+  if(p.money<0){
+    // Try forced bankruptcy check
+    const totalAssets=p.money+totalLiquidAssets(pi);
+    if(totalAssets<0){
+      sfxBankrupt();
+      bankruptcy(pi,toIdx);
+    } else {
+      addLog(`⚠️ ${p.name} cần bán tài sản để trả nợ! (đang thiếu ${formatMoney(-p.money)})`,true);
+      showToast(`⚠️ ${p.name}: Hãy mở "Tài sản" để cầm cố / bán nhà!`);
+    }
+  }
+  renderPlayers();
+  return amount;
+}
+
+function totalLiquidAssets(pi){
+  let v=0;
+  players[pi].owned.forEach(id=>{
+    const cell=BOARD_DATA[id];
+    if(!mortgaged[id]) v+=Math.floor(cell.price/2);
+    const h=houses[id]||0;
+    if(h>0) v+=h*Math.floor(cell.houseCost/2);
+  });
+  return v;
+}
+
+function bankruptcy(pi,creditorIdx){
+  const p=players[pi];
+  addLog(`💀 ${p.name} đã phá sản!`,true);
+  sfxBankrupt();
+  // Transfer assets
+  p.owned.forEach(id=>{
+    if(creditorIdx!==null&&creditorIdx!==undefined&&!players[creditorIdx].bankrupt){
+      properties[id]=creditorIdx;
+      players[creditorIdx].owned.push(id);
+      // creditor gets houses too (in real Monopoly houses must be sold, but simplify)
+    } else {
+      delete properties[id];
+      delete houses[id];
+      delete mortgaged[id];
+    }
+  });
+  p.owned=[];p.money=0;p.bankrupt=true;
+  renderOwnership();renderPlayers();
+  const alive=players.filter(pl=>!pl.bankrupt);
+  if(alive.length===1){
+    setTimeout(()=>{
+      sfxWin();
+      openModal({
+        title:'🏆 Chiến Thắng!',
+        body:`<div style="font-size:42px;margin:14px 0">🎊</div>
+          <div style="font-size:22px;color:var(--gold);font-weight:800;margin:8px 0">${alive[0].token} ${alive[0].name}</div>
+          <div style="color:#d4c4a0;margin-bottom:10px">là Tỉ Phú Du Lịch Việt Nam!</div>
+          <div class="modal-price">${formatMoney(alive[0].money)}</div>`,
+        actions:[{label:'Chơi lại',primary:true,fn:()=>{closeModal();confirmReset(true);}}]
+      });
+    },800);
+  }
+}
+
+// ============== CARDS ==============
+function drawCard(pi,card,source){
+  const p=players[pi];
+  openModal({
+    title:source,
+    body:`<div style="font-size:38px;margin:10px 0">🎴</div><div style="font-size:15px;color:#d4c4a0;line-height:1.7">${card.text}</div>`,
+    actions:[{label:'Tiếp tục',primary:true,fn:()=>{
+      closeModal();
+      if(card.effect==='money'){
+        if(card.amount>0){p.money+=card.amount;sfxCoin();}
+        else{sfxPay();chargeMoney(pi,-card.amount,null);}
+        addLog(`${p.name}: ${card.text}`,true);
+      } else if(card.effect==='move'){
+        const old=p.pos;p.pos=card.target;
+        if(card.target<=old){p.money+=2000000;sfxCoin();addLog(`💰 Đi qua Xuất Phát +2.000.000đ`);}
+        renderTokens();
+        addLog(`${p.name} đến ${BOARD_DATA[p.pos].name}`,true);
+        setTimeout(()=>handleLanding(pi,BOARD_DATA[p.pos]),300);
+      } else if(card.effect==='gotojail'){
+        sendToJail(pi);
+      }
+      renderPlayers();
+    }}]
+  });
+}
+
+// ============== MODALS ==============
+function openModal(cfg){
+  const inner=document.getElementById('modal-inner');
+  let actionsHtml='';
+  cfg.actions.forEach((a,i)=>{
+    actionsHtml+=`<button class="${a.primary?'btn-yes':'btn-no'}" id="modalBtn${i}">${a.label}</button>`;
+  });
+  inner.innerHTML=`<h3>${cfg.title}</h3><div class="modal-body">${cfg.body}</div>${cfg.priceText?`<div class="modal-price">${cfg.priceText}</div>`:''}<div class="modal-actions">${actionsHtml}</div>`;
+  document.getElementById('modal').style.display='flex';
+  cfg.actions.forEach((a,i)=>{document.getElementById('modalBtn'+i).onclick=a.fn;});
+}
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+function deedHtml(cell){
+  const colorBg=cell.color||'#666';
+  const groupCells=cell.type==='property'?BOARD_DATA.filter(c=>c.group===cell.group):[];
+  let rentRows='';
+  if(cell.type==='property'){
+    rentRows=`
+      <div class="deed-row"><span>Thuê cơ bản</span><span>${formatMoney(cell.rent[0])}</span></div>
+      <div class="deed-row"><span>Có 1 Nhà</span><span>${formatMoney(cell.rent[1])}</span></div>
+      <div class="deed-row"><span>Có 2 Nhà</span><span>${formatMoney(cell.rent[2])}</span></div>
+      <div class="deed-row"><span>Có 3 Nhà</span><span>${formatMoney(cell.rent[3])}</span></div>
+      <div class="deed-row"><span>Có 4 Nhà</span><span>${formatMoney(cell.rent[4])}</span></div>
+      <div class="deed-row featured"><span>🌟 Resort</span><span>${formatMoney(cell.rent[5])}</span></div>
+      <div class="deed-row"><span>Giá xây nhà</span><span>${formatMoney(cell.houseCost)}</span></div>`;
+  } else if(cell.type==='railroad'){
+    rentRows=`
+      <div class="deed-row"><span>1 Ga</span><span>500.000đ</span></div>
+      <div class="deed-row"><span>2 Ga</span><span>1.000.000đ</span></div>
+      <div class="deed-row"><span>3 Ga</span><span>2.000.000đ</span></div>
+      <div class="deed-row"><span>4 Ga</span><span>4.000.000đ</span></div>`;
+  } else if(cell.type==='utility'){
+    rentRows=`
+      <div class="deed-row"><span>1 Tiện ích</span><span>4× xúc xắc × 100k</span></div>
+      <div class="deed-row"><span>2 Tiện ích</span><span>4× xúc xắc × 200k</span></div>`;
+  }
+  return `<div class="deed">
+    <div class="deed-header" style="background:${colorBg}">${cell.name}</div>
+    <div class="deed-body">
+      <div class="deed-row featured"><span>Giá mua</span><span>${formatMoney(cell.price)}</span></div>
+      ${rentRows}
+      <div class="deed-row"><span>Cầm cố</span><span>${formatMoney(Math.floor(cell.price/2))}</span></div>
+    </div>
+    <div class="deed-meta">${cell.type==='property'?'Nhóm: '+GROUP_NAMES[cell.group]:PROP_TYPES[cell.type]}</div>
+  </div>`;
+}
+
+function showBuyModal(pi,cell){
+  const p=players[pi];
+  const canAfford=p.money>=cell.price;
+  openModal({
+    title:'🏛️ Mua Di Sản',
+    body:deedHtml(cell)+`<div style="margin-top:10px;color:#d4c4a0">Bạn có ${formatMoney(p.money)}<br>${canAfford?'Bạn có muốn mua di sản này không?':'❌ Không đủ tiền để mua'}</div>`,
+    actions:canAfford?[
+      {label:'✅ Mua',primary:true,fn:()=>{
+        p.money-=cell.price;
+        properties[cell.id]=pi;
+        p.owned.push(cell.id);
+        sfxBuy();
+        addLog(`🏛️ ${p.name} đã mua ${cell.name}!`,true);
+        renderOwnership();renderPlayers();closeModal();
+      }},
+      {label:'Bỏ qua',primary:false,fn:closeModal}
+    ]:[{label:'OK',primary:true,fn:closeModal}]
+  });
+}
+
+function showCellInfo(idx){
+  const cell=BOARD_DATA[idx];
+  if(cell.type==='corner'||cell.type==='gotojail'||cell.type==='chance'||cell.type==='chest'||cell.type==='tax')return;
+  const owner=properties[idx];
+  const ownerLabel=owner!==undefined?`${players[owner].token} ${players[owner].name}`:'Chưa có chủ';
+  const h=houses[idx]||0;
+  const status=mortgaged[idx]?'💤 Đang cầm cố':(h===5?'🌟 Resort':h>0?`🏠 ${h} Nhà Khách`:'');
+  openModal({
+    title:'🏛️ '+cell.name,
+    body:deedHtml(cell)+`<div style="margin-top:10px;color:#d4c4a0">Chủ sở hữu: <strong>${ownerLabel}</strong>${status?`<br>Trạng thái: ${status}`:''}</div>`,
+    actions:[{label:'Đóng',primary:true,fn:closeModal}]
+  });
+}
+
+// ============== PROPERTY MANAGEMENT ==============
+function openManageModal(){
+  const p=players[currentPlayer];
+  if(p.bankrupt){showToast('Bạn đã phá sản!');return;}
+  let listHtml='';
+  if(p.owned.length===0){
+    listHtml='<div style="color:var(--muted);padding:20px;text-align:center">Bạn chưa sở hữu di sản nào.</div>';
+  } else {
+    p.owned.slice().sort((a,b)=>a-b).forEach(id=>{
+      const cell=BOARD_DATA[id];
+      const h=houses[id]||0;
+      const isMort=mortgaged[id];
+      const canBuild=cell.type==='property'&&!isMort&&h<5&&canBuildOn(currentPlayer,id);
+      const canSell=cell.type==='property'&&h>0&&canSellOn(currentPlayer,id);
+      const canMort=!isMort&&h===0;
+      const canUnmort=isMort;
+      const statusTag=isMort?'💤':(h===5?'🌟':h>0?`🏠×${h}`:'');
+      listHtml+=`<div class="prop-item">
+        <div class="prop-color" style="background:${cell.color||'#888'}"></div>
+        <div class="prop-info">
+          <div class="prop-name">${cell.name} ${statusTag}</div>
+          <div class="prop-detail">${PROP_TYPES[cell.type]} · Giá: ${formatMoney(cell.price)}${cell.type==='property'?' · Nhóm '+GROUP_NAMES[cell.group]:''}</div>
+        </div>
+        <div class="prop-actions">
+          ${cell.type==='property'?`<button onclick="buildHouse(${id})" ${canBuild?'':'disabled'} title="Xây nhà (${formatMoney(cell.houseCost)})">+🏠</button>`:''}
+          ${cell.type==='property'?`<button onclick="sellHouse(${id})" ${canSell?'':'disabled'} title="Bán nhà">-🏠</button>`:''}
+          <button onclick="mortgageProp(${id})" ${canMort?'':'disabled'} title="Cầm cố +${formatMoney(Math.floor(cell.price/2))}">💤</button>
+          <button onclick="unmortgageProp(${id})" ${canUnmort?'':'disabled'} title="Hủy cầm -${formatMoney(Math.ceil(cell.price*0.55))}">↩️</button>
+          <button class="danger" onclick="confirmSellProp(${id})" title="Bán đứt">💰</button>
+        </div>
+      </div>`;
+    });
+  }
+  openModal({
+    title:'🏛️ Quản Lý Tài Sản',
+    body:`<div style="text-align:left;color:#d4c4a0;font-size:13px;margin-bottom:8px">Tiền mặt: <strong style="color:var(--gold)">${formatMoney(p.money)}</strong></div>
+      <div class="props-list">${listHtml}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px;text-align:left">+🏠 xây nhà · -🏠 bán nhà · 💤 cầm cố · ↩️ hủy cầm · 💰 bán đứt</div>`,
+    actions:[{label:'Đóng',primary:true,fn:closeModal}]
+  });
+}
+
+function canBuildOn(pi,id){
+  const cell=BOARD_DATA[id];
+  if(cell.type!=='property')return false;
+  const group=BOARD_DATA.filter(c=>c.group===cell.group&&c.type==='property');
+  const allOwned=group.every(c=>properties[c.id]===pi&&!mortgaged[c.id]);
+  if(!allOwned)return false;
+  const cur=houses[id]||0;
+  if(cur>=5)return false;
+  // Even building: this house cannot exceed min(group)+1
+  const minH=Math.min(...group.map(c=>houses[c.id]||0));
+  if(cur>minH)return false;
+  if(players[pi].money<cell.houseCost)return false;
+  return true;
+}
+function canSellOn(pi,id){
+  const cell=BOARD_DATA[id];
+  if(cell.type!=='property')return false;
+  const cur=houses[id]||0;
+  if(cur<=0)return false;
+  const group=BOARD_DATA.filter(c=>c.group===cell.group&&c.type==='property');
+  const maxH=Math.max(...group.map(c=>houses[c.id]||0));
+  if(cur<maxH)return false;
+  return true;
+}
+
+function buildHouse(id){
+  const pi=currentPlayer;
+  if(!canBuildOn(pi,id)){showToast('Không thể xây ở đây');return;}
+  const cell=BOARD_DATA[id];
+  players[pi].money-=cell.houseCost;
+  houses[id]=(houses[id]||0)+1;
+  sfxBuild();
+  if(houses[id]===5) addLog(`🌟 ${players[pi].name} xây Resort tại ${cell.name}!`,true);
+  else addLog(`🏠 ${players[pi].name} xây Nhà Khách (${houses[id]}/4) tại ${cell.name}`,true);
+  renderOwnership();renderPlayers();openManageModal();
+}
+function sellHouse(id){
+  const pi=currentPlayer;
+  if(!canSellOn(pi,id)){showToast('Không thể bán ở đây');return;}
+  const cell=BOARD_DATA[id];
+  houses[id]=(houses[id]||0)-1;
+  if(houses[id]<=0)delete houses[id];
+  const refund=Math.floor(cell.houseCost/2);
+  players[pi].money+=refund;sfxCoin();
+  addLog(`💰 ${players[pi].name} bán nhà tại ${cell.name}, nhận ${formatMoney(refund)}`);
+  renderOwnership();renderPlayers();openManageModal();
+}
+function mortgageProp(id){
+  const pi=currentPlayer;
+  const cell=BOARD_DATA[id];
+  if(houses[id]>0){showToast('Bán nhà trước khi cầm cố');return;}
+  // No houses on the entire group either
+  const group=BOARD_DATA.filter(c=>c.group===cell.group&&c.type==='property');
+  if(cell.type==='property'&&group.some(c=>(houses[c.id]||0)>0)){showToast('Phải bán hết nhà nhóm này trước');return;}
+  mortgaged[id]=true;
+  const amt=Math.floor(cell.price/2);
+  players[pi].money+=amt;sfxCoin();
+  addLog(`💤 ${players[pi].name} cầm cố ${cell.name}, nhận ${formatMoney(amt)}`);
+  renderOwnership();renderPlayers();openManageModal();
+}
+function unmortgageProp(id){
+  const pi=currentPlayer;
+  const cell=BOARD_DATA[id];
+  const cost=Math.ceil(cell.price*0.55);
+  if(players[pi].money<cost){showToast('Không đủ tiền hủy cầm cố');return;}
+  players[pi].money-=cost;
+  delete mortgaged[id];
+  sfxBuild();
+  addLog(`↩️ ${players[pi].name} hủy cầm cố ${cell.name}, trả ${formatMoney(cost)}`);
+  renderOwnership();renderPlayers();openManageModal();
+}
+function confirmSellProp(id){
+  const cell=BOARD_DATA[id];
+  if((houses[id]||0)>0){showToast('Bán nhà trước');return;}
+  openModal({
+    title:'Bán Đứt Di Sản',
+    body:`Bán <strong>${cell.name}</strong> với giá ${formatMoney(Math.floor(cell.price*(mortgaged[id]?0.4:0.6)))}?<br><small style="color:var(--muted)">Bán đứt sẽ mất tài sản này vĩnh viễn.</small>`,
+    actions:[
+      {label:'✅ Bán',primary:true,fn:()=>{
+        const pi=currentPlayer;
+        const refund=Math.floor(cell.price*(mortgaged[id]?0.4:0.6));
+        players[pi].money+=refund;sfxCoin();
+        delete properties[id];delete mortgaged[id];delete houses[id];
+        players[pi].owned=players[pi].owned.filter(x=>x!==id);
+        addLog(`💰 ${players[pi].name} bán đứt ${cell.name}, nhận ${formatMoney(refund)}`);
+        renderOwnership();renderPlayers();closeModal();openManageModal();
+      }},
+      {label:'Hủy',primary:false,fn:()=>{closeModal();openManageModal();}}
+    ]
+  });
+}
+
+// ============== TURN END / RESET ==============
+function endTurn(){
+  if(isMoving){showToast('Đang di chuyển...');return;}
+  if(!rolled){showToast('Hãy tung xúc xắc trước!');return;}
+  const p=players[currentPlayer];
+  if(p.money<0){showToast('Bạn còn nợ — hãy bán/cầm cố để trả!');return;}
+  let next=(currentPlayer+1)%numPlayers;
+  let tries=0;
+  while(players[next].bankrupt&&tries<numPlayers){next=(next+1)%numPlayers;tries++;}
+  currentPlayer=next;rolled=false;doublesCount=0;
+  addLog(`──── Lượt của ${players[currentPlayer].token} ${players[currentPlayer].name} ────`);
+  document.querySelector('.log-entry')?.classList.add('divider');
+  updateStatus();renderPlayers();
+}
+function confirmReset(skipConfirm){
+  if(skipConfirm){doReset();return;}
+  openModal({
+    title:'Chơi lại từ đầu?',
+    body:'Toàn bộ tiến trình hiện tại sẽ bị xóa.',
+    actions:[
+      {label:'✅ Chơi lại',primary:true,fn:()=>{closeModal();doReset();}},
+      {label:'Hủy',primary:false,fn:closeModal}
+    ]
+  });
+}
+function doReset(){
+  document.getElementById('setup-area').style.display='flex';
+  document.getElementById('board-area').style.display='none';
+  document.getElementById('log-area').innerHTML='';
+  document.getElementById('d1').textContent='?';
+  document.getElementById('d2').textContent='?';
+  renderSetup();
+}
+
+// ============== HELPERS ==============
+function addLog(msg,highlight){
+  const log=document.getElementById('log-area');
+  const div=document.createElement('div');
+  div.className='log-entry'+(highlight?' highlight':'');
+  div.textContent=msg;
+  log.insertBefore(div,log.firstChild);
+  if(log.children.length>50)log.removeChild(log.lastChild);
+}
+function formatMoney(n){
+  if(n===0)return '0đ';
+  const sign=n<0?'-':'';n=Math.abs(n);
+  if(n>=1000000) return sign+(n/1000000).toFixed(n%1000000===0?0:1)+'M đ';
+  if(n>=1000) return sign+(n/1000).toFixed(0)+'K đ';
+  return sign+n.toLocaleString('vi-VN')+'đ';
+}
+function showToast(msg){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className='toast';t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';},2200);
+  setTimeout(()=>t.remove(),2600);
+}
+
+// ============== HERITAGE PAGE ==============
+const heritageInfo=[
+  {name:'Vịnh Hạ Long',icon:'🏝️',loc:'Quảng Ninh',year:'1994 & 2000',desc:'Di sản thiên nhiên thế giới với hàng nghìn đảo đá vôi kỳ vĩ, là biểu tượng du lịch số một của Việt Nam.',type:'Thiên nhiên'},
+  {name:'Phố Cổ Hội An',icon:'🏮',loc:'Quảng Nam',year:'1999',desc:'Thương cảng cổ với kiến trúc độc đáo pha trộn Việt, Nhật, Hoa. Nổi tiếng với đèn lồng và ẩm thực phong phú.',type:'Văn hóa'},
+  {name:'Cố Đô Huế',icon:'🏯',loc:'Thừa Thiên Huế',year:'1993',desc:'Kinh đô của triều Nguyễn với Đại Nội, lăng tẩm hoàng gia và hệ thống di tích lịch sử phong phú.',type:'Văn hóa'},
+  {name:'Thánh Địa Mỹ Sơn',icon:'🗿',loc:'Quảng Nam',year:'1999',desc:'Quần thể đền tháp Chăm Pa độc đáo, được xây dựng từ thế kỷ 4-13, là "Angkor Wat của Việt Nam".',type:'Văn hóa'},
+  {name:'Phong Nha-Kẻ Bàng',icon:'🦇',loc:'Quảng Bình',year:'2003 & 2015',desc:'Hệ thống hang động kỳ vĩ nhất thế giới, trong đó có Hang Sơn Đoòng - hang động lớn nhất thế giới.',type:'Thiên nhiên'},
+  {name:'Tràng An',icon:'⛩️',loc:'Ninh Bình',year:'2014',desc:'Di sản hỗn hợp đầu tiên của Đông Nam Á, với cảnh quan núi đá vôi, hang động và giá trị lịch sử lâu đời.',type:'Hỗn hợp'},
+  {name:'Sa Pa',icon:'⛰️',loc:'Lào Cai',year:'Đang xét',desc:'Thị trấn mù sương với ruộng bậc thang ngoạn mục và bản sắc văn hóa các dân tộc thiểu số Tây Bắc.',type:'Cảnh quan'},
+  {name:'Hang Sơn Đoòng',icon:'🕳️',loc:'Quảng Bình',year:'2009',desc:'Hang động lớn nhất thế giới với thể tích khổng lồ, có thể chứa cả một khối phố. Khám phá năm 2009.',type:'Thiên nhiên'},
+  {name:'Đỉnh Fansipan',icon:'🏔️',loc:'Lào Cai',year:'-',desc:'Nóc nhà Đông Dương với độ cao 3.143m, thu hút hàng triệu du khách chinh phục mỗi năm.',type:'Cảnh quan'},
+  {name:'Vịnh Lan Hạ',icon:'🌊',loc:'Hải Phòng',year:'Đề cử',desc:'Vịnh biển đẹp với hơn 400 hòn đảo nằm cạnh Vịnh Hạ Long, trong xanh và ít đông đúc hơn.',type:'Thiên nhiên'},
+  {name:'Côn Đảo',icon:'🏖️',loc:'Bà Rịa-Vũng Tàu',year:'-',desc:'Quần đảo hoang sơ với bãi biển trong vắt, rừng nguyên sinh và di tích lịch sử cách mạng.',type:'Cảnh quan'},
+  {name:'Đại Nội Huế',icon:'👑',loc:'Thừa Thiên Huế',year:'1993',desc:'Kinh thành của 13 vị vua triều Nguyễn với kiến trúc đồ sộ, là trung tâm của Quần thể Di tích Cố đô Huế.',type:'Văn hóa'},
+  {name:'Mù Cang Chải',icon:'🌾',loc:'Yên Bái',year:'-',desc:'Ruộng bậc thang vàng óng vào mùa lúa chín, là một trong những điểm chụp ảnh đẹp nhất thế giới.',type:'Cảnh quan'},
+  {name:'Bãi Biển Mỹ Khê',icon:'🏖️',loc:'Đà Nẵng',year:'-',desc:'Một trong những bãi biển đẹp nhất hành tinh theo Forbes, với cát trắng mịn và sóng êm.',type:'Cảnh quan'},
+];
+function renderHeritage(){
+  const grid=document.getElementById('heritage-grid');
+  grid.innerHTML=heritageInfo.map(h=>`
+    <div class="h-card">
+      <div class="h-card-img">${h.icon}</div>
+      <div class="h-card-body">
+        <h3>${h.name}</h3>
+        <div class="location">📍 ${h.loc} &nbsp;·&nbsp; 🗓️ ${h.year}</div>
+        <p>${h.desc}</p>
+        <span class="h-badge">${h.type}</span>
+      </div>
+    </div>`).join('');
+}
+
+// ============== INIT ==============
+renderSetup();
+renderHeritage();
+document.addEventListener('click',()=>{initAudio();},{once:true});
+</script>
+</body>
+</html>
