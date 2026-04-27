@@ -1,8 +1,5 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "destination": "/game.html" }
-  ],
   "headers": [
     {
       "source": "/images/(.*)",
