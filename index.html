@@ -527,7 +527,7 @@ function renderBoard(){
           center.className='center-logo';
           const decoHtml=CENTER_DECO.map((d,i)=>{
             const pos=['tl','tr','bl','br'][i];
-            return `<div class="deco-card ${pos}"><div class="deco-card-inner"><span class="emoji-fallback">${d.emoji}</span><img src="${d.img}" alt="${d.alt}" loading="lazy" onerror="this.style.display='none'"></div></div>`;
+            return `<div class="deco-card ${pos}"><div class="deco-card-inner"><img src="${d.img}" alt="${d.alt}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'emoji-fallback\\'>'+'${d.emoji}'+'</span>'"></div></div>`;
           }).join('');
           center.innerHTML=`${decoHtml}
             <div class="center-emblem">
@@ -1032,7 +1032,7 @@ function renderHeritage(){
   items.forEach(it=>{
     const el=document.createElement('div');
     el.className='h-card';
-    el.innerHTML=`<div class="h-card-img"><div class="fallback-emoji">${it.icon}</div><img src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.style.display='none'"></div><div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
+    el.innerHTML=`<div class="h-card-img"><img src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'fallback-emoji\\'>'+'${it.icon}'+'</div>'"></div><div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
     grid.appendChild(el);
   });
 }
