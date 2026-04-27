@@ -435,23 +435,38 @@ const CENTER_DECO=[
   {emoji:'🏝️',img:`${IMG_BASE}/halong.jpg`,alt:'Hạ Long'}
 ];
 
-// Map: tên ô bàn cờ → file ảnh (dùng lại ảnh cho các điểm gần nhau)
+// Map: tên ô bàn cờ → file ảnh (mỗi địa danh có ảnh riêng)
 const LANDMARK_IMAGES={
+  // Group 0 — Biển Nam (nâu)
+  'Bãi Biển Mỹ Khê':`${IMG_BASE}/mykhe.jpg`,
+  'Mũi Né Phan Thiết':`${IMG_BASE}/muine.jpg`,
+  // Group 1 — Đảo (xanh nhạt)
+  'Đảo Phú Quý':`${IMG_BASE}/phuquy.jpg`,
+  'Côn Đảo':`${IMG_BASE}/condao.jpg`,
+  'Bãi Dài Phú Quốc':`${IMG_BASE}/phuquoc.jpg`,
+  // Group 2 — Phố Cổ (hồng)
   'Phố Cổ Hội An':`${IMG_BASE}/hoian.jpg`,
   'Tháp Chàm Mỹ Sơn':`${IMG_BASE}/myson.jpg`,
-  'Thánh Địa Mỹ Sơn':`${IMG_BASE}/myson.jpg`,
+  'Phố Cổ Đồng Văn':`${IMG_BASE}/dongvan.jpg`,
+  // Group 3 — Cố Đô (cam)
   'Cố Đô Huế':`${IMG_BASE}/hue.jpg`,
-  'Đại Nội Huế':`${IMG_BASE}/hue.jpg`,
-  'Chùa Thiên Mụ':`${IMG_BASE}/hue.jpg`,
-  'Phong Nha-Kẻ Bàng':`${IMG_BASE}/sondoong.jpg`,
+  'Đại Nội Huế':`${IMG_BASE}/dainoi.jpg`,
+  'Chùa Thiên Mụ':`${IMG_BASE}/thienmu.jpg`,
+  // Group 4 — Hang Động (đỏ)
+  'Thánh Địa Mỹ Sơn':`${IMG_BASE}/myson.jpg`,
+  'Phong Nha-Kẻ Bàng':`${IMG_BASE}/phongnha.jpg`,
   'Hang Sơn Đoòng':`${IMG_BASE}/sondoong.jpg`,
+  // Group 5 — Sinh Thái (vàng)
+  'VQG Cúc Phương':`${IMG_BASE}/cucphuong.jpg`,
   'Tràng An Ninh Bình':`${IMG_BASE}/trangan.jpg`,
-  'VQG Cúc Phương':`${IMG_BASE}/trangan.jpg`,
-  'Vịnh Lan Hạ':`${IMG_BASE}/halong.jpg`,
-  'Vịnh Hạ Long':`${IMG_BASE}/halong.jpg`,
-  'Sa Pa Lào Cai':`${IMG_BASE}/mucangchai.jpg`,
+  'Vịnh Lan Hạ':`${IMG_BASE}/lanha.jpg`,
+  // Group 6 — Tây Bắc (xanh lá)
+  'Sa Pa Lào Cai':`${IMG_BASE}/sapa.jpg`,
   'Mù Cang Chải':`${IMG_BASE}/mucangchai.jpg`,
-  'Đỉnh Fansipan':`${IMG_BASE}/fansipan.jpg`
+  'Đỉnh Fansipan':`${IMG_BASE}/fansipan.jpg`,
+  // Group 7 — Biểu Tượng (xanh dương)
+  'Vịnh Hạ Long':`${IMG_BASE}/halong.jpg`,
+  'Hồ Hoàn Kiếm':`${IMG_BASE}/hoankiem.jpg`
 };
 
 let numPlayers=2;
