@@ -424,8 +424,8 @@ const GROUP_NAMES=['Biển Nam','Đảo','Phố Cổ','Cố Đô','Hang Động'
 const PROP_TYPES={property:'Di sản',railroad:'Ga tàu',utility:'Tiện ích'};
 
 // CENTER deco — real Vietnamese landscapes (4 corners of center area)
-// Ảnh được phục vụ từ thư mục /public/images khi deploy trên Vercel
-const IMG_BASE='/images';
+// Ảnh được lưu trong thư mục ./images (relative path — chạy tốt cả local file:// và Vercel)
+const IMG_BASE='images';
 const CENTER_DECO=[
   {emoji:'🏯',img:`${IMG_BASE}/myson.jpg`,alt:'Mỹ Sơn'},
   {emoji:'🦇',img:`${IMG_BASE}/sondoong.jpg`,alt:'Sơn Đoòng'},
