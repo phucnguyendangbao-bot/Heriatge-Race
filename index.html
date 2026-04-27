@@ -111,6 +111,8 @@
   .cell-name{font-size:6.5px;font-weight:700;color:#1a0a00;text-align:center;padding:2px 2px 0;line-height:1.15;flex:1;display:flex;align-items:center;justify-content:center;word-break:break-word}
   .cell-price{font-size:5.8px;color:#5a3e1b;font-weight:700;text-align:center;padding-bottom:2px}
   .cell-icon{font-size:18px;line-height:1;text-align:center;margin:2px 0}
+  .cell-img{width:100%;height:38%;flex-shrink:0;overflow:hidden;border-bottom:1px solid rgba(0,0,0,.25);background:#000}
+  .cell-img img{width:100%;height:100%;object-fit:cover;display:block}
   .cell.corner .cell-name{font-size:8px;font-weight:800;padding:0 4px;color:#3d1a00}
   .cell.corner .cell-icon{font-size:26px;margin:4px 0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
   .cell.corner .cell-sub{font-size:7px;color:#5a3e1b;margin-top:2px}
@@ -433,6 +435,25 @@ const CENTER_DECO=[
   {emoji:'🏝️',img:`${IMG_BASE}/halong.jpg`,alt:'Hạ Long'}
 ];
 
+// Map: tên ô bàn cờ → file ảnh (dùng lại ảnh cho các điểm gần nhau)
+const LANDMARK_IMAGES={
+  'Phố Cổ Hội An':`${IMG_BASE}/hoian.jpg`,
+  'Tháp Chàm Mỹ Sơn':`${IMG_BASE}/myson.jpg`,
+  'Thánh Địa Mỹ Sơn':`${IMG_BASE}/myson.jpg`,
+  'Cố Đô Huế':`${IMG_BASE}/hue.jpg`,
+  'Đại Nội Huế':`${IMG_BASE}/hue.jpg`,
+  'Chùa Thiên Mụ':`${IMG_BASE}/hue.jpg`,
+  'Phong Nha-Kẻ Bàng':`${IMG_BASE}/sondoong.jpg`,
+  'Hang Sơn Đoòng':`${IMG_BASE}/sondoong.jpg`,
+  'Tràng An Ninh Bình':`${IMG_BASE}/trangan.jpg`,
+  'VQG Cúc Phương':`${IMG_BASE}/trangan.jpg`,
+  'Vịnh Lan Hạ':`${IMG_BASE}/halong.jpg`,
+  'Vịnh Hạ Long':`${IMG_BASE}/halong.jpg`,
+  'Sa Pa Lào Cai':`${IMG_BASE}/mucangchai.jpg`,
+  'Mù Cang Chải':`${IMG_BASE}/mucangchai.jpg`,
+  'Đỉnh Fansipan':`${IMG_BASE}/fansipan.jpg`
+};
+
 let numPlayers=2;
 let players=[];
 let currentPlayer=0;
@@ -552,7 +573,9 @@ function renderBoard(){
         inner=`<div class="x-mark">X</div><div class="x-spark">✦</div>`;
       } else {
         if(cell.color&&cell.type==='property'){inner+=`<div class="cell-color" style="background:${cell.color}"></div>`;}
-        if(cell.icon){inner+=`<div class="cell-icon">${cell.icon}</div>`;}
+        const landmarkImg=cell.type==='property'?LANDMARK_IMAGES[cell.name]:null;
+        if(landmarkImg){inner+=`<div class="cell-img"><img src="${landmarkImg}" alt="${cell.name}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`;}
+        else if(cell.icon){inner+=`<div class="cell-icon">${cell.icon}</div>`;}
         inner+=`<div class="cell-name">${cell.name}</div>`;
         if(cell.price){inner+=`<div class="cell-price">${(cell.price/1000000).toFixed(1)}M đ</div>`;}
         else if(cell.fee){inner+=`<div class="cell-price">-${(cell.fee/1000000).toFixed(1)}M đ</div>`;}
@@ -1027,7 +1050,43 @@ function renderHeritage(){
       desc:'"Nóc nhà Đông Dương" cao 3.143m thuộc dãy Hoàng Liên Sơn – đích đến mơ ước của những người yêu núi.'},
     {icon:'🌾',name:'Mù Cang Chải',loc:'Yên Bái',
       img:`${IMG_BASE}/mucangchai.jpg`,
-      desc:'Nổi tiếng với những thửa ruộng bậc thang vàng óng trải dài trên sườn núi vào mùa lúa chín tháng 9 – tháng 10.'}
+      desc:'Nổi tiếng với những thửa ruộng bậc thang vàng óng trải dài trên sườn núi vào mùa lúa chín tháng 9 – tháng 10.'},
+    {icon:'🏛️',name:'Hoàng Thành Thăng Long',loc:'Hà Nội',
+      img:`${IMG_BASE}/hoangthanh.jpg`,
+      desc:'Di sản văn hóa thế giới UNESCO – trung tâm chính trị của Đại Việt suốt 13 thế kỷ. Dấu tích kinh thành cổ kính giữa lòng Hà Nội hiện đại.'},
+    {icon:'🏰',name:'Thành Nhà Hồ',loc:'Thanh Hóa',
+      img:`${IMG_BASE}/nhaho.jpg`,
+      desc:'Tòa thành đá độc đáo do Hồ Quý Ly cho xây năm 1397, được UNESCO công nhận năm 2011. Kiệt tác kiến trúc quân sự bằng đá tảng khổng lồ.'},
+    {icon:'🪨',name:'Cao Nguyên Đá Đồng Văn',loc:'Hà Giang',
+      img:`${IMG_BASE}/dongvan.jpg`,
+      desc:'Công viên địa chất toàn cầu UNESCO với cảnh quan đá vôi hùng vĩ, những con đèo uốn lượn và bản làng dân tộc H\'Mông trên núi cao.'},
+    {icon:'📜',name:'Văn Miếu - Quốc Tử Giám',loc:'Hà Nội',
+      img:`${IMG_BASE}/vanmieu.jpg`,
+      desc:'Trường đại học đầu tiên của Việt Nam, nơi tôn vinh đạo học với 82 bia tiến sĩ ghi danh hiền tài qua các triều đại.'},
+    {icon:'🏯',name:'Cố Đô Hoa Lư',loc:'Ninh Bình',
+      img:`${IMG_BASE}/hoalu.jpg`,
+      desc:'Kinh đô đầu tiên của Đại Cồ Việt thời nhà Đinh – Tiền Lê, ẩn mình giữa quần thể núi đá vôi của Tràng An.'},
+    {icon:'🏖️',name:'Đảo Phú Quốc',loc:'Kiên Giang',
+      img:`${IMG_BASE}/phuquoc.jpg`,
+      desc:'"Đảo Ngọc" lớn nhất Việt Nam với bãi biển cát trắng mịn, nước biển trong xanh và rừng nguyên sinh quý hiếm.'},
+    {icon:'🌸',name:'Đà Lạt',loc:'Lâm Đồng',
+      img:`${IMG_BASE}/dalat.jpg`,
+      desc:'"Thành phố ngàn hoa" với khí hậu mát mẻ quanh năm, thông reo, hồ Xuân Hương và những biệt thự Pháp cổ kính.'},
+    {icon:'⛰️',name:'Sa Pa',loc:'Lào Cai',
+      img:`${IMG_BASE}/sapa.jpg`,
+      desc:'Thị trấn trong mây giữa dãy Hoàng Liên Sơn với ruộng bậc thang, chợ phiên dân tộc và biển mây bồng bềnh sớm mai.'},
+    {icon:'🌅',name:'Mũi Né',loc:'Bình Thuận',
+      img:`${IMG_BASE}/muine.jpg`,
+      desc:'Bãi biển dài cát vàng với đồi cát bay đỏ – trắng độc đáo, được mệnh danh là "thiên đường resort" của miền Trung.'},
+    {icon:'🌊',name:'Côn Đảo',loc:'Bà Rịa - Vũng Tàu',
+      img:`${IMG_BASE}/condao.jpg`,
+      desc:'Quần đảo lịch sử với nhà tù Côn Đảo, bãi biển hoang sơ và là khu bảo tồn rùa biển quý hiếm.'},
+    {icon:'🌉',name:'Cầu Vàng - Bà Nà Hills',loc:'Đà Nẵng',
+      img:`${IMG_BASE}/cauvang.jpg`,
+      desc:'Cây cầu vàng nâng đỡ bởi đôi bàn tay khổng lồ trên đỉnh Bà Nà – biểu tượng du lịch mới của Việt Nam.'},
+    {icon:'🏖️',name:'Bãi Biển Mỹ Khê',loc:'Đà Nẵng',
+      img:`${IMG_BASE}/mykhe.jpg`,
+      desc:'Một trong những bãi biển đẹp nhất hành tinh theo tạp chí Forbes – cát mịn, sóng êm, biển xanh ngọc quanh năm.'}
   ];
   items.forEach(it=>{
     const el=document.createElement('div');
