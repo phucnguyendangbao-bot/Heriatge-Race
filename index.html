@@ -283,7 +283,48 @@
 
 <div id="game" class="page">
   <div class="game-container">
-    <div id="setup-area" class="setup-screen">
+    <!-- ===== AUTH SCREEN ===== -->
+    <div id="auth-screen" class="setup-screen" style="max-width:480px;margin:0 auto">
+      <h2>🔐 Đăng nhập để chơi</h2>
+      <div class="subtitle">Tạo tài khoản để lưu lịch sử và xem xếp hạng</div>
+      <div style="display:flex;gap:4px;margin:20px 0;background:rgba(0,0,0,.3);padding:4px;border-radius:10px;width:100%">
+        <button id="auth-tab-login" class="np-btn selected" style="flex:1" onclick="switchAuthTab('login')">Đăng nhập</button>
+        <button id="auth-tab-signup" class="np-btn" style="flex:1" onclick="switchAuthTab('signup')">Đăng ký</button>
+      </div>
+      <div id="auth-login" style="width:100%">
+        <div class="player-card-setup p0">
+          <label>Email Gmail</label>
+          <input type="email" id="auth-login-email" placeholder="ban@gmail.com">
+          <label style="margin-top:14px">Mật khẩu</label>
+          <input type="password" id="auth-login-pass" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="margin-top:16px;width:100%" onclick="doLogin()">Đăng nhập</button>
+      </div>
+      <div id="auth-signup" style="display:none;width:100%">
+        <div class="player-card-setup p1">
+          <label>Tên hiển thị</label>
+          <input type="text" id="auth-signup-name" maxlength="20" placeholder="Tên của bạn">
+          <label style="margin-top:14px">Email Gmail</label>
+          <input type="email" id="auth-signup-email" placeholder="ban@gmail.com">
+          <label style="margin-top:14px">Mật khẩu (≥6 ký tự)</label>
+          <input type="password" id="auth-signup-pass" placeholder="••••••••">
+        </div>
+        <button class="btn-primary" style="margin-top:16px;width:100%" onclick="doSignup()">Tạo tài khoản</button>
+      </div>
+      <div id="auth-msg" style="margin-top:14px;padding:10px;border-radius:8px;display:none;font-size:13px;text-align:center"></div>
+    </div>
+
+    <div id="user-bar" style="display:none;padding:12px 20px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:10px;margin:0 auto 16px;max-width:920px;align-items:center;gap:12px">
+      <div style="font-size:24px">👤</div>
+      <div style="flex:1">
+        <div style="color:#d4af37;font-weight:700" id="user-bar-name"></div>
+        <div style="color:#a09070;font-size:12px" id="user-bar-email"></div>
+      </div>
+      <button class="btn-action" onclick="showLeaderboardModal()">🏆 Xếp hạng</button>
+      <button class="btn-action danger" onclick="doLogout()">Đăng xuất</button>
+    </div>
+
+    <div id="setup-area" class="setup-screen" style="display:none">
       <h2>🎲 Thiết Lập Trò Chơi</h2>
       <div class="subtitle">Chọn số người chơi và nhập tên nhân vật</div>
       <div class="num-players">
@@ -532,6 +573,7 @@ function startGame(){
   document.getElementById('d2').textContent='?';
   renderBoard();renderPlayers();updateStatus();
   addLog('🎉 Trò chơi bắt đầu! Chúc mọi người vui vẻ',true);
+  if (typeof onGameStarted === 'function') onGameStarted();
 }
 
 // Layout: idx 0 = bottom-right corner (X / Xuất Phát)
@@ -836,6 +878,14 @@ function bankrupt(pi,toPlayer){
   const alive=players.filter(pl=>!pl.bankrupt);
   if(alive.length===1){
     sfxWin();
+    if (typeof onGameEnded === 'function' && window.currentUserProfile) {
+      const myIdx = players.findIndex(p => p.name === window.currentUserProfile.display_name);
+      if (myIdx >= 0) {
+        const sortedByMoney = [...players].sort((a,b) => b.money - a.money);
+        const myPosition = sortedByMoney.findIndex(p => p === players[myIdx]) + 1;
+        onGameEnded(alive[0].name, players[myIdx].money, myPosition, players.length);
+      }
+    }
     setTimeout(()=>showModal(`🏆 Chiến Thắng!`,`<div class="modal-body"><strong>${alive[0].token} ${alive[0].name}</strong> đã trở thành Tỉ Phú Du Lịch Việt Nam!</div>`,[{label:'Chơi lại',fn:()=>{document.getElementById('modal').style.display='none';confirmReset(true);}}]),600);
   }
 }
@@ -1127,6 +1177,113 @@ function renderHeritage(){
 }
 
 renderSetup();
+</script>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const SUPABASE_URL = 'https://eimpadcvrhinhmsvauvc.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpbXBhZGN2cmhpbmhtc3ZhdXZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTYyODYsImV4cCI6MjA5Mzg3MjI4Nn0.bhvBBPbhQW0XQ627CNb6yzfa8kNOzu0_4eZywo6JwGg'
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+window.supabase = supabase
+window.currentUserProfile = null
+let gameStartTime = 0
+
+function showAuthMsg(text, type) {
+  const el = document.getElementById('auth-msg')
+  el.style.display = 'block'
+  el.textContent = text
+  const colors = {
+    error: ['rgba(231,76,60,.15)', 'rgba(231,76,60,.4)', '#ff8080'],
+    success: ['rgba(46,204,113,.15)', 'rgba(46,204,113,.4)', '#7be395'],
+    info: ['rgba(52,152,219,.15)', 'rgba(52,152,219,.4)', '#8ab4f8']
+  }
+  const [bg, br, c] = colors[type] || colors.info
+  el.style.background = bg
+  el.style.border = '1px solid ' + br
+  el.style.color = c
+}
+window.switchAuthTab = (tab) => {
+  document.getElementById('auth-tab-login').classList.toggle('selected', tab === 'login')
+  document.getElementById('auth-tab-signup').classList.toggle('selected', tab === 'signup')
+  document.getElementById('auth-login').style.display = tab === 'login' ? 'block' : 'none'
+  document.getElementById('auth-signup').style.display = tab === 'signup' ? 'block' : 'none'
+  document.getElementById('auth-msg').style.display = 'none'
+}
+window.doSignup = async () => {
+  const name = document.getElementById('auth-signup-name').value.trim()
+  const email = document.getElementById('auth-signup-email').value.trim()
+  const pass = document.getElementById('auth-signup-pass').value
+  if (!name) return showAuthMsg('Nhập tên hiển thị', 'error')
+  if (!email.endsWith('@gmail.com')) return showAuthMsg('Chỉ chấp nhận @gmail.com', 'error')
+  if (pass.length < 6) return showAuthMsg('Mật khẩu tối thiểu 6 ký tự', 'error')
+  showAuthMsg('Đang tạo tài khoản...', 'info')
+  const { error } = await supabase.auth.signUp({
+    email, password: pass, options: { data: { display_name: name } }
+  })
+  if (error) return showAuthMsg('Lỗi: ' + error.message, 'error')
+  showAuthMsg('✓ Tạo thành công! Đăng nhập ngay.', 'success')
+}
+window.doLogin = async () => {
+  const email = document.getElementById('auth-login-email').value.trim()
+  const pass = document.getElementById('auth-login-pass').value
+  if (!email || !pass) return showAuthMsg('Điền đủ thông tin', 'error')
+  showAuthMsg('Đang đăng nhập...', 'info')
+  const { error } = await supabase.auth.signInWithPassword({ email, password: pass })
+  if (error) return showAuthMsg('Lỗi: ' + error.message, 'error')
+}
+window.doLogout = async () => { await supabase.auth.signOut() }
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (session?.user) {
+    const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single()
+    window.currentUserProfile = { ...profile, email: session.user.email }
+    document.getElementById('auth-screen').style.display = 'none'
+    document.getElementById('user-bar').style.display = 'flex'
+    document.getElementById('setup-area').style.display = 'flex'
+    document.getElementById('user-bar-name').textContent = profile?.display_name || session.user.email
+    document.getElementById('user-bar-email').textContent = session.user.email
+    if (typeof renderSetup === 'function') {
+      renderSetup()
+      setTimeout(() => {
+        const p0 = document.getElementById('pname0')
+        if (p0 && profile?.display_name) p0.value = profile.display_name
+      }, 50)
+    }
+  } else {
+    window.currentUserProfile = null
+    document.getElementById('auth-screen').style.display = 'flex'
+    document.getElementById('user-bar').style.display = 'none'
+    document.getElementById('setup-area').style.display = 'none'
+  }
+})
+
+window.onGameStarted = () => { gameStartTime = Date.now() }
+window.onGameEnded = async (winnerName, finalMoney, position, numPlayers) => {
+  if (!window.currentUserProfile) return
+  const duration = Math.floor((Date.now() - gameStartTime) / 1000)
+  const isWinner = winnerName === window.currentUserProfile.display_name
+  await supabase.from('game_history').insert({
+    user_id: window.currentUserProfile.id,
+    num_players: numPlayers, final_money: finalMoney,
+    position, is_winner: isWinner, duration_seconds: duration
+  })
+}
+window.showLeaderboardModal = async () => {
+  const { data } = await supabase.from('leaderboard').select('*').limit(10)
+  let rows = data?.length
+    ? data.map((p, i) => `<tr><td>${i+1}</td><td>${p.display_name}</td><td>${p.wins}</td><td>${p.total_games}</td></tr>`).join('')
+    : '<tr><td colspan="4">Chưa có dữ liệu</td></tr>'
+  const modal = document.getElementById('modal')
+  document.getElementById('modal-inner').innerHTML = `
+    <h3>🏆 Bảng xếp hạng</h3>
+    <table style="width:100%;color:#f5e6c8;font-size:13px;margin-top:14px">
+      <thead><tr style="color:#d4af37"><th>#</th><th>Tên</th><th>Thắng</th><th>Tổng</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="modal-actions"><button class="btn-yes" onclick="document.getElementById('modal').style.display='none'">Đóng</button></div>`
+  modal.style.display = 'flex'
+}
 </script>
 </body>
 </html>
