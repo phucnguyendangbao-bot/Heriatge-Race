@@ -605,7 +605,7 @@ function renderBoard(){
           center.className='center-logo';
           const decoHtml=CENTER_DECO.map((d,i)=>{
             const pos=['tl','tr','bl','br'][i];
-            return `<div class="deco-card ${pos}"><div class="deco-card-inner"><img src="${d.img}" alt="${d.alt}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=\\'emoji-fallback\\'>'+'${d.emoji}'+'</span>'"></div></div>`;
+            return `<div class="deco-card ${pos}"><div class="deco-card-inner"><span class="emoji-fallback">${d.emoji}</span></div></div>`;
           }).join('');
           center.innerHTML=`${decoHtml}
             <div class="center-emblem">
@@ -631,8 +631,7 @@ function renderBoard(){
       } else {
         if(cell.color&&cell.type==='property'){inner+=`<div class="cell-color" style="background:${cell.color}"></div>`;}
         const landmarkImg=cell.type==='property'?LANDMARK_IMAGES[cell.name]:null;
-        if(landmarkImg){inner+=`<div class="cell-img"><img src="${landmarkImg}" alt="${cell.name}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`;}
-        else if(cell.icon){inner+=`<div class="cell-icon">${cell.icon}</div>`;}
+        if(cell.icon){inner+=`<div class="cell-icon">${cell.icon}</div>`;}
         inner+=`<div class="cell-name">${cell.name}</div>`;
         if(cell.price){inner+=`<div class="cell-price">${(cell.price/1000000).toFixed(1)}M đ</div>`;}
         else if(cell.fee){inner+=`<div class="cell-price">-${(cell.fee/1000000).toFixed(1)}M đ</div>`;}
@@ -1171,7 +1170,7 @@ function renderHeritage(){
   items.forEach(it=>{
     const el=document.createElement('div');
     el.className='h-card';
-    el.innerHTML=`<div class="h-card-img"><img src="${it.img}" alt="${it.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'fallback-emoji\\'>'+'${it.icon}'+'</div>'"></div><div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
+    el.innerHTML=`<div class="h-card-img"><div class="fallback-emoji">${it.icon}</div></div><div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
     grid.appendChild(el);
   });
 }
