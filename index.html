@@ -461,6 +461,39 @@
   .auth-msg-box.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.4);color:#7be395;display:block}
   .auth-msg-box.info{background:rgba(52,152,219,.15);border:1px solid rgba(52,152,219,.4);color:#8ab4f8;display:block}
 
+  /* ===== ADMIN BADGE ===== */
+  .admin-badge{
+    display:inline-flex;align-items:center;gap:4px;
+    background:linear-gradient(135deg,#ff4757,#c0392b);
+    color:#fff;font-weight:900;font-size:10px;letter-spacing:1.2px;
+    padding:3px 9px;border-radius:12px;
+    box-shadow:0 2px 8px rgba(231,76,60,.5),inset 0 1px 0 rgba(255,255,255,.25);
+    border:1px solid rgba(255,255,255,.3);
+    text-transform:uppercase;animation:adminPulse 2.5s ease-in-out infinite
+  }
+  .admin-badge::before{content:'👑';font-size:11px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+  @keyframes adminPulse{
+    0%,100%{box-shadow:0 2px 8px rgba(231,76,60,.5),inset 0 1px 0 rgba(255,255,255,.25)}
+    50%{box-shadow:0 2px 16px rgba(231,76,60,.85),inset 0 1px 0 rgba(255,255,255,.25)}
+  }
+  .topbar-coin.admin{
+    background:linear-gradient(135deg,#ffd700,#ff8c00);
+    border:1px solid #b8540f;animation:adminCoinShine 3s linear infinite
+  }
+  @keyframes adminCoinShine{
+    0%,100%{filter:brightness(1)}
+    50%{filter:brightness(1.2) drop-shadow(0 0 8px rgba(255,215,0,.6))}
+  }
+  .avatar-btn.admin{
+    background:linear-gradient(135deg,#ff4757,#c0392b);
+    border-color:#fff;color:#fff;
+    box-shadow:0 3px 10px rgba(231,76,60,.6),0 0 0 2px rgba(255,215,0,.4)
+  }
+  .ud-admin-tag{
+    display:inline-block;margin-left:6px;background:#ff4757;color:#fff;
+    font-size:9px;font-weight:900;padding:2px 6px;border-radius:8px;letter-spacing:1px
+  }
+
   /* Login required panel khi vào trang yêu cầu đăng nhập */
   .login-required{text-align:center;padding:60px 20px;max-width:520px;margin:0 auto}
   .login-required .crest{font-size:64px;margin-bottom:18px}
@@ -941,8 +974,10 @@ function renderSkinGrid(kind){
     } else if(owned){
       footer=`<button class="skin-btn equip" onclick="equipSkin('${kind}','${skin.id}')">✓ Trang bị</button>`;
     } else if(skin.price!==null){
-      const can=p.coins>=skin.price;
-      footer=`<span class="skin-price"><span style="color:#ffd700">💰</span> ${skin.price.toLocaleString('vi-VN')}</span><button class="skin-btn" ${can?'':'disabled'} onclick="buySkin('${kind}','${skin.id}')">Mua</button>`;
+      // Admin → luôn đủ xu, không bị disable
+      const adm=!!(window.currentUserProfile?.isAdmin);
+      const can=adm || p.coins>=skin.price;
+      footer=`<span class="skin-price"><span style="color:#ffd700">💰</span> ${skin.price.toLocaleString('vi-VN')}${adm?' <span style="color:#ff4757;font-size:10px">(ADMIN FREE)</span>':''}</span><button class="skin-btn" ${can?'':'disabled'} onclick="buySkin('${kind}','${skin.id}')">Mua</button>`;
     } else {
       // quest unlock
       const q=QUESTS.find(qq=>qq.id===skin.quest);
@@ -1014,15 +1049,20 @@ function buySkin(kind,id){
   if(!skin) return;
   if(p[ownedKey].includes(id)){ addToast('Bạn đã sở hữu skin này'); return; }
   if(skin.price===null){ addToast('Skin này chỉ mở khoá qua nhiệm vụ'); return; }
-  if(p.coins<skin.price){ addToast('Không đủ xu!'); return; }
-  showModal(`🛒 Xác nhận mua`,`<div class="modal-body">Mua skin <strong>${skin.name}</strong> với giá <strong style="color:#ffd700">${skin.price.toLocaleString('vi-VN')} xu</strong>?</div>`,[
-    {label:'Mua',primary:true,fn:()=>{
+  const isAdm=!!(window.currentUserProfile?.isAdmin);
+  if(!isAdm && p.coins<skin.price){ addToast('Không đủ xu!'); return; }
+  const priceLabel = isAdm
+    ? `<strong style="color:#ff4757">MIỄN PHÍ (Admin)</strong> <span style="color:#888;text-decoration:line-through;font-size:13px">${skin.price.toLocaleString('vi-VN')} xu</span>`
+    : `<strong style="color:#ffd700">${skin.price.toLocaleString('vi-VN')} xu</strong>`;
+  showModal(`🛒 Xác nhận mua`,`<div class="modal-body">Mua skin <strong>${skin.name}</strong> với giá ${priceLabel}?</div>`,[
+    {label: isAdm ? 'Mua (Admin)' : 'Mua', primary:true, fn:()=>{
       document.getElementById('modal').style.display='none';
-      p.coins-=skin.price;
+      // Admin: không trừ xu — xu không bao giờ về 0
+      if(!isAdm) p.coins-=skin.price;
       p[ownedKey].push(id);
       sfxBuy();
       persist();
-      addToast(`Đã mua: ${skin.name}!`);
+      addToast(isAdm ? `👑 Admin nhận: ${skin.name}!` : `Đã mua: ${skin.name}!`);
       renderPersonalize();
     }},
     {label:'Huỷ',fn:()=>{document.getElementById('modal').style.display='none';}}
@@ -1873,6 +1913,15 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 })
 window.supabase = supabase
 window.currentUserProfile = null
+
+// ========== ADMIN CONFIG ==========
+// Email được cấp quyền admin → xu không bao giờ về 0, có badge ADMIN
+const ADMIN_EMAILS = [
+  'phucndbfct31041@gmail.com'
+]
+window.ADMIN_EMAILS = ADMIN_EMAILS
+window.isAdminEmail = (email) => !!email && ADMIN_EMAILS.includes(String(email).toLowerCase().trim())
+window.isCurrentUserAdmin = () => !!(window.currentUserProfile?.isAdmin)
 let gameStartTime = 0
 let authBusy = false         // flag chống double-submit
 let lastSubmit = 0           // throttle thời gian
@@ -2286,15 +2335,22 @@ function renderTopbarUser(profile, email) {
     const initial = escapeHtml((rawName[0] || 'U').toUpperCase())
     const coins = (profile.coins != null ? profile.coins : 0)
     const safeEmail = escapeHtml(email || '')
+    const isAdm = !!profile.isAdmin
+    const adminBadgeTopbar = isAdm ? `<span class="admin-badge" title="Tài khoản quản trị">ADMIN</span>` : ''
+    const adminDropdownTag = isAdm ? `<span class="ud-admin-tag">ADMIN</span>` : ''
+    const coinClass = isAdm ? 'topbar-coin admin' : 'topbar-coin'
+    const avatarClass = isAdm ? 'avatar-btn admin' : 'avatar-btn'
+    const coinTitle = isAdm ? 'Xu của admin (không bao giờ về 0)' : 'Coin của bạn'
     tb.innerHTML = `
-      <button class="topbar-coin" onclick="typeof showSkinShop==='function'&&showSkinShop()" title="Coin của bạn">
+      ${adminBadgeTopbar}
+      <button class="${coinClass}" onclick="typeof showSkinShop==='function'&&showSkinShop()" title="${coinTitle}">
         🪙 <span id="topbar-coins">${coins}</span>
       </button>
       <div class="avatar-wrap">
-        <button id="user-avatar-btn" class="avatar-btn" onclick="toggleUserDropdown()" aria-label="Tài khoản">${initial}</button>
+        <button id="user-avatar-btn" class="${avatarClass}" onclick="toggleUserDropdown()" aria-label="Tài khoản">${initial}</button>
         <div id="user-dropdown" class="avatar-dropdown" style="display:none">
           <div class="ud-info">
-            <div class="ud-name">${name}</div>
+            <div class="ud-name">${name}${adminDropdownTag}</div>
             <div class="ud-email">${safeEmail}</div>
           </div>
           <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';typeof showLeaderboardModal==='function'&&showLeaderboardModal()">🏆 <span>Bảng xếp hạng</span></button>
@@ -2331,7 +2387,8 @@ function makeFallbackProfile(user){
     coins: 0,
     stats: { games: 0, wins: 0 },
     ownedTokens: [], ownedColors: [],
-    equippedTokens: null, equippedColors: null
+    equippedTokens: null, equippedColors: null,
+    isAdmin: window.isAdminEmail(user.email)
   }
 }
 async function ensureProfile(user){
@@ -2388,7 +2445,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 
     // 2) Hiển thị topbar với thông tin cơ bản (chưa có profile từ DB)
     const basicProfile = makeFallbackProfile(session.user)
-    window.currentUserProfile = { ...basicProfile, email: session.user.email }
+    window.currentUserProfile = { ...basicProfile, email: session.user.email, isAdmin: window.isAdminEmail(session.user.email) }
     renderTopbarUser(window.currentUserProfile, session.user.email)
 
     // 3) Ẩn login-required, hiện setup-area
@@ -2412,7 +2469,11 @@ supabase.auth.onAuthStateChange((event, session) => {
     // 5) Load profile thật từ DB ở chế độ background (không block UI)
     ensureProfile(session.user).then(fullProfile => {
       if (!fullProfile) return
-      window.currentUserProfile = { ...fullProfile, email: session.user.email }
+      window.currentUserProfile = {
+        ...fullProfile,
+        email: session.user.email,
+        isAdmin: window.isAdminEmail(session.user.email)
+      }
       renderTopbarUser(window.currentUserProfile, session.user.email)
       if (typeof renderSetup === 'function') renderSetup()
       if (typeof renderPersonalize === 'function') renderPersonalize()
