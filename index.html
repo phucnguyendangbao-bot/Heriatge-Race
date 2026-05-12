@@ -237,6 +237,212 @@
   .h-badge{display:inline-block;background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.1));color:var(--gold);border:1px solid rgba(212,175,55,.4);border-radius:14px;padding:5px 14px;font-size:11px;font-weight:700;margin-top:14px;align-self:flex-start;letter-spacing:1px;text-transform:uppercase}
 
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--bg-2),var(--bg-1));border:1px solid var(--gold);color:var(--gold);padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:2000}
+
+  /* ===== SKIN / PERSONALIZE ===== */
+  .coin-pill{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#ffd700,#b8941f);color:#3d1a00;padding:6px 14px;border-radius:20px;font-weight:800;font-size:13px;box-shadow:0 3px 10px rgba(212,175,55,.35);border:1px solid #8a6818}
+  .coin-pill .coin-ico{font-size:14px}
+  .skin-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+  .skin-tab{background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.25);color:var(--gold-2);padding:10px 22px;border-radius:10px;cursor:pointer;font-weight:700;font-size:14px}
+  .skin-tab.active{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border-color:var(--gold)}
+  .skin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:30px}
+  .skin-card{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1.5px solid rgba(212,175,55,.22);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative;overflow:hidden}
+  .skin-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,175,55,.18);border-color:rgba(212,175,55,.5)}
+  .skin-card.owned{border-color:rgba(46,204,113,.4)}
+  .skin-card.equipped{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.3),0 8px 24px rgba(212,175,55,.2)}
+  .skin-card.locked{opacity:.7}
+  .skin-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .skin-card-title{font-size:16px;color:var(--gold);font-weight:800;letter-spacing:.3px}
+  .skin-card-badge{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+  .badge-equipped{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1)}
+  .badge-owned{background:rgba(46,204,113,.25);color:#7be395;border:1px solid rgba(46,204,113,.4)}
+  .badge-locked{background:rgba(231,76,60,.2);color:#ff9090;border:1px solid rgba(231,76,60,.4)}
+  .skin-preview{background:rgba(0,0,0,.3);border-radius:10px;padding:14px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:64px}
+  .skin-token-preview{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .skin-color-preview{width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+  .skin-card-desc{font-size:12.5px;color:#c4b48a;line-height:1.55;min-height:36px}
+  .skin-card-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto}
+  .skin-price{font-weight:800;font-size:14px;color:var(--gold)}
+  .skin-price.free{color:#7be395}
+  .skin-btn{background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);border:none;padding:8px 16px;font-size:13px;font-weight:800;border-radius:8px;cursor:pointer;letter-spacing:.3px}
+  .skin-btn:disabled{opacity:.4;cursor:not-allowed}
+  .skin-btn.secondary{background:rgba(255,255,255,.08);color:var(--gold-soft);border:1px solid rgba(212,175,55,.3)}
+  .skin-btn.equip{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff}
+  .quest-card{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(212,175,55,.22);border-radius:12px;padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .quest-icon{font-size:32px;flex-shrink:0;width:48px;height:48px;background:rgba(212,175,55,.12);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(212,175,55,.3)}
+  .quest-info{flex:1;min-width:180px}
+  .quest-name{font-size:15px;color:var(--gold);font-weight:800;margin-bottom:4px}
+  .quest-desc{font-size:12.5px;color:#c4b48a;margin-bottom:8px}
+  .quest-bar{background:rgba(0,0,0,.35);height:8px;border-radius:4px;overflow:hidden;border:1px solid rgba(212,175,55,.15)}
+  .quest-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),#ffd700);border-radius:4px;transition:width .35s}
+  .quest-progress-text{font-size:11px;color:#a09070;margin-top:4px;font-weight:600}
+  .quest-reward{text-align:center;flex-shrink:0}
+  .quest-reward-amount{font-size:18px;font-weight:900;color:#ffd700}
+  .quest-claim-btn{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:800;cursor:pointer;font-size:12px;margin-top:6px;letter-spacing:.3px}
+  .quest-claim-btn:disabled{background:rgba(255,255,255,.08);color:#888;cursor:not-allowed}
+  .quest-claimed{font-size:12px;color:#7be395;font-weight:700;margin-top:6px}
+  .skin-section-head{display:flex;justify-content:space-between;align-items:center;margin:30px 0 14px;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:10px;flex-wrap:wrap;gap:10px}
+  .skin-section-title{font-size:18px;color:var(--gold);font-weight:800;letter-spacing:.5px}
+  .skin-stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+  .skin-stat{background:linear-gradient(135deg,rgba(212,175,55,.12),rgba(212,175,55,.04));border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:14px;text-align:center}
+  .skin-stat-label{font-size:11px;color:#a09070;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px}
+  .skin-stat-value{font-size:22px;color:var(--gold);font-weight:900}
+
+  /* ===== TOP BAR USER AREA (redesign) ===== */
+  .nav{align-items:center}
+  .topbar-user{display:flex;align-items:center;gap:10px;padding:0 16px;margin-left:auto}
+  .btn-login-top{
+    background:linear-gradient(135deg,var(--gold),#b8941f);
+    color:var(--bg-1);border:none;padding:10px 20px;border-radius:10px;
+    font-weight:800;font-size:14px;letter-spacing:.4px;cursor:pointer;
+    box-shadow:0 4px 14px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.3);
+    display:flex;align-items:center;gap:8px;
+    animation:loginPulse 2.4s ease-in-out infinite;transition:transform .2s
+  }
+  .btn-login-top:hover{transform:translateY(-2px);animation:none}
+  @keyframes loginPulse{
+    0%,100%{box-shadow:0 4px 14px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+    50%{box-shadow:0 4px 24px rgba(212,175,55,.75),inset 0 1px 0 rgba(255,255,255,.3)}
+  }
+  .topbar-coin{
+    display:inline-flex;align-items:center;gap:6px;
+    background:linear-gradient(135deg,#ffd700,#b8941f);color:#3d1a00;
+    padding:7px 14px;border-radius:20px;font-weight:800;font-size:13px;
+    box-shadow:0 3px 10px rgba(212,175,55,.35);border:1px solid #8a6818;
+    cursor:pointer;transition:transform .15s
+  }
+  .topbar-coin:hover{transform:translateY(-2px)}
+  .avatar-wrap{position:relative}
+  .avatar-btn{
+    width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);
+    border:2px solid var(--gold-soft);font-weight:800;font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.4);position:relative
+  }
+  .avatar-btn::after{
+    content:'';position:absolute;top:-2px;right:-2px;width:10px;height:10px;
+    background:#e74c3c;border:2px solid var(--bg-1);border-radius:50%;display:none
+  }
+  .avatar-btn.has-notif::after{display:block}
+  .avatar-dropdown{
+    position:absolute;top:52px;right:0;min-width:240px;
+    background:linear-gradient(135deg,#2d1200,#1a0a00);
+    border:2px solid var(--gold);border-radius:12px;padding:8px;
+    box-shadow:0 14px 40px rgba(0,0,0,.6);display:none;z-index:200
+  }
+  .avatar-dropdown.open{display:block}
+  .avatar-dropdown .ud-info{padding:14px 12px;border-bottom:1px solid rgba(212,175,55,.2);margin-bottom:6px}
+  .avatar-dropdown .ud-info .ud-name{color:var(--gold);font-weight:700;font-size:15px;word-break:break-word}
+  .avatar-dropdown .ud-info .ud-email{color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
+  .avatar-dropdown .ud-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;
+    color:var(--gold-soft);cursor:pointer;border-radius:8px;font-size:14px;
+    transition:background .15s;background:none;border:none;width:100%;text-align:left;font-family:inherit
+  }
+  .avatar-dropdown .ud-item:hover{background:rgba(212,175,55,.1)}
+  .avatar-dropdown .ud-item .ud-badge{
+    margin-left:auto;background:#e74c3c;color:white;
+    font-size:10px;padding:2px 7px;border-radius:10px;font-weight:800
+  }
+  .avatar-dropdown .ud-item.danger{
+    color:#ff9090;border-top:1px solid rgba(212,175,55,.15);
+    margin-top:6px;padding-top:14px
+  }
+
+  /* ===== AUTH MODAL (redesign) ===== */
+  .auth-modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:1500;padding:20px
+  }
+  .auth-modal-overlay.open{display:flex;animation:fadeIn .25s ease}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .auth-modal{
+    background:linear-gradient(135deg,#2d1200,#1a0a00);
+    border:2px solid var(--gold);border-radius:18px;padding:32px 30px;
+    max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.7);
+    max-height:92vh;overflow-y:auto;
+    animation:modalSlide .35s cubic-bezier(.16,1,.3,1)
+  }
+  @keyframes modalSlide{
+    from{opacity:0;transform:translateY(20px) scale(.96)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .auth-modal-head{text-align:center;margin-bottom:20px;position:relative}
+  .auth-modal-close{
+    position:absolute;top:-8px;right:-8px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.25);
+    color:var(--gold-soft);width:34px;height:34px;border-radius:50%;
+    cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center
+  }
+  .auth-modal-head .crest{font-size:38px;margin-bottom:8px}
+  .auth-modal-head h2{font-size:22px;color:var(--gold);font-weight:900;letter-spacing:.5px;margin-bottom:6px}
+  .auth-modal-head p{color:var(--muted);font-size:13px;line-height:1.6}
+
+  .auth-tab-bar{
+    display:flex;gap:0;background:rgba(0,0,0,.35);
+    padding:6px;border-radius:12px;margin:0 0 20px;
+    border:1px solid rgba(212,175,55,.25)
+  }
+  .auth-tab-btn{
+    flex:1;padding:13px 0;text-align:center;background:none;border:none;cursor:pointer;
+    color:var(--muted);font-size:14px;font-weight:800;letter-spacing:.5px;
+    border-radius:8px;transition:all .25s;
+    display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit
+  }
+  .auth-tab-btn:hover:not(.active){color:var(--gold-soft)}
+  .auth-tab-btn.active{
+    background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);
+    box-shadow:0 4px 12px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.3)
+  }
+
+  .auth-form-panel{display:none}
+  .auth-form-panel.active{display:block;animation:formIn .3s ease}
+  @keyframes formIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+
+  .auth-field{margin-bottom:14px}
+  .auth-field label{
+    display:block;color:var(--gold);font-size:12px;font-weight:700;
+    letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px
+  }
+  .auth-field input{
+    width:100%;background:rgba(0,0,0,.35);
+    border:1.5px solid rgba(212,175,55,.25);border-radius:10px;
+    padding:12px 14px;color:var(--gold-soft);font-size:14px;outline:none;
+    font-family:inherit;transition:border-color .2s
+  }
+  .auth-field input:focus{border-color:var(--gold)}
+  .auth-field input::placeholder{color:#7a5e3c}
+
+  .auth-submit-btn{
+    width:100%;background:linear-gradient(135deg,var(--gold),#b8941f);
+    color:var(--bg-1);border:none;padding:14px;border-radius:10px;
+    font-size:15px;font-weight:800;letter-spacing:.5px;cursor:pointer;margin-top:6px;
+    box-shadow:0 6px 18px rgba(212,175,55,.35),inset 0 1px 0 rgba(255,255,255,.3);
+    transition:transform .15s;font-family:inherit
+  }
+  .auth-submit-btn:hover{transform:translateY(-2px)}
+  .auth-submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  .auth-msg-box{
+    margin-top:14px;padding:10px 14px;border-radius:8px;
+    font-size:13px;text-align:center;display:none
+  }
+  .auth-msg-box.error{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.4);color:#ff8080;display:block}
+  .auth-msg-box.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.4);color:#7be395;display:block}
+  .auth-msg-box.info{background:rgba(52,152,219,.15);border:1px solid rgba(52,152,219,.4);color:#8ab4f8;display:block}
+
+  /* Login required panel khi vào trang yêu cầu đăng nhập */
+  .login-required{text-align:center;padding:60px 20px;max-width:520px;margin:0 auto}
+  .login-required .crest{font-size:64px;margin-bottom:18px}
+  .login-required h2{color:var(--gold);font-size:26px;margin-bottom:12px;font-weight:800}
+  .login-required p{color:#d4c4a0;font-size:15px;line-height:1.8;margin-bottom:24px}
+
+  @media(max-width:720px){
+    .btn-login-top span.lbl{display:none}
+    .btn-login-top{padding:10px 14px}
+    .topbar-user{padding:0 10px;gap:8px}
+    .topbar-coin{padding:6px 10px;font-size:12px}
+  }
 </style>
 </head>
 <body>
@@ -247,7 +453,60 @@
   <button onclick="showPage('rules',this)">Luật Chơi</button>
   <button onclick="showPage('game',this)">Chơi Cờ</button>
   <button onclick="showPage('heritage',this)">Di Sản</button>
+  <button onclick="showPage('personalize',this)">Cá Nhân Hóa</button>
+  <div class="topbar-user" id="topbar-user">
+    <button class="btn-login-top" onclick="openAuthModal('login')">
+      <span>🔑</span><span class="lbl">Đăng nhập</span>
+    </button>
+  </div>
 </nav>
+
+<!-- ========= AUTH MODAL ========= -->
+<div class="auth-modal-overlay" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-modal">
+    <div class="auth-modal-head">
+      <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Đóng">×</button>
+      <div class="crest">🏛️</div>
+      <h2 id="auth-modal-title">Chào mừng đến Heritage Race</h2>
+      <p>Đăng nhập để lưu tiến trình, tích lũy xu và sưu tầm skin di sản</p>
+    </div>
+    <div class="auth-tab-bar">
+      <button class="auth-tab-btn active" id="auth-tab-login" onclick="switchAuthTab('login')">
+        🔓 Đăng nhập
+      </button>
+      <button class="auth-tab-btn" id="auth-tab-signup" onclick="switchAuthTab('signup')">
+        ✨ Đăng ký
+      </button>
+    </div>
+    <div class="auth-form-panel active" id="auth-login">
+      <div class="auth-field">
+        <label for="auth-login-email">Email Gmail</label>
+        <input type="email" id="auth-login-email" placeholder="ban@gmail.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label for="auth-login-pass">Mật khẩu</label>
+        <input type="password" id="auth-login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="auth-submit-btn" onclick="doLogin()">Đăng nhập</button>
+    </div>
+    <div class="auth-form-panel" id="auth-signup">
+      <div class="auth-field">
+        <label for="auth-signup-name">Tên hiển thị</label>
+        <input type="text" id="auth-signup-name" maxlength="20" placeholder="Tên của bạn" autocomplete="nickname">
+      </div>
+      <div class="auth-field">
+        <label for="auth-signup-email">Email Gmail</label>
+        <input type="email" id="auth-signup-email" placeholder="ban@gmail.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label for="auth-signup-pass">Mật khẩu (≥6 ký tự)</label>
+        <input type="password" id="auth-signup-pass" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <button class="auth-submit-btn" onclick="doSignup()">Tạo tài khoản</button>
+    </div>
+    <div class="auth-msg-box" id="auth-msg"></div>
+  </div>
+</div>
 
 <div id="intro" class="page active">
   <div class="hero">
@@ -283,45 +542,12 @@
 
 <div id="game" class="page">
   <div class="game-container">
-    <!-- ===== AUTH SCREEN ===== -->
-    <div id="auth-screen" class="setup-screen" style="max-width:480px;margin:0 auto">
-      <h2>🔐 Đăng nhập để chơi</h2>
-      <div class="subtitle">Tạo tài khoản để lưu lịch sử và xem xếp hạng</div>
-      <div style="display:flex;gap:4px;margin:20px 0;background:rgba(0,0,0,.3);padding:4px;border-radius:10px;width:100%">
-        <button id="auth-tab-login" class="np-btn selected" style="flex:1" onclick="switchAuthTab('login')">Đăng nhập</button>
-        <button id="auth-tab-signup" class="np-btn" style="flex:1" onclick="switchAuthTab('signup')">Đăng ký</button>
-      </div>
-      <div id="auth-login" style="width:100%">
-        <div class="player-card-setup p0">
-          <label>Email Gmail</label>
-          <input type="email" id="auth-login-email" placeholder="ban@gmail.com">
-          <label style="margin-top:14px">Mật khẩu</label>
-          <input type="password" id="auth-login-pass" placeholder="••••••••">
-        </div>
-        <button class="btn-primary" style="margin-top:16px;width:100%" onclick="doLogin()">Đăng nhập</button>
-      </div>
-      <div id="auth-signup" style="display:none;width:100%">
-        <div class="player-card-setup p1">
-          <label>Tên hiển thị</label>
-          <input type="text" id="auth-signup-name" maxlength="20" placeholder="Tên của bạn">
-          <label style="margin-top:14px">Email Gmail</label>
-          <input type="email" id="auth-signup-email" placeholder="ban@gmail.com">
-          <label style="margin-top:14px">Mật khẩu (≥6 ký tự)</label>
-          <input type="password" id="auth-signup-pass" placeholder="••••••••">
-        </div>
-        <button class="btn-primary" style="margin-top:16px;width:100%" onclick="doSignup()">Tạo tài khoản</button>
-      </div>
-      <div id="auth-msg" style="margin-top:14px;padding:10px;border-radius:8px;display:none;font-size:13px;text-align:center"></div>
-    </div>
-
-    <div id="user-bar" style="display:none;padding:12px 20px;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.3);border-radius:10px;margin:0 auto 16px;max-width:920px;align-items:center;gap:12px">
-      <div style="font-size:24px">👤</div>
-      <div style="flex:1">
-        <div style="color:#d4af37;font-weight:700" id="user-bar-name"></div>
-        <div style="color:#a09070;font-size:12px" id="user-bar-email"></div>
-      </div>
-      <button class="btn-action" onclick="showLeaderboardModal()">🏆 Xếp hạng</button>
-      <button class="btn-action danger" onclick="doLogout()">Đăng xuất</button>
+    <!-- ===== LOGIN REQUIRED PANEL (khi chưa đăng nhập) ===== -->
+    <div id="login-required-panel" class="login-required" style="display:none">
+      <div class="crest">🔐</div>
+      <h2>Cần đăng nhập để chơi</h2>
+      <p>Tạo tài khoản hoặc đăng nhập để lưu tiến trình, tích lũy xu, mở khóa skin và tham gia bảng xếp hạng.</p>
+      <button class="btn-primary" onclick="openAuthModal('login')">🔑 Đăng nhập ngay</button>
     </div>
 
     <div id="setup-area" class="setup-screen" style="display:none">
@@ -374,6 +600,57 @@
 <div id="heritage" class="page">
   <div class="content" style="max-width:1200px;padding-bottom:20px"><h2 class="section-title">🏛️ Di Sản Việt Nam Trong Trò Chơi</h2></div>
   <div class="heritage-grid" id="heritage-grid"></div>
+</div>
+
+<div id="personalize" class="page">
+  <div class="content" style="max-width:1100px;padding-bottom:40px">
+    <h2 class="section-title">✨ Cá Nhân Hóa Tài Khoản</h2>
+    <div id="personalize-need-login" style="text-align:center;padding:40px 20px;color:#d4c4a0;display:none">
+      <div style="font-size:48px;margin-bottom:14px">🔒</div>
+      <h3 style="color:var(--gold);font-size:20px;margin-bottom:10px">Cần đăng nhập</h3>
+      <p style="font-size:14px;line-height:1.7">Hãy đăng nhập trong trang <strong>Chơi Cờ</strong> để mở khóa kho skin, làm nhiệm vụ và tích lũy xu.</p>
+      <button class="btn-primary" style="margin-top:18px" onclick="document.querySelectorAll('.nav button')[2].click()">Đến trang đăng nhập</button>
+    </div>
+
+    <div id="personalize-content">
+      <div class="skin-stats-row">
+        <div class="skin-stat"><div class="skin-stat-label">💰 Xu sở hữu</div><div class="skin-stat-value" id="stat-coins">0</div></div>
+        <div class="skin-stat"><div class="skin-stat-label">🎮 Trận đã chơi</div><div class="skin-stat-value" id="stat-games">0</div></div>
+        <div class="skin-stat"><div class="skin-stat-label">🏆 Số trận thắng</div><div class="skin-stat-value" id="stat-wins">0</div></div>
+        <div class="skin-stat"><div class="skin-stat-label">💎 Skin đã mở</div><div class="skin-stat-value" id="stat-skins">0</div></div>
+      </div>
+
+      <div class="skin-tabs">
+        <button class="skin-tab active" onclick="switchSkinTab('tokens',this)">🎭 Nhân vật</button>
+        <button class="skin-tab" onclick="switchSkinTab('colors',this)">🎨 Màu sắc</button>
+        <button class="skin-tab" onclick="switchSkinTab('quests',this)">🎯 Nhiệm vụ</button>
+      </div>
+
+      <div id="skin-panel-tokens" class="skin-panel">
+        <div class="skin-section-head">
+          <div class="skin-section-title">🎭 Bộ Nhân Vật</div>
+          <div style="font-size:12.5px;color:#a09070">Trang bị bộ skin để dùng làm quân cờ trong trận đấu</div>
+        </div>
+        <div class="skin-grid" id="grid-tokens"></div>
+      </div>
+
+      <div id="skin-panel-colors" class="skin-panel" style="display:none">
+        <div class="skin-section-head">
+          <div class="skin-section-title">🎨 Bộ Màu Sắc</div>
+          <div style="font-size:12.5px;color:#a09070">Thay đổi màu quân cờ và viền ô đất sở hữu</div>
+        </div>
+        <div class="skin-grid" id="grid-colors"></div>
+      </div>
+
+      <div id="skin-panel-quests" class="skin-panel" style="display:none">
+        <div class="skin-section-head">
+          <div class="skin-section-title">🎯 Nhiệm Vụ</div>
+          <div style="font-size:12.5px;color:#a09070">Hoàn thành để nhận xu và skin độc quyền</div>
+        </div>
+        <div id="quests-list"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="modal" class="modal-overlay" style="display:none"><div class="modal" id="modal-inner"></div></div>
@@ -461,14 +738,307 @@ const CHEST_CARDS = [
   {text:'Trúng giải thiết kế tour. Nhận 5.000.000đ',effect:'money',amount:5000000},
 ];
 
-const TOKENS=['🦅','🐉','🎎','🏮','🐢','🐅','🦌','🦋'];
-const COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6'];
+let TOKENS=['🦅','🐉','🎎','🏮','🐢','🐅','🦌','🦋'];
+let COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6'];
+const DEFAULT_TOKENS=['🦅','🐉','🎎','🏮','🐢','🐅','🦌','🦋'];
+const DEFAULT_COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6'];
 const GROUP_NAMES=['Biển Nam','Đảo','Phố Cổ','Cố Đô','Hang Động','Sinh Thái','Tây Bắc','Biểu Tượng'];
 const PROP_TYPES={property:'Di sản',railroad:'Ga tàu',utility:'Tiện ích'};
 
+// ============== SKIN DATA ==============
+// Mỗi skin có id duy nhất, tên, mô tả, giá (xu) HOẶC quest để mở khóa.
+// Mặc định 'default_*' luôn được sở hữu sẵn.
+const TOKEN_SKINS=[
+  {id:'tok_default',name:'Cổ Truyền',desc:'Bộ nhân vật mặc định lấy cảm hứng từ linh vật Việt Nam',icons:['🦅','🐉','🎎','🏮','🐢','🐅','🦌','🦋'],price:0,quest:null,defaultOwned:true},
+  {id:'tok_zodiac',name:'12 Con Giáp',desc:'Bộ thú trong chuyện cổ tích VN: chuột, trâu, hổ, mèo...',icons:['🐭','🐂','🐯','🐰','🐉','🐍','🐴','🐐'],price:3000,quest:null},
+  {id:'tok_fruit',name:'Trái Cây Nhiệt Đới',desc:'Hương vị trái cây Việt Nam',icons:['🍎','🍊','🍇','🍓','🍉','🍑','🥭','🍍'],price:2000,quest:null},
+  {id:'tok_transport',name:'Phương Tiện',desc:'Hành trình bằng nhiều phương tiện',icons:['🚗','✈️','🚂','🚢','🏍️','🛴','🚁','🚀'],price:5000,quest:null},
+  {id:'tok_food',name:'Ẩm Thực Việt',desc:'Phở, bánh mì và các món Việt nổi tiếng',icons:['🍜','🥖','🍚','🍡','🥟','🍢','🍥','🍙'],price:4000,quest:null},
+  {id:'tok_legend',name:'Huyền Thoại 🌟',desc:'Bộ skin huyền thoại — chỉ nhận qua nhiệm vụ',icons:['👑','⚔️','🏛️','🎭','🪷','🎋','🍃','🌟'],price:null,quest:'q_win_3'},
+  {id:'tok_emoji',name:'Mặt Cười',desc:'Cùng nhau cười suốt trận đấu',icons:['😀','😎','🤠','🥳','😺','🤖','👽','🤡'],price:1500,quest:null},
+  {id:'tok_animal',name:'Sở Thú',desc:'Bộ thú đáng yêu',icons:['🐶','🐱','🐼','🦊','🐨','🐸','🐵','🦁'],price:2500,quest:null}
+];
+
+const COLOR_SKINS=[
+  {id:'col_default',name:'Cổ Điển',desc:'4 màu cổ điển',colors:['#e74c3c','#3498db','#2ecc71','#9b59b6'],price:0,quest:null,defaultOwned:true},
+  {id:'col_pastel',name:'Pastel Mơ Mộng',desc:'Tông màu pastel nhẹ nhàng',colors:['#ffadad','#a0c4ff','#caffbf','#ffd6a5'],price:2000,quest:null},
+  {id:'col_neon',name:'Neon ⚡',desc:'Màu neon rực rỡ — phần thưởng người chơi tích cực',colors:['#ff006e','#00f5ff','#39ff14','#bf00ff'],price:null,quest:'q_play_5'},
+  {id:'col_gold',name:'Hoàng Kim 👑',desc:'4 sắc kim loại quý',colors:['#ffd700','#c0c0c0','#cd7f32','#e5e4e2'],price:6000,quest:null},
+  {id:'col_ocean',name:'Đại Dương',desc:'Sắc xanh của biển Việt Nam',colors:['#006994','#0085a1','#52b2cf','#9eddf0'],price:2500,quest:null},
+  {id:'col_sunset',name:'Hoàng Hôn',desc:'Màu hoàng hôn miền Trung',colors:['#ff6b35','#f7931e','#ffc857','#c1292e'],price:3000,quest:null},
+  {id:'col_jungle',name:'Rừng Nguyên Sinh 🌳',desc:'Sắc xanh rừng VQG — nhận từ nhiệm vụ',colors:['#2d5016','#73a942','#aad576','#f1faee'],price:null,quest:'q_play_10'}
+];
+
+const QUESTS=[
+  {id:'q_play_1',name:'Người Mới',desc:'Hoàn thành 1 trận đấu',icon:'🎮',target:1,type:'games',reward:500},
+  {id:'q_play_5',name:'Người Chơi Tích Cực',desc:'Hoàn thành 5 trận — mở Bộ Neon ⚡',icon:'🔥',target:5,type:'games',reward:1500,skinReward:'col_neon'},
+  {id:'q_play_10',name:'Lão Làng',desc:'Hoàn thành 10 trận — mở Bộ Rừng 🌳',icon:'🌳',target:10,type:'games',reward:3000,skinReward:'col_jungle'},
+  {id:'q_win_1',name:'Chiến Thắng Đầu Tiên',desc:'Thắng 1 trận đấu',icon:'🥇',target:1,type:'wins',reward:1000},
+  {id:'q_win_3',name:'Bộ Ba Vô Địch',desc:'Thắng 3 trận — mở Bộ Huyền Thoại 🌟',icon:'🏆',target:3,type:'wins',reward:2500,skinReward:'tok_legend'},
+  {id:'q_win_10',name:'Đế Vương Di Sản',desc:'Thắng 10 trận — thưởng lớn',icon:'👑',target:10,type:'wins',reward:8000},
+  {id:'q_rich',name:'Tỷ Phú Thực Sự',desc:'Đạt 50.000.000đ trong 1 trận',icon:'💎',target:50000000,type:'maxMoney',reward:2000}
+];
+
+// ============== USER PROFILE (localStorage) ==============
+function _profileKey(){
+  const id=(window.currentUserProfile?.id)||(window.currentUserProfile?.email)||'guest';
+  return 'heritage_skin_profile::'+id;
+}
+function loadProfile(){
+  try{
+    const raw=localStorage.getItem(_profileKey());
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {
+    coins:1000,
+    ownedTokens:['tok_default'],
+    ownedColors:['col_default'],
+    equippedTokens:'tok_default',
+    equippedColors:'col_default',
+    stats:{games:0,wins:0,maxMoney:0},
+    claimedQuests:[]
+  };
+}
+function saveProfile(p){
+  try{ localStorage.setItem(_profileKey(),JSON.stringify(p)); }catch(e){}
+}
+function getProfile(){
+  if(!window._skinProfile) window._skinProfile=loadProfile();
+  return window._skinProfile;
+}
+function persist(){ saveProfile(getProfile()); refreshCoinBar(); }
+function refreshCoinBar(){
+  const coinTxt=getProfile().coins.toLocaleString('vi-VN');
+  const el=document.getElementById('user-bar-coins');
+  if(el) el.textContent=coinTxt;
+  const el2=document.getElementById('topbar-coins');
+  if(el2) el2.textContent=coinTxt;
+}
+
+function applyEquippedSkins(){
+  const p=getProfile();
+  const tok=TOKEN_SKINS.find(s=>s.id===p.equippedTokens)||TOKEN_SKINS[0];
+  const col=COLOR_SKINS.find(s=>s.id===p.equippedColors)||COLOR_SKINS[0];
+  TOKENS=tok.icons.slice();
+  COLORS=col.colors.slice();
+}
+
+// ============== PERSONALIZE UI ==============
+function switchSkinTab(tab,btn){
+  initAudio();sfxClick();
+  document.querySelectorAll('.skin-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['tokens','colors','quests'].forEach(t=>{
+    const el=document.getElementById('skin-panel-'+t);
+    if(el) el.style.display=(t===tab)?'block':'none';
+  });
+}
+
+function renderPersonalize(){
+  // If not logged in show notice
+  const loggedIn=!!(window.currentUserProfile);
+  const need=document.getElementById('personalize-need-login');
+  const content=document.getElementById('personalize-content');
+  if(!loggedIn){
+    if(need) need.style.display='block';
+    if(content) content.style.display='none';
+    return;
+  }
+  if(need) need.style.display='none';
+  if(content) content.style.display='block';
+
+  const p=getProfile();
+  // stats
+  document.getElementById('stat-coins').textContent=p.coins.toLocaleString('vi-VN');
+  document.getElementById('stat-games').textContent=p.stats.games;
+  document.getElementById('stat-wins').textContent=p.stats.wins;
+  document.getElementById('stat-skins').textContent=(p.ownedTokens.length+p.ownedColors.length);
+
+  renderSkinGrid('tokens');
+  renderSkinGrid('colors');
+  renderQuests();
+}
+
+function renderSkinGrid(kind){
+  const list=kind==='tokens'?TOKEN_SKINS:COLOR_SKINS;
+  const ownedKey=kind==='tokens'?'ownedTokens':'ownedColors';
+  const equippedKey=kind==='tokens'?'equippedTokens':'equippedColors';
+  const grid=document.getElementById('grid-'+kind);
+  if(!grid) return;
+  const p=getProfile();
+  grid.innerHTML='';
+  list.forEach(skin=>{
+    const owned=p[ownedKey].includes(skin.id);
+    const equipped=p[equippedKey]===skin.id;
+    const locked=!owned && skin.quest!==null && skin.price===null;
+    // preview
+    let preview='';
+    if(kind==='tokens'){
+      preview=skin.icons.slice(0,8).map(i=>`<div class="skin-token-preview" style="background:#3d1a00">${i}</div>`).join('');
+    }else{
+      preview=skin.colors.map(c=>`<div class="skin-color-preview" style="background:${c}"></div>`).join('');
+    }
+    // badge
+    let badge='';
+    if(equipped) badge=`<span class="skin-card-badge badge-equipped">Đang dùng</span>`;
+    else if(owned) badge=`<span class="skin-card-badge badge-owned">Đã sở hữu</span>`;
+    else if(locked) badge=`<span class="skin-card-badge badge-locked">Khoá</span>`;
+    // footer
+    let footer='';
+    if(equipped){
+      footer=`<span class="skin-price free">Đang trang bị</span>`;
+    } else if(owned){
+      footer=`<button class="skin-btn equip" onclick="equipSkin('${kind}','${skin.id}')">✓ Trang bị</button>`;
+    } else if(skin.price!==null){
+      const can=p.coins>=skin.price;
+      footer=`<span class="skin-price"><span style="color:#ffd700">💰</span> ${skin.price.toLocaleString('vi-VN')}</span><button class="skin-btn" ${can?'':'disabled'} onclick="buySkin('${kind}','${skin.id}')">Mua</button>`;
+    } else {
+      // quest unlock
+      const q=QUESTS.find(qq=>qq.id===skin.quest);
+      footer=`<span class="skin-price" style="color:#ff9090;font-size:12px">🎯 ${q?q.name:'Nhiệm vụ'}</span>`;
+    }
+    const card=document.createElement('div');
+    card.className='skin-card'+(equipped?' equipped':(owned?' owned':(locked?' locked':'')));
+    card.innerHTML=`
+      <div class="skin-card-header">
+        <div class="skin-card-title">${skin.name}</div>
+        ${badge}
+      </div>
+      <div class="skin-preview">${preview}</div>
+      <div class="skin-card-desc">${skin.desc}</div>
+      <div class="skin-card-footer">${footer}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function renderQuests(){
+  const list=document.getElementById('quests-list');
+  if(!list) return;
+  const p=getProfile();
+  list.innerHTML='';
+  QUESTS.forEach(q=>{
+    const cur=Math.min(p.stats[q.type]||0,q.target);
+    const done=cur>=q.target;
+    const claimed=p.claimedQuests.includes(q.id);
+    const pct=Math.floor((cur/q.target)*100);
+    const fmt=q.type==='maxMoney'?(v)=>v.toLocaleString('vi-VN')+'đ':(v)=>v;
+    let actionHtml='';
+    if(claimed){
+      actionHtml=`<div class="quest-claimed">✓ Đã nhận</div>`;
+    } else if(done){
+      actionHtml=`<button class="quest-claim-btn" onclick="claimQuest('${q.id}')">Nhận thưởng</button>`;
+    } else {
+      actionHtml=`<button class="quest-claim-btn" disabled>Chưa đủ</button>`;
+    }
+    let skinHint='';
+    if(q.skinReward){
+      const sk=[...TOKEN_SKINS,...COLOR_SKINS].find(s=>s.id===q.skinReward);
+      if(sk) skinHint=`<div style="font-size:11px;color:#7be395;margin-top:3px">+ Skin: ${sk.name}</div>`;
+    }
+    const card=document.createElement('div');
+    card.className='quest-card';
+    card.innerHTML=`
+      <div class="quest-icon">${q.icon}</div>
+      <div class="quest-info">
+        <div class="quest-name">${q.name}</div>
+        <div class="quest-desc">${q.desc}</div>
+        <div class="quest-bar"><div class="quest-bar-fill" style="width:${pct}%"></div></div>
+        <div class="quest-progress-text">${fmt(cur)} / ${fmt(q.target)}</div>
+      </div>
+      <div class="quest-reward">
+        <div class="quest-reward-amount">💰 ${q.reward.toLocaleString('vi-VN')}</div>
+        ${skinHint}
+        ${actionHtml}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function buySkin(kind,id){
+  initAudio();
+  const p=getProfile();
+  const list=kind==='tokens'?TOKEN_SKINS:COLOR_SKINS;
+  const ownedKey=kind==='tokens'?'ownedTokens':'ownedColors';
+  const skin=list.find(s=>s.id===id);
+  if(!skin) return;
+  if(p[ownedKey].includes(id)){ addToast('Bạn đã sở hữu skin này'); return; }
+  if(skin.price===null){ addToast('Skin này chỉ mở khoá qua nhiệm vụ'); return; }
+  if(p.coins<skin.price){ addToast('Không đủ xu!'); return; }
+  showModal(`🛒 Xác nhận mua`,`<div class="modal-body">Mua skin <strong>${skin.name}</strong> với giá <strong style="color:#ffd700">${skin.price.toLocaleString('vi-VN')} xu</strong>?</div>`,[
+    {label:'Mua',primary:true,fn:()=>{
+      document.getElementById('modal').style.display='none';
+      p.coins-=skin.price;
+      p[ownedKey].push(id);
+      sfxBuy();
+      persist();
+      addToast(`Đã mua: ${skin.name}!`);
+      renderPersonalize();
+    }},
+    {label:'Huỷ',fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+
+function equipSkin(kind,id){
+  initAudio();sfxClick();
+  const p=getProfile();
+  const ownedKey=kind==='tokens'?'ownedTokens':'ownedColors';
+  const equippedKey=kind==='tokens'?'equippedTokens':'equippedColors';
+  if(!p[ownedKey].includes(id)){ addToast('Bạn chưa sở hữu skin này'); return; }
+  p[equippedKey]=id;
+  persist();
+  applyEquippedSkins();
+  addToast('Đã trang bị! ✓');
+  renderPersonalize();
+  // Update setup screen tokens if visible
+  if(document.getElementById('setup-area')?.style.display!=='none' && typeof renderSetup==='function') renderSetup();
+}
+
+function claimQuest(qid){
+  initAudio();
+  const p=getProfile();
+  const q=QUESTS.find(x=>x.id===qid);
+  if(!q) return;
+  if(p.claimedQuests.includes(qid)){ addToast('Đã nhận rồi'); return; }
+  const cur=p.stats[q.type]||0;
+  if(cur<q.target){ addToast('Chưa đủ điều kiện'); return; }
+  p.coins+=q.reward;
+  p.claimedQuests.push(qid);
+  let extra='';
+  if(q.skinReward){
+    const isTokenSkin=TOKEN_SKINS.some(s=>s.id===q.skinReward);
+    const ownedKey=isTokenSkin?'ownedTokens':'ownedColors';
+    if(!p[ownedKey].includes(q.skinReward)){
+      p[ownedKey].push(q.skinReward);
+      const sk=[...TOKEN_SKINS,...COLOR_SKINS].find(s=>s.id===q.skinReward);
+      extra=`<br>🎁 Mở khoá skin: <strong>${sk?.name}</strong>`;
+    }
+  }
+  sfxWin();
+  persist();
+  showModal('🎉 Nhiệm vụ hoàn thành!',`<div class="modal-body">+ <strong style="color:#ffd700">${q.reward.toLocaleString('vi-VN')} xu</strong>${extra}</div>`,[
+    {label:'Tuyệt!',primary:true,fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+  renderPersonalize();
+}
+
+function updateGameStats(finalMoney,isWinner){
+  const p=getProfile();
+  p.stats.games=(p.stats.games||0)+1;
+  if(isWinner) p.stats.wins=(p.stats.wins||0)+1;
+  if(finalMoney>(p.stats.maxMoney||0)) p.stats.maxMoney=finalMoney;
+  // Earn coins per game: base + win bonus
+  let earned=200;
+  if(isWinner) earned+=800;
+  p.coins+=earned;
+  persist();
+  addToast(`+${earned} xu sau trận đấu!`);
+}
+
 // CENTER deco — real Vietnamese landscapes (4 corners of center area)
-// Ảnh được lưu trong thư mục ./images (relative path — chạy tốt cả local file:// và Vercel)
-const IMG_BASE='images';
+// Ảnh lấy từ GitHub repo qua jsDelivr CDN (cache toàn cầu, nhanh hơn raw.githubusercontent)
+// Fallback sang raw.githubusercontent.com nếu jsDelivr lỗi (xem onerror trong renderHeritage)
+const IMG_BASE='https://cdn.jsdelivr.net/gh/phucnguyendangbao-bot/Heriatge-Race@main/images';
+const IMG_BASE_FALLBACK='https://raw.githubusercontent.com/phucnguyendangbao-bot/Heriatge-Race/main/images';
 const CENTER_DECO=[
   {emoji:'🏯',img:`${IMG_BASE}/myson.jpg`,alt:'Mỹ Sơn'},
   {emoji:'🦇',img:`${IMG_BASE}/sondoong.jpg`,alt:'Sơn Đoòng'},
@@ -530,6 +1100,13 @@ function showPage(id,btnEl){
   document.getElementById(id).classList.add('active');
   if(btnEl) btnEl.classList.add('active');
   if(id==='heritage') renderHeritage();
+  if(id==='game'){
+    const isLogged = !!window.currentUserProfile;
+    const lr = document.getElementById('login-required-panel');
+    const sa = document.getElementById('setup-area');
+    if(lr) lr.style.display = isLogged ? 'none' : 'flex';
+    if(sa) sa.style.display = isLogged ? 'flex' : 'none';
+  }
 }
 
 function setNumPlayers(n,btn){
@@ -1170,7 +1747,18 @@ function renderHeritage(){
   items.forEach(it=>{
     const el=document.createElement('div');
     el.className='h-card';
-    el.innerHTML=`<div class="h-card-img"><div class="fallback-emoji">${it.icon}</div></div><div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
+    // Ảnh chính: jsDelivr CDN — fallback 1: raw.githubusercontent.com — fallback 2: emoji
+    const fname = (it.img||'').split('/').pop();
+    const fallbackUrl = fname ? (IMG_BASE_FALLBACK+'/'+fname) : '';
+    el.innerHTML=`<div class="h-card-img">`
+      + (it.img
+          ? `<img src="${it.img}" alt="${it.name}" loading="lazy" referrerpolicy="no-referrer"
+                 onerror="if(this.dataset.fb!=='1'&&'${fallbackUrl}'){this.dataset.fb='1';this.src='${fallbackUrl}'}else{this.style.display='none';this.nextElementSibling.style.display='flex'}"
+                 style="width:100%;height:100%;object-fit:cover;display:block">`
+          : '')
+      + `<div class="fallback-emoji" style="${it.img?'display:none':''}">${it.icon}</div>`
+      + `</div>`
+      + `<div class="h-card-body"><h3>${it.name}</h3><div class="location">📍 ${it.loc}</div><p>${it.desc}</p><div class="h-badge">Di Sản Việt Nam</div></div>`;
     grid.appendChild(el);
   });
 }
@@ -1190,25 +1778,57 @@ let gameStartTime = 0
 
 function showAuthMsg(text, type) {
   const el = document.getElementById('auth-msg')
-  el.style.display = 'block'
+  if (!el) return
+  el.className = 'auth-msg-box ' + (type || 'info')
   el.textContent = text
-  const colors = {
-    error: ['rgba(231,76,60,.15)', 'rgba(231,76,60,.4)', '#ff8080'],
-    success: ['rgba(46,204,113,.15)', 'rgba(46,204,113,.4)', '#7be395'],
-    info: ['rgba(52,152,219,.15)', 'rgba(52,152,219,.4)', '#8ab4f8']
-  }
-  const [bg, br, c] = colors[type] || colors.info
-  el.style.background = bg
-  el.style.border = '1px solid ' + br
-  el.style.color = c
+}
+window.openAuthModal = (tab) => {
+  const m = document.getElementById('auth-modal')
+  if (!m) return
+  m.classList.add('open')
+  m.style.display = 'flex'
+  window.switchAuthTab(tab || 'login')
+  document.body.style.overflow = 'hidden'
+}
+window.closeAuthModal = () => {
+  const m = document.getElementById('auth-modal')
+  if (!m) return
+  m.classList.remove('open')
+  m.style.display = 'none'
+  document.body.style.overflow = ''
+  const msg = document.getElementById('auth-msg')
+  if (msg) { msg.className = 'auth-msg-box'; msg.textContent = '' }
 }
 window.switchAuthTab = (tab) => {
-  document.getElementById('auth-tab-login').classList.toggle('selected', tab === 'login')
-  document.getElementById('auth-tab-signup').classList.toggle('selected', tab === 'signup')
-  document.getElementById('auth-login').style.display = tab === 'login' ? 'block' : 'none'
-  document.getElementById('auth-signup').style.display = tab === 'signup' ? 'block' : 'none'
-  document.getElementById('auth-msg').style.display = 'none'
+  const tLogin = document.getElementById('auth-tab-login')
+  const tSignup = document.getElementById('auth-tab-signup')
+  const pLogin = document.getElementById('auth-login')
+  const pSignup = document.getElementById('auth-signup')
+  if (tLogin) tLogin.classList.toggle('active', tab === 'login')
+  if (tSignup) tSignup.classList.toggle('active', tab === 'signup')
+  if (pLogin) {
+    pLogin.classList.toggle('active', tab === 'login')
+    pLogin.style.display = tab === 'login' ? 'block' : 'none'
+  }
+  if (pSignup) {
+    pSignup.classList.toggle('active', tab === 'signup')
+    pSignup.style.display = tab === 'signup' ? 'block' : 'none'
+  }
+  const msg = document.getElementById('auth-msg')
+  if (msg) { msg.className = 'auth-msg-box'; msg.textContent = '' }
 }
+window.toggleUserDropdown = () => {
+  const dd = document.getElementById('user-dropdown')
+  if (!dd) return
+  dd.style.display = dd.style.display === 'block' ? 'none' : 'block'
+}
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('user-dropdown')
+  const trigger = document.getElementById('user-avatar-btn')
+  if (!dd || dd.style.display !== 'block') return
+  if (trigger && (trigger === e.target || trigger.contains(e.target))) return
+  if (!dd.contains(e.target)) dd.style.display = 'none'
+})
 window.doSignup = async () => {
   const name = document.getElementById('auth-signup-name').value.trim()
   const email = document.getElementById('auth-signup-email').value.trim()
@@ -1233,15 +1853,47 @@ window.doLogin = async () => {
 }
 window.doLogout = async () => { await supabase.auth.signOut() }
 
+function renderTopbarUser(profile, email) {
+  const tb = document.getElementById('topbar-user')
+  if (!tb) return
+  if (profile) {
+    const name = profile.display_name || email || 'Người chơi'
+    const initial = (name[0] || 'U').toUpperCase()
+    const coins = (profile.coins != null ? profile.coins : 0)
+    tb.innerHTML = `
+      <button class="topbar-coin" onclick="showSkinShop && showSkinShop()" title="Coin của bạn">
+        🪙 <span id="topbar-coins">${coins}</span>
+      </button>
+      <div class="avatar-wrap">
+        <button id="user-avatar-btn" class="avatar-btn" onclick="toggleUserDropdown()" aria-label="Tài khoản">${initial}</button>
+        <div id="user-dropdown" class="avatar-dropdown" style="display:none">
+          <div class="ud-info">
+            <div class="ud-name">${name}</div>
+            <div class="ud-email">${email || ''}</div>
+          </div>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';showLeaderboardModal&&showLeaderboardModal()">🏆 <span>Bảng xếp hạng</span></button>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';if(typeof showSkinShop==='function')showSkinShop()">🎨 <span>Cửa hàng skin</span></button>
+          <button class="ud-item danger" onclick="document.getElementById('user-dropdown').style.display='none';doLogout()">🚪 <span>Đăng xuất</span></button>
+        </div>
+      </div>`
+  } else {
+    tb.innerHTML = `
+      <button class="btn-login-top" onclick="openAuthModal('login')">
+        🔑 <span class="lbl">Đăng nhập</span>
+      </button>`
+  }
+}
+
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single()
     window.currentUserProfile = { ...profile, email: session.user.email }
-    document.getElementById('auth-screen').style.display = 'none'
-    document.getElementById('user-bar').style.display = 'flex'
-    document.getElementById('setup-area').style.display = 'flex'
-    document.getElementById('user-bar-name').textContent = profile?.display_name || session.user.email
-    document.getElementById('user-bar-email').textContent = session.user.email
+    renderTopbarUser(window.currentUserProfile, session.user.email)
+    const lr = document.getElementById('login-required-panel')
+    if (lr) lr.style.display = 'none'
+    const sa = document.getElementById('setup-area')
+    if (sa) sa.style.display = 'flex'
+    if (typeof closeAuthModal === 'function') closeAuthModal()
     if (typeof renderSetup === 'function') {
       renderSetup()
       setTimeout(() => {
@@ -1251,9 +1903,11 @@ supabase.auth.onAuthStateChange(async (event, session) => {
     }
   } else {
     window.currentUserProfile = null
-    document.getElementById('auth-screen').style.display = 'flex'
-    document.getElementById('user-bar').style.display = 'none'
-    document.getElementById('setup-area').style.display = 'none'
+    renderTopbarUser(null, null)
+    const lr = document.getElementById('login-required-panel')
+    if (lr) lr.style.display = 'flex'
+    const sa = document.getElementById('setup-area')
+    if (sa) sa.style.display = 'none'
   }
 })
 
