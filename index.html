@@ -1866,31 +1866,59 @@ window.doSignup = async () => {
   if (!name) return showAuthMsg('Nhập tên hiển thị', 'error')
   if (!email.endsWith('@gmail.com')) return showAuthMsg('Chỉ chấp nhận @gmail.com', 'error')
   if (pass.length < 6) return showAuthMsg('Mật khẩu tối thiểu 6 ký tự', 'error')
-  showAuthMsg('Đang tạo tài khoản...', 'info')
+  showAuthMsg('Đang tạo tài khoản…', 'info')
+  console.log('[signUp] start →', email)
   try {
-    const { data, error } = await supabase.auth.signUp({
-      email, password: pass, options: { data: { display_name: name } }
-    })
+    const { data, error } = await withTimeout(
+      supabase.auth.signUp({ email, password: pass, options: { data: { display_name: name } } }),
+      15000, 'signUp'
+    )
+    console.log('[signUp] result', { hasSession: !!data?.session, error })
     if (error) { console.error('[signUp]', error); return showAuthMsg(translateAuthError(error.message), 'error') }
-    // Nếu Supabase yêu cầu xác nhận email, session sẽ null. Nếu không, user đăng nhập luôn.
     if (data?.session) {
       showAuthMsg('✓ Tạo tài khoản & đăng nhập thành công!', 'success')
     } else {
       showAuthMsg('✓ Đã tạo tài khoản. Mở Gmail xác nhận, sau đó quay lại đăng nhập.', 'success')
     }
-  } catch(e) { console.error('[signUp ex]', e); showAuthMsg(translateAuthError(e.message), 'error') }
+  } catch(e) {
+    console.error('[signUp ex]', e)
+    if (e.message && e.message.startsWith('TIMEOUT:')) {
+      showAuthMsg('⏱ Server Supabase không phản hồi. Có thể project đang pause — vào dashboard Supabase bấm "Restore project".', 'error')
+    } else {
+      showAuthMsg(translateAuthError(e.message), 'error')
+    }
+  }
+}
+// Bọc Promise với timeout — nếu Supabase không trả về sau X giây thì reject
+function withTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT: '+label+' không phản hồi sau '+(ms/1000)+'s. Có thể Supabase project bị pause hoặc mạng chậm.')), ms))
+  ])
 }
 window.doLogin = async () => {
   const email = document.getElementById('auth-login-email').value.trim().toLowerCase()
   const pass = document.getElementById('auth-login-pass').value
   if (!email || !pass) return showAuthMsg('Điền đủ email và mật khẩu', 'error')
-  showAuthMsg('Đang đăng nhập...', 'info')
+  showAuthMsg('Đang đăng nhập…', 'info')
+  console.log('[signIn] start →', email)
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass })
+    const { data, error } = await withTimeout(
+      supabase.auth.signInWithPassword({ email, password: pass }),
+      15000, 'signInWithPassword'
+    )
+    console.log('[signIn] result', { hasSession: !!data?.session, error })
     if (error) { console.error('[signIn]', error); return showAuthMsg(translateAuthError(error.message), 'error') }
     if (!data?.session) return showAuthMsg('Đăng nhập không trả về session — thử lại', 'error')
     showAuthMsg('✓ Đăng nhập thành công!', 'success')
-  } catch(e) { console.error('[signIn ex]', e); showAuthMsg(translateAuthError(e.message), 'error') }
+  } catch(e) {
+    console.error('[signIn ex]', e)
+    if (e.message && e.message.startsWith('TIMEOUT:')) {
+      showAuthMsg('⏱ Server Supabase không phản hồi. Có thể project đang pause — vào dashboard Supabase bấm "Restore project". Hoặc kiểm tra mạng.', 'error')
+    } else {
+      showAuthMsg(translateAuthError(e.message), 'error')
+    }
+  }
 }
 window.doLogout = async () => {
   try { await supabase.auth.signOut() } catch(e) { console.error('[signOut]', e) }
