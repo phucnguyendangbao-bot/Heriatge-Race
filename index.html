@@ -1763,6 +1763,25 @@ function renderHeritage(){
   });
 }
 
+// Stub các hàm auth: nếu user click TRƯỚC khi module supabase load xong,
+// stub sẽ queue lại lệnh và phát lại khi module thật ghi đè.
+(function(){
+  const pending = [];
+  window.__authQueue = pending;
+  ['openAuthModal','closeAuthModal','switchAuthTab','doLogin','doSignup','doLogout','toggleUserDropdown']
+    .forEach(name => {
+      if (typeof window[name] === 'function') return;
+      window[name] = function(){
+        pending.push({name, args: [...arguments]});
+        // Nếu user click login mà module chưa sẵn sàng → báo "đang tải…"
+        if (name === 'openAuthModal') {
+          const msg = document.getElementById('auth-msg');
+          if (msg) { msg.className='auth-msg-box info'; msg.textContent='Đang khởi tạo đăng nhập, vui lòng đợi…'; }
+        }
+      };
+    });
+})();
+
 renderSetup();
 </script>
 
@@ -1829,29 +1848,63 @@ document.addEventListener('click', (e) => {
   if (trigger && (trigger === e.target || trigger.contains(e.target))) return
   if (!dd.contains(e.target)) dd.style.display = 'none'
 })
+function translateAuthError(msg){
+  if(!msg) return 'Lỗi không xác định'
+  const m = msg.toLowerCase()
+  if(m.includes('invalid login credentials') || m.includes('invalid_credentials')) return 'Email hoặc mật khẩu không đúng'
+  if(m.includes('email not confirmed') || m.includes('email_not_confirmed')) return 'Email chưa được xác nhận. Hãy kiểm tra hộp thư Gmail và bấm link xác nhận trước khi đăng nhập.'
+  if(m.includes('user already registered') || m.includes('already_registered')) return 'Email đã được đăng ký. Hãy đăng nhập thay vì đăng ký.'
+  if(m.includes('rate limit') || m.includes('too many')) return 'Bạn thử quá nhiều lần — đợi vài phút rồi thử lại.'
+  if(m.includes('weak password') || m.includes('password should be')) return 'Mật khẩu yếu — dùng ≥6 ký tự, có chữ và số.'
+  if(m.includes('network') || m.includes('failed to fetch')) return 'Không kết nối được tới máy chủ. Kiểm tra mạng.'
+  return 'Lỗi: ' + msg
+}
 window.doSignup = async () => {
   const name = document.getElementById('auth-signup-name').value.trim()
-  const email = document.getElementById('auth-signup-email').value.trim()
+  const email = document.getElementById('auth-signup-email').value.trim().toLowerCase()
   const pass = document.getElementById('auth-signup-pass').value
   if (!name) return showAuthMsg('Nhập tên hiển thị', 'error')
   if (!email.endsWith('@gmail.com')) return showAuthMsg('Chỉ chấp nhận @gmail.com', 'error')
   if (pass.length < 6) return showAuthMsg('Mật khẩu tối thiểu 6 ký tự', 'error')
   showAuthMsg('Đang tạo tài khoản...', 'info')
-  const { error } = await supabase.auth.signUp({
-    email, password: pass, options: { data: { display_name: name } }
-  })
-  if (error) return showAuthMsg('Lỗi: ' + error.message, 'error')
-  showAuthMsg('✓ Tạo thành công! Đăng nhập ngay.', 'success')
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email, password: pass, options: { data: { display_name: name } }
+    })
+    if (error) { console.error('[signUp]', error); return showAuthMsg(translateAuthError(error.message), 'error') }
+    // Nếu Supabase yêu cầu xác nhận email, session sẽ null. Nếu không, user đăng nhập luôn.
+    if (data?.session) {
+      showAuthMsg('✓ Tạo tài khoản & đăng nhập thành công!', 'success')
+    } else {
+      showAuthMsg('✓ Đã tạo tài khoản. Mở Gmail xác nhận, sau đó quay lại đăng nhập.', 'success')
+    }
+  } catch(e) { console.error('[signUp ex]', e); showAuthMsg(translateAuthError(e.message), 'error') }
 }
 window.doLogin = async () => {
-  const email = document.getElementById('auth-login-email').value.trim()
+  const email = document.getElementById('auth-login-email').value.trim().toLowerCase()
   const pass = document.getElementById('auth-login-pass').value
-  if (!email || !pass) return showAuthMsg('Điền đủ thông tin', 'error')
+  if (!email || !pass) return showAuthMsg('Điền đủ email và mật khẩu', 'error')
   showAuthMsg('Đang đăng nhập...', 'info')
-  const { error } = await supabase.auth.signInWithPassword({ email, password: pass })
-  if (error) return showAuthMsg('Lỗi: ' + error.message, 'error')
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass })
+    if (error) { console.error('[signIn]', error); return showAuthMsg(translateAuthError(error.message), 'error') }
+    if (!data?.session) return showAuthMsg('Đăng nhập không trả về session — thử lại', 'error')
+    showAuthMsg('✓ Đăng nhập thành công!', 'success')
+  } catch(e) { console.error('[signIn ex]', e); showAuthMsg(translateAuthError(e.message), 'error') }
 }
-window.doLogout = async () => { await supabase.auth.signOut() }
+window.doLogout = async () => {
+  try { await supabase.auth.signOut() } catch(e) { console.error('[signOut]', e) }
+}
+
+// Enter key submits form
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return
+  const m = document.getElementById('auth-modal')
+  if (!m || m.style.display === 'none') return
+  const loginActive = document.getElementById('auth-tab-login')?.classList.contains('active')
+  if (loginActive) { e.preventDefault(); window.doLogin() }
+  else { e.preventDefault(); window.doSignup() }
+})
 
 function renderTopbarUser(profile, email) {
   const tb = document.getElementById('topbar-user')
@@ -1882,6 +1935,12 @@ function renderTopbarUser(profile, email) {
         🔑 <span class="lbl">Đăng nhập</span>
       </button>`
   }
+}
+
+// Flush các click bị queue trong khi module đang load
+if (Array.isArray(window.__authQueue)) {
+  const q = window.__authQueue.slice(); window.__authQueue.length = 0;
+  q.forEach(item => { try { window[item.name](...item.args) } catch(e) { console.error('[flush]', item.name, e) } });
 }
 
 supabase.auth.onAuthStateChange(async (event, session) => {
