@@ -418,14 +418,44 @@
     color:var(--bg-1);border:none;padding:14px;border-radius:10px;
     font-size:15px;font-weight:800;letter-spacing:.5px;cursor:pointer;margin-top:6px;
     box-shadow:0 6px 18px rgba(212,175,55,.35),inset 0 1px 0 rgba(255,255,255,.3);
-    transition:transform .15s;font-family:inherit
+    transition:transform .15s;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;gap:10px
   }
-  .auth-submit-btn:hover{transform:translateY(-2px)}
-  .auth-submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .auth-submit-btn:hover:not(:disabled){transform:translateY(-2px)}
+  .auth-submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .auth-spinner{
+    width:16px;height:16px;border:2.5px solid rgba(26,10,0,.3);
+    border-top-color:var(--bg-1);border-radius:50%;
+    animation:spin .8s linear infinite;display:none
+  }
+  .auth-submit-btn.loading .auth-spinner{display:inline-block}
+  .auth-submit-btn.loading .auth-btn-label{opacity:.85}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .auth-pass-wrap{position:relative}
+  .auth-pass-wrap input{padding-right:46px}
+  .auth-pass-toggle{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:none;color:var(--gold-2);cursor:pointer;
+    width:34px;height:34px;font-size:16px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;transition:background .15s
+  }
+  .auth-pass-toggle:hover{background:rgba(212,175,55,.12)}
+
+  .auth-extra-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
+  .auth-link{
+    background:none;border:none;color:var(--gold-2);cursor:pointer;
+    font-size:12.5px;text-decoration:underline;padding:4px 0;font-family:inherit
+  }
+  .auth-link:hover{color:var(--gold)}
+
+  .auth-field.invalid input{border-color:rgba(231,76,60,.6)}
+  .auth-field-error{color:#ff8080;font-size:11.5px;margin-top:5px;display:none}
+  .auth-field.invalid .auth-field-error{display:block}
 
   .auth-msg-box{
     margin-top:14px;padding:10px 14px;border-radius:8px;
-    font-size:13px;text-align:center;display:none
+    font-size:13px;text-align:center;display:none;line-height:1.55
   }
   .auth-msg-box.error{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.4);color:#ff8080;display:block}
   .auth-msg-box.success{background:rgba(46,204,113,.15);border:1px solid rgba(46,204,113,.4);color:#7be395;display:block}
@@ -479,32 +509,53 @@
       </button>
     </div>
     <div class="auth-form-panel active" id="auth-login">
-      <div class="auth-field">
+      <div class="auth-field" id="field-login-email">
         <label for="auth-login-email">Email Gmail</label>
-        <input type="email" id="auth-login-email" placeholder="ban@gmail.com" autocomplete="email">
+        <input type="email" id="auth-login-email" placeholder="ban@gmail.com" autocomplete="email" inputmode="email" spellcheck="false">
+        <div class="auth-field-error">Email không hợp lệ. Chỉ chấp nhận địa chỉ @gmail.com.</div>
       </div>
-      <div class="auth-field">
+      <div class="auth-field" id="field-login-pass">
         <label for="auth-login-pass">Mật khẩu</label>
-        <input type="password" id="auth-login-pass" placeholder="••••••••" autocomplete="current-password">
+        <div class="auth-pass-wrap">
+          <input type="password" id="auth-login-pass" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="auth-pass-toggle" onclick="togglePassVisibility('auth-login-pass',this)" aria-label="Hiện/ẩn mật khẩu">👁</button>
+        </div>
+        <div class="auth-field-error">Vui lòng nhập mật khẩu.</div>
       </div>
-      <button class="auth-submit-btn" onclick="doLogin()">Đăng nhập</button>
+      <button class="auth-submit-btn" id="btn-login" onclick="doLogin()">
+        <span class="auth-spinner"></span>
+        <span class="auth-btn-label">Đăng nhập</span>
+      </button>
+      <div class="auth-extra-row">
+        <button type="button" class="auth-link" onclick="doForgotPassword()">Quên mật khẩu?</button>
+        <button type="button" class="auth-link" onclick="doResendConfirmation()">Gửi lại email xác nhận</button>
+      </div>
     </div>
     <div class="auth-form-panel" id="auth-signup">
-      <div class="auth-field">
+      <div class="auth-field" id="field-signup-name">
         <label for="auth-signup-name">Tên hiển thị</label>
         <input type="text" id="auth-signup-name" maxlength="20" placeholder="Tên của bạn" autocomplete="nickname">
+        <div class="auth-field-error">Tên hiển thị từ 2 đến 20 ký tự.</div>
       </div>
-      <div class="auth-field">
+      <div class="auth-field" id="field-signup-email">
         <label for="auth-signup-email">Email Gmail</label>
-        <input type="email" id="auth-signup-email" placeholder="ban@gmail.com" autocomplete="email">
+        <input type="email" id="auth-signup-email" placeholder="ban@gmail.com" autocomplete="email" inputmode="email" spellcheck="false">
+        <div class="auth-field-error">Chỉ chấp nhận địa chỉ @gmail.com hợp lệ.</div>
       </div>
-      <div class="auth-field">
+      <div class="auth-field" id="field-signup-pass">
         <label for="auth-signup-pass">Mật khẩu (≥6 ký tự)</label>
-        <input type="password" id="auth-signup-pass" placeholder="••••••••" autocomplete="new-password">
+        <div class="auth-pass-wrap">
+          <input type="password" id="auth-signup-pass" placeholder="••••••••" autocomplete="new-password">
+          <button type="button" class="auth-pass-toggle" onclick="togglePassVisibility('auth-signup-pass',this)" aria-label="Hiện/ẩn mật khẩu">👁</button>
+        </div>
+        <div class="auth-field-error">Mật khẩu tối thiểu 6 ký tự.</div>
       </div>
-      <button class="auth-submit-btn" onclick="doSignup()">Tạo tài khoản</button>
+      <button class="auth-submit-btn" id="btn-signup" onclick="doSignup()">
+        <span class="auth-spinner"></span>
+        <span class="auth-btn-label">Tạo tài khoản</span>
+      </button>
     </div>
-    <div class="auth-msg-box" id="auth-msg"></div>
+    <div class="auth-msg-box" id="auth-msg" role="status" aria-live="polite"></div>
   </div>
 </div>
 
@@ -1768,18 +1819,39 @@ function renderHeritage(){
 (function(){
   const pending = [];
   window.__authQueue = pending;
-  ['openAuthModal','closeAuthModal','switchAuthTab','doLogin','doSignup','doLogout','toggleUserDropdown']
-    .forEach(name => {
-      if (typeof window[name] === 'function') return;
-      window[name] = function(){
-        pending.push({name, args: [...arguments]});
-        // Nếu user click login mà module chưa sẵn sàng → báo "đang tải…"
-        if (name === 'openAuthModal') {
-          const msg = document.getElementById('auth-msg');
-          if (msg) { msg.className='auth-msg-box info'; msg.textContent='Đang khởi tạo đăng nhập, vui lòng đợi…'; }
+  window.__authReady = false;
+  const NAMES = ['openAuthModal','closeAuthModal','switchAuthTab','doLogin','doSignup',
+    'doLogout','toggleUserDropdown','doForgotPassword','doResendConfirmation','togglePassVisibility'];
+  NAMES.forEach(name => {
+    if (typeof window[name] === 'function') return;
+    window[name] = function(){
+      // Chỉ queue các thao tác UI an toàn — KHÔNG queue submit (doLogin/doSignup)
+      // để tránh gọi 2 lần khi user click lại sau khi module load.
+      if (name === 'doLogin' || name === 'doSignup') {
+        const msg = document.getElementById('auth-msg');
+        if (msg) { msg.className='auth-msg-box info'; msg.textContent='Đang khởi tạo đăng nhập, vui lòng đợi vài giây rồi thử lại…'; }
+        return;
+      }
+      pending.push({name, args: [...arguments]});
+      if (name === 'openAuthModal') {
+        // Vẫn mở modal trực quan bằng CSS để user không nghĩ là treo
+        const m = document.getElementById('auth-modal');
+        if (m) { m.classList.add('open'); m.style.display = 'flex'; }
+        const msg = document.getElementById('auth-msg');
+        if (msg) { msg.className='auth-msg-box info'; msg.textContent='Đang khởi tạo đăng nhập, vui lòng đợi…'; }
+      }
+      if (name === 'togglePassVisibility' && arguments.length >= 1) {
+        // Toggle password trực tiếp — không cần đợi module
+        const inp = document.getElementById(arguments[0]);
+        const btn = arguments[1];
+        if (inp) {
+          const showing = inp.type === 'text';
+          inp.type = showing ? 'password' : 'text';
+          if (btn) btn.textContent = showing ? '👁' : '🙈';
         }
-      };
-    });
+      }
+    };
+  });
 })();
 
 renderSetup();
@@ -1790,88 +1862,157 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 const SUPABASE_URL = 'https://eimpadcvrhinhmsvauvc.supabase.co'
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpbXBhZGN2cmhpbmhtc3ZhdXZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyOTYyODYsImV4cCI6MjA5Mzg3MjI4Nn0.bhvBBPbhQW0XQ627CNb6yzfa8kNOzu0_4eZywo6JwGg'
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storageKey: 'heritage-race-auth'
+  }
+})
 window.supabase = supabase
 window.currentUserProfile = null
 let gameStartTime = 0
+let authBusy = false         // flag chống double-submit
+let lastSubmit = 0           // throttle thời gian
+const SUBMIT_COOLDOWN_MS = 800
+const EMAIL_RE = /^[a-z0-9._%+-]+@gmail\.com$/i
 
+// ========== UI HELPERS ==========
+function $(id){ return document.getElementById(id) }
 function showAuthMsg(text, type) {
-  const el = document.getElementById('auth-msg')
+  const el = $('auth-msg')
   if (!el) return
   el.className = 'auth-msg-box ' + (type || 'info')
   el.textContent = text
 }
+function clearAuthMsg(){
+  const el = $('auth-msg'); if (!el) return
+  el.className = 'auth-msg-box'; el.textContent = ''
+}
+function setFieldInvalid(fieldId, isInvalid, customMsg){
+  const wrap = $(fieldId); if (!wrap) return
+  wrap.classList.toggle('invalid', !!isInvalid)
+  if (customMsg) {
+    const errEl = wrap.querySelector('.auth-field-error')
+    if (errEl) errEl.textContent = customMsg
+  }
+}
+function clearAllInvalid(){
+  document.querySelectorAll('.auth-field.invalid').forEach(el => el.classList.remove('invalid'))
+}
+function setSubmitLoading(btnId, loading, label){
+  const b = $(btnId); if (!b) return
+  b.classList.toggle('loading', !!loading)
+  b.disabled = !!loading
+  if (label) {
+    const lbl = b.querySelector('.auth-btn-label')
+    if (lbl) lbl.textContent = label
+  }
+}
+function resetAuthForms(){
+  ['auth-login-email','auth-login-pass','auth-signup-name','auth-signup-email','auth-signup-pass']
+    .forEach(id => { const el = $(id); if (el) el.value = '' })
+  clearAllInvalid()
+  clearAuthMsg()
+}
+
+// ========== MODAL CONTROL ==========
 window.openAuthModal = (tab) => {
-  const m = document.getElementById('auth-modal')
-  if (!m) return
-  m.classList.add('open')
-  m.style.display = 'flex'
-  window.switchAuthTab(tab || 'login')
+  const m = $('auth-modal'); if (!m) return
+  m.classList.add('open'); m.style.display = 'flex'
   document.body.style.overflow = 'hidden'
+  window.switchAuthTab(tab || 'login')
+  // focus email field sau khi animation chạy
+  setTimeout(() => {
+    const focusId = (tab === 'signup') ? 'auth-signup-name' : 'auth-login-email'
+    const fld = $(focusId); if (fld) fld.focus()
+  }, 200)
 }
 window.closeAuthModal = () => {
-  const m = document.getElementById('auth-modal')
-  if (!m) return
-  m.classList.remove('open')
-  m.style.display = 'none'
+  const m = $('auth-modal'); if (!m) return
+  m.classList.remove('open'); m.style.display = 'none'
   document.body.style.overflow = ''
-  const msg = document.getElementById('auth-msg')
-  if (msg) { msg.className = 'auth-msg-box'; msg.textContent = '' }
+  clearAuthMsg(); clearAllInvalid()
+  // không clear password ngay để tránh mất công gõ lại khi đóng nhầm
 }
 window.switchAuthTab = (tab) => {
-  const tLogin = document.getElementById('auth-tab-login')
-  const tSignup = document.getElementById('auth-tab-signup')
-  const pLogin = document.getElementById('auth-login')
-  const pSignup = document.getElementById('auth-signup')
-  if (tLogin) tLogin.classList.toggle('active', tab === 'login')
-  if (tSignup) tSignup.classList.toggle('active', tab === 'signup')
-  if (pLogin) {
-    pLogin.classList.toggle('active', tab === 'login')
-    pLogin.style.display = tab === 'login' ? 'block' : 'none'
+  if (tab !== 'login' && tab !== 'signup') tab = 'login'
+  const map = {
+    login: { tab: $('auth-tab-login'), panel: $('auth-login') },
+    signup: { tab: $('auth-tab-signup'), panel: $('auth-signup') }
   }
-  if (pSignup) {
-    pSignup.classList.toggle('active', tab === 'signup')
-    pSignup.style.display = tab === 'signup' ? 'block' : 'none'
-  }
-  const msg = document.getElementById('auth-msg')
-  if (msg) { msg.className = 'auth-msg-box'; msg.textContent = '' }
+  Object.entries(map).forEach(([k, v]) => {
+    if (v.tab) v.tab.classList.toggle('active', k === tab)
+    if (v.panel) {
+      v.panel.classList.toggle('active', k === tab)
+      v.panel.style.display = (k === tab) ? 'block' : 'none'
+    }
+  })
+  clearAuthMsg(); clearAllInvalid()
+  setTimeout(() => {
+    const focusId = (tab === 'signup') ? 'auth-signup-name' : 'auth-login-email'
+    const fld = $(focusId); if (fld) fld.focus()
+  }, 50)
+}
+window.togglePassVisibility = (inputId, btn) => {
+  const inp = $(inputId); if (!inp) return
+  const showing = inp.type === 'text'
+  inp.type = showing ? 'password' : 'text'
+  if (btn) btn.textContent = showing ? '👁' : '🙈'
 }
 window.toggleUserDropdown = () => {
-  const dd = document.getElementById('user-dropdown')
-  if (!dd) return
+  const dd = $('user-dropdown'); if (!dd) return
   dd.style.display = dd.style.display === 'block' ? 'none' : 'block'
 }
+// Click outside dropdown để đóng
 document.addEventListener('click', (e) => {
-  const dd = document.getElementById('user-dropdown')
-  const trigger = document.getElementById('user-avatar-btn')
+  const dd = $('user-dropdown'); const trigger = $('user-avatar-btn')
   if (!dd || dd.style.display !== 'block') return
   if (trigger && (trigger === e.target || trigger.contains(e.target))) return
   if (!dd.contains(e.target)) dd.style.display = 'none'
 })
+// ESC để đóng modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const m = $('auth-modal')
+    if (m && m.classList.contains('open')) window.closeAuthModal()
+  }
+})
+
+// ========== ERROR TRANSLATION ==========
 function translateAuthError(msg){
-  if(!msg) return 'Lỗi không xác định'
-  const m = msg.toLowerCase()
-  if(m.includes('invalid login credentials') || m.includes('invalid_credentials')) return 'Email hoặc mật khẩu không đúng'
-  if(m.includes('email not confirmed') || m.includes('email_not_confirmed')) return 'Email chưa được xác nhận. Hãy kiểm tra hộp thư Gmail và bấm link xác nhận trước khi đăng nhập.'
-  if(m.includes('user already registered') || m.includes('already_registered')) return 'Email đã được đăng ký. Hãy đăng nhập thay vì đăng ký.'
-  if(m.includes('rate limit') || m.includes('too many')) return 'Bạn thử quá nhiều lần — đợi vài phút rồi thử lại.'
-  if(m.includes('weak password') || m.includes('password should be')) return 'Mật khẩu yếu — dùng ≥6 ký tự, có chữ và số.'
-  if(m.includes('network') || m.includes('failed to fetch')) return 'Không kết nối được tới máy chủ. Kiểm tra mạng.'
-  return 'Lỗi: ' + msg
-}
-// Bọc Promise với timeout — nếu Supabase không trả về sau X giây thì reject
-function withTimeout(promise, ms, label){
-  return Promise.race([
-    promise,
-    new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT: '+label+' không phản hồi sau '+(ms/1000)+'s.')), ms))
-  ])
+  if(!msg) return 'Lỗi không xác định. Hãy thử lại.'
+  const m = String(msg).toLowerCase()
+  if(m.includes('invalid login credentials') || m.includes('invalid_credentials') || m.includes('invalid email or password'))
+    return '❌ Email hoặc mật khẩu không đúng. Hãy kiểm tra lại.'
+  if(m.includes('email not confirmed') || m.includes('email_not_confirmed'))
+    return '✉️ Email chưa được xác nhận. Mở hộp thư Gmail và bấm link xác nhận trước khi đăng nhập (kiểm tra cả thư mục Spam/Quảng cáo).'
+  if(m.includes('user already registered') || m.includes('already_registered') || m.includes('email_exists') || m.includes('user_already_exists'))
+    return '⚠️ Email đã được đăng ký. Hãy chuyển qua tab "Đăng nhập".'
+  if(m.includes('rate limit') || m.includes('too many') || m.includes('over_email_send_rate_limit') || m.includes('over_request_rate_limit'))
+    return '⏱ Bạn thao tác quá nhanh — chờ 1-2 phút rồi thử lại.'
+  if(m.includes('weak password') || m.includes('password should be') || m.includes('password_too_short') || m.includes('weak_password'))
+    return '🔒 Mật khẩu quá yếu — dùng tối thiểu 6 ký tự (nên kèm chữ và số).'
+  if(m.includes('invalid email') || m.includes('email_address_invalid') || m.includes('validation_failed'))
+    return '✉️ Email không hợp lệ. Kiểm tra lại định dạng.'
+  if(m.includes('user not found') || m.includes('user_not_found'))
+    return '❓ Không tìm thấy tài khoản. Hãy đăng ký trước.'
+  if(m.includes('network') || m.includes('failed to fetch') || m.includes('networkerror'))
+    return '🌐 Không kết nối được tới máy chủ. Kiểm tra mạng.'
+  if(m.includes('timeout') || m.includes('aborted'))
+    return '⏱ Hết thời gian chờ. Mạng có thể chậm — thử lại.'
+  if(m.includes('signup is disabled') || m.includes('signup_disabled'))
+    return '🚫 Đăng ký hiện đang bị tắt trên server.'
+  return '⚠️ Lỗi: ' + msg
 }
 
-// ===== DIRECT REST AUTH (bypass supabase-js để tránh hang) =====
-async function restAuthRequest(path, body) {
+// ========== REST AUTH (bypass supabase-js để tránh hang) ==========
+async function restAuthRequest(path, body, timeoutMs = 15000) {
   const url = SUPABASE_URL + path
   const ctrl = new AbortController()
-  const t = setTimeout(() => ctrl.abort(), 15000)
+  const t = setTimeout(() => ctrl.abort(), timeoutMs)
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -1879,125 +2020,246 @@ async function restAuthRequest(path, body) {
       headers: {
         'apikey': SUPABASE_ANON_KEY,
         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-Client-Info': 'heritage-race-web'
       },
       body: JSON.stringify(body)
     })
-    const json = await res.json().catch(() => ({}))
+    let json = {}
+    const ct = res.headers.get('content-type') || ''
+    if (ct.includes('application/json')) {
+      try { json = await res.json() } catch(_) { json = {} }
+    } else {
+      // server trả non-JSON (ví dụ 502 HTML) — lấy text để debug
+      const txt = await res.text().catch(() => '')
+      json = { error: 'non_json_response', error_description: txt.slice(0, 160) || ('HTTP ' + res.status) }
+    }
     return { status: res.status, ok: res.ok, body: json }
   } finally {
     clearTimeout(t)
   }
 }
-
-async function restSignIn(email, password) {
-  return restAuthRequest('/auth/v1/token?grant_type=password', { email, password })
-}
-async function restSignUp(email, password, display_name) {
+function restSignIn(email, password){ return restAuthRequest('/auth/v1/token?grant_type=password', { email, password }) }
+function restSignUp(email, password, display_name){
   return restAuthRequest('/auth/v1/signup', { email, password, data: { display_name } })
 }
+function restRecover(email){ return restAuthRequest('/auth/v1/recover', { email }) }
+function restResend(email){ return restAuthRequest('/auth/v1/resend', { type: 'signup', email }) }
 
+// ========== FORM VALIDATION ==========
+function validateEmail(value){
+  if (!value) return 'Vui lòng nhập email.'
+  if (!EMAIL_RE.test(value)) return 'Chỉ chấp nhận địa chỉ @gmail.com hợp lệ.'
+  return null
+}
+function validatePassword(value, forSignup){
+  if (!value) return 'Vui lòng nhập mật khẩu.'
+  if (forSignup && value.length < 6) return 'Mật khẩu tối thiểu 6 ký tự.'
+  return null
+}
+function validateName(value){
+  if (!value || value.length < 2) return 'Tên hiển thị từ 2 đến 20 ký tự.'
+  if (value.length > 20) return 'Tên hiển thị tối đa 20 ký tự.'
+  return null
+}
+
+// ========== SIGNUP ==========
 window.doSignup = async () => {
-  const name = document.getElementById('auth-signup-name').value.trim()
-  const email = document.getElementById('auth-signup-email').value.trim().toLowerCase()
-  const pass = document.getElementById('auth-signup-pass').value
-  if (!name) return showAuthMsg('Nhập tên hiển thị', 'error')
-  if (!email.endsWith('@gmail.com')) return showAuthMsg('Chỉ chấp nhận @gmail.com', 'error')
-  if (pass.length < 6) return showAuthMsg('Mật khẩu tối thiểu 6 ký tự', 'error')
-  showAuthMsg('Đang tạo tài khoản…', 'info')
-  console.log('[signUp REST] start →', email)
+  if (authBusy) return
+  if (Date.now() - lastSubmit < SUBMIT_COOLDOWN_MS) return
+  lastSubmit = Date.now()
+  clearAllInvalid(); clearAuthMsg()
+
+  const name = ($('auth-signup-name').value || '').trim()
+  const email = ($('auth-signup-email').value || '').trim().toLowerCase()
+  const pass = $('auth-signup-pass').value || ''
+
+  const nameErr = validateName(name)
+  const emailErr = validateEmail(email)
+  const passErr = validatePassword(pass, true)
+  if (nameErr)  setFieldInvalid('field-signup-name', true, nameErr)
+  if (emailErr) setFieldInvalid('field-signup-email', true, emailErr)
+  if (passErr)  setFieldInvalid('field-signup-pass', true, passErr)
+  if (nameErr || emailErr || passErr) return
+
+  authBusy = true
+  setSubmitLoading('btn-signup', true, 'Đang tạo tài khoản…')
+  showAuthMsg('Đang tạo tài khoản, vui lòng đợi…', 'info')
+
   try {
     const r = await restSignUp(email, pass, name)
-    console.log('[signUp REST] result', r)
     if (!r.ok) {
-      const errMsg = r.body?.msg || r.body?.error_description || r.body?.error || ('HTTP '+r.status)
-      return showAuthMsg(translateAuthError(errMsg), 'error')
+      const errMsg = r.body?.msg || r.body?.error_description || r.body?.error || ('HTTP ' + r.status)
+      showAuthMsg(translateAuthError(errMsg), 'error')
+      return
     }
-    // Nếu trả về access_token = signup tự đăng nhập
-    if (r.body?.access_token) {
-      // Đẩy session sang supabase-js để onAuthStateChange fire
-      await supabase.auth.setSession({ access_token: r.body.access_token, refresh_token: r.body.refresh_token })
-      showAuthMsg('✓ Tạo tài khoản & đăng nhập thành công!', 'success')
+    if (r.body?.access_token && r.body?.refresh_token) {
+      // Email confirmation đã tắt → auto sign in
+      const { error } = await supabase.auth.setSession({
+        access_token: r.body.access_token,
+        refresh_token: r.body.refresh_token
+      })
+      if (error) {
+        console.error('[signUp setSession]', error)
+        showAuthMsg('⚠️ Tạo tài khoản OK nhưng đăng nhập tự động lỗi. Hãy đăng nhập thủ công.', 'error')
+        return
+      }
+      showAuthMsg('✓ Tạo tài khoản và đăng nhập thành công!', 'success')
     } else {
-      showAuthMsg('✓ Đã tạo tài khoản. Mở Gmail xác nhận, sau đó quay lại đăng nhập.', 'success')
+      // Cần xác nhận email
+      showAuthMsg('✓ Đã tạo tài khoản. Mở Gmail và bấm link xác nhận, sau đó quay lại đăng nhập (kiểm tra Spam nếu chưa thấy).', 'success')
     }
   } catch(e) {
-    console.error('[signUp REST ex]', e)
-    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ. Kiểm tra mạng rồi thử lại.', 'error')
+    console.error('[signUp ex]', e)
+    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng rồi thử lại.', 'error')
     else showAuthMsg(translateAuthError(e.message), 'error')
+  } finally {
+    authBusy = false
+    setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
   }
 }
 
+// ========== LOGIN ==========
 window.doLogin = async () => {
-  const email = document.getElementById('auth-login-email').value.trim().toLowerCase()
-  const pass = document.getElementById('auth-login-pass').value
-  if (!email || !pass) return showAuthMsg('Điền đủ email và mật khẩu', 'error')
-  showAuthMsg('Đang đăng nhập…', 'info')
-  console.log('[signIn REST] start →', email)
+  if (authBusy) return
+  if (Date.now() - lastSubmit < SUBMIT_COOLDOWN_MS) return
+  lastSubmit = Date.now()
+  clearAllInvalid(); clearAuthMsg()
+
+  const email = ($('auth-login-email').value || '').trim().toLowerCase()
+  const pass = $('auth-login-pass').value || ''
+
+  const emailErr = validateEmail(email)
+  const passErr = validatePassword(pass, false)
+  if (emailErr) setFieldInvalid('field-login-email', true, emailErr)
+  if (passErr)  setFieldInvalid('field-login-pass', true, passErr)
+  if (emailErr || passErr) return
+
+  authBusy = true
+  setSubmitLoading('btn-login', true, 'Đang đăng nhập…')
+  showAuthMsg('Đang đăng nhập, vui lòng đợi…', 'info')
+
   try {
     const r = await restSignIn(email, pass)
-    console.log('[signIn REST] result', r)
     if (!r.ok) {
-      const errMsg = r.body?.error_description || r.body?.msg || r.body?.error || ('HTTP '+r.status)
-      return showAuthMsg(translateAuthError(errMsg), 'error')
+      const errMsg = r.body?.error_description || r.body?.msg || r.body?.error || ('HTTP ' + r.status)
+      showAuthMsg(translateAuthError(errMsg), 'error')
+      return
     }
-    if (!r.body?.access_token) return showAuthMsg('Đăng nhập không trả về token — thử lại', 'error')
-    // Đẩy session sang supabase-js
-    await supabase.auth.setSession({ access_token: r.body.access_token, refresh_token: r.body.refresh_token })
-    showAuthMsg('✓ Đăng nhập thành công!', 'success')
-  } catch(e) {
-    console.error('[signIn REST ex]', e)
-    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng.', 'error')
-    else showAuthMsg(translateAuthError(e.message), 'error')
-  }
-}
-
-// Phần đăng nhập cũ qua supabase-js (đã thay bằng REST ở trên — giữ lại để tham khảo)
-window.__doLoginSupabaseJS = async () => {
-  const email = document.getElementById('auth-login-email').value.trim().toLowerCase()
-  const pass = document.getElementById('auth-login-pass').value
-  if (!email || !pass) return showAuthMsg('Điền đủ email và mật khẩu', 'error')
-  showAuthMsg('Đang đăng nhập…', 'info')
-  try {
-    const { data, error } = await withTimeout(
-      supabase.auth.signInWithPassword({ email, password: pass }),
-      15000, 'signInWithPassword'
-    )
-    if (error) { console.error('[signIn]', error); return showAuthMsg(translateAuthError(error.message), 'error') }
-    if (!data?.session) return showAuthMsg('Đăng nhập không trả về session — thử lại', 'error')
+    if (!r.body?.access_token || !r.body?.refresh_token) {
+      showAuthMsg('⚠️ Server không trả về token đầy đủ. Hãy thử lại.', 'error')
+      return
+    }
+    const { error } = await supabase.auth.setSession({
+      access_token: r.body.access_token,
+      refresh_token: r.body.refresh_token
+    })
+    if (error) {
+      console.error('[signIn setSession]', error)
+      showAuthMsg(translateAuthError(error.message), 'error')
+      return
+    }
     showAuthMsg('✓ Đăng nhập thành công!', 'success')
   } catch(e) {
     console.error('[signIn ex]', e)
-    if (e.message && e.message.startsWith('TIMEOUT:')) {
-      showAuthMsg('⏱ Server Supabase không phản hồi. Có thể project đang pause — vào dashboard Supabase bấm "Restore project". Hoặc kiểm tra mạng.', 'error')
-    } else {
-      showAuthMsg(translateAuthError(e.message), 'error')
-    }
+    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng.', 'error')
+    else showAuthMsg(translateAuthError(e.message), 'error')
+  } finally {
+    authBusy = false
+    setSubmitLoading('btn-login', false, 'Đăng nhập')
   }
 }
-window.doLogout = async () => {
-  try { await supabase.auth.signOut() } catch(e) { console.error('[signOut]', e) }
+
+// ========== FORGOT PASSWORD ==========
+window.doForgotPassword = async () => {
+  if (authBusy) return
+  clearAllInvalid(); clearAuthMsg()
+  const email = ($('auth-login-email').value || '').trim().toLowerCase()
+  const emailErr = validateEmail(email)
+  if (emailErr) {
+    setFieldInvalid('field-login-email', true, 'Nhập email Gmail để khôi phục mật khẩu.')
+    return
+  }
+  authBusy = true
+  showAuthMsg('Đang gửi email khôi phục mật khẩu…', 'info')
+  try {
+    const r = await restRecover(email)
+    if (!r.ok && r.status !== 200) {
+      const errMsg = r.body?.msg || r.body?.error_description || r.body?.error || ('HTTP ' + r.status)
+      showAuthMsg(translateAuthError(errMsg), 'error')
+    } else {
+      showAuthMsg('✉️ Nếu email tồn tại, link khôi phục đã được gửi. Kiểm tra Gmail (kể cả Spam).', 'success')
+    }
+  } catch(e) {
+    console.error('[forgot ex]', e)
+    showAuthMsg(translateAuthError(e.message), 'error')
+  } finally {
+    authBusy = false
+  }
 }
 
-// Enter key submits form
+// ========== RESEND CONFIRMATION ==========
+window.doResendConfirmation = async () => {
+  if (authBusy) return
+  clearAllInvalid(); clearAuthMsg()
+  const email = ($('auth-login-email').value || '').trim().toLowerCase()
+  const emailErr = validateEmail(email)
+  if (emailErr) {
+    setFieldInvalid('field-login-email', true, 'Nhập email Gmail để gửi lại email xác nhận.')
+    return
+  }
+  authBusy = true
+  showAuthMsg('Đang gửi lại email xác nhận…', 'info')
+  try {
+    const r = await restResend(email)
+    if (!r.ok && r.status !== 200) {
+      const errMsg = r.body?.msg || r.body?.error_description || r.body?.error || ('HTTP ' + r.status)
+      showAuthMsg(translateAuthError(errMsg), 'error')
+    } else {
+      showAuthMsg('✉️ Email xác nhận đã được gửi lại. Kiểm tra Gmail (kể cả Spam).', 'success')
+    }
+  } catch(e) {
+    console.error('[resend ex]', e)
+    showAuthMsg(translateAuthError(e.message), 'error')
+  } finally {
+    authBusy = false
+  }
+}
+
+// ========== LOGOUT ==========
+window.doLogout = async () => {
+  try {
+    await supabase.auth.signOut()
+    resetAuthForms()
+  } catch(e) { console.error('[signOut]', e) }
+}
+
+// ========== ENTER KEY SUBMIT (chỉ khi không đang loading) ==========
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return
-  const m = document.getElementById('auth-modal')
-  if (!m || m.style.display === 'none') return
-  const loginActive = document.getElementById('auth-tab-login')?.classList.contains('active')
-  if (loginActive) { e.preventDefault(); window.doLogin() }
-  else { e.preventDefault(); window.doSignup() }
+  const m = $('auth-modal'); if (!m || !m.classList.contains('open')) return
+  if (authBusy) { e.preventDefault(); return }
+  const loginActive = $('auth-tab-login')?.classList.contains('active')
+  e.preventDefault()
+  if (loginActive) window.doLogin(); else window.doSignup()
 })
 
+// ========== TOPBAR RENDER (với XSS-safe text) ==========
+function escapeHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+}
 function renderTopbarUser(profile, email) {
-  const tb = document.getElementById('topbar-user')
-  if (!tb) return
+  const tb = $('topbar-user'); if (!tb) return
   if (profile) {
-    const name = profile.display_name || email || 'Người chơi'
-    const initial = (name[0] || 'U').toUpperCase()
+    const rawName = profile.display_name || email || 'Người chơi'
+    const name = escapeHtml(rawName)
+    const initial = escapeHtml((rawName[0] || 'U').toUpperCase())
     const coins = (profile.coins != null ? profile.coins : 0)
+    const safeEmail = escapeHtml(email || '')
     tb.innerHTML = `
-      <button class="topbar-coin" onclick="showSkinShop && showSkinShop()" title="Coin của bạn">
+      <button class="topbar-coin" onclick="typeof showSkinShop==='function'&&showSkinShop()" title="Coin của bạn">
         🪙 <span id="topbar-coins">${coins}</span>
       </button>
       <div class="avatar-wrap">
@@ -2005,10 +2267,10 @@ function renderTopbarUser(profile, email) {
         <div id="user-dropdown" class="avatar-dropdown" style="display:none">
           <div class="ud-info">
             <div class="ud-name">${name}</div>
-            <div class="ud-email">${email || ''}</div>
+            <div class="ud-email">${safeEmail}</div>
           </div>
-          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';showLeaderboardModal&&showLeaderboardModal()">🏆 <span>Bảng xếp hạng</span></button>
-          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';if(typeof showSkinShop==='function')showSkinShop()">🎨 <span>Cửa hàng skin</span></button>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';typeof showLeaderboardModal==='function'&&showLeaderboardModal()">🏆 <span>Bảng xếp hạng</span></button>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';typeof showSkinShop==='function'&&showSkinShop()">🎨 <span>Cửa hàng skin</span></button>
           <button class="ud-item danger" onclick="document.getElementById('user-dropdown').style.display='none';doLogout()">🚪 <span>Đăng xuất</span></button>
         </div>
       </div>`
@@ -2020,38 +2282,83 @@ function renderTopbarUser(profile, email) {
   }
 }
 
-// Flush các click bị queue trong khi module đang load
-if (Array.isArray(window.__authQueue)) {
-  const q = window.__authQueue.slice(); window.__authQueue.length = 0;
-  q.forEach(item => { try { window[item.name](...item.args) } catch(e) { console.error('[flush]', item.name, e) } });
+// ========== ENSURE PROFILE ROW EXISTS ==========
+async function ensureProfile(user){
+  if (!user) return null
+  try {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .maybeSingle()  // không throw nếu 0 row
+    if (error) {
+      console.warn('[profile fetch]', error)
+      // fallback: trả profile rỗng để app vẫn chạy
+      return { id: user.id, display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0], coins: 0 }
+    }
+    if (profile) return profile
+    // Profile chưa có → thử insert (có thể bị RLS chặn, không sao)
+    const newP = {
+      id: user.id,
+      display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0],
+      coins: 0
+    }
+    const { data: inserted, error: insErr } = await supabase.from('profiles').insert(newP).select('*').single()
+    if (insErr) {
+      console.warn('[profile insert]', insErr)
+      return newP   // fallback in-memory
+    }
+    return inserted
+  } catch(e) {
+    console.error('[ensureProfile ex]', e)
+    return { id: user.id, display_name: (user.email || '').split('@')[0], coins: 0 }
+  }
 }
 
+// ========== AUTH STATE CHANGE ==========
+let lastUserId = null
 supabase.auth.onAuthStateChange(async (event, session) => {
+  console.log('[auth]', event, session?.user?.id || '(no user)')
   if (session?.user) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single()
+    // Tránh re-render khi cùng user (TOKEN_REFRESHED không cần làm gì)
+    if (event === 'TOKEN_REFRESHED' && lastUserId === session.user.id) return
+    lastUserId = session.user.id
+    const profile = await ensureProfile(session.user)
     window.currentUserProfile = { ...profile, email: session.user.email }
     renderTopbarUser(window.currentUserProfile, session.user.email)
-    const lr = document.getElementById('login-required-panel')
-    if (lr) lr.style.display = 'none'
-    const sa = document.getElementById('setup-area')
-    if (sa) sa.style.display = 'flex'
-    if (typeof closeAuthModal === 'function') closeAuthModal()
+    const lr = $('login-required-panel'); if (lr) lr.style.display = 'none'
+    const sa = $('setup-area'); if (sa) sa.style.display = 'flex'
+    if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
     if (typeof renderSetup === 'function') {
       renderSetup()
       setTimeout(() => {
-        const p0 = document.getElementById('pname0')
+        const p0 = $('pname0')
         if (p0 && profile?.display_name) p0.value = profile.display_name
       }, 50)
     }
+    if (typeof renderPersonalize === 'function') renderPersonalize()
   } else {
+    lastUserId = null
     window.currentUserProfile = null
     renderTopbarUser(null, null)
-    const lr = document.getElementById('login-required-panel')
-    if (lr) lr.style.display = 'flex'
-    const sa = document.getElementById('setup-area')
-    if (sa) sa.style.display = 'none'
+    const lr = $('login-required-panel'); if (lr) lr.style.display = 'flex'
+    const sa = $('setup-area'); if (sa) sa.style.display = 'none'
+    if (typeof renderPersonalize === 'function') renderPersonalize()
   }
 })
+
+// ========== ANNOUNCE MODULE READY & FLUSH QUEUE ==========
+window.__authReady = true
+if (Array.isArray(window.__authQueue) && window.__authQueue.length) {
+  const q = window.__authQueue.slice()
+  window.__authQueue.length = 0
+  // Chỉ flush các thao tác UI an toàn — không submit
+  const SAFE_FLUSH = new Set(['openAuthModal','closeAuthModal','switchAuthTab','toggleUserDropdown','togglePassVisibility'])
+  q.forEach(item => {
+    if (!SAFE_FLUSH.has(item.name)) return
+    try { window[item.name](...item.args) } catch(e) { console.error('[flush]', item.name, e) }
+  })
+}
 
 window.onGameStarted = () => { gameStartTime = Date.now() }
 window.onGameEnded = async (winnerName, finalMoney, position, numPlayers) => {
