@@ -2091,31 +2091,41 @@ window.doSignup = async () => {
     if (!r.ok) {
       const errMsg = r.body?.msg || r.body?.error_description || r.body?.error || ('HTTP ' + r.status)
       showAuthMsg(translateAuthError(errMsg), 'error')
+      authBusy = false
+      setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
       return
     }
     if (r.body?.access_token && r.body?.refresh_token) {
-      // Email confirmation đã tắt → auto sign in
-      const { error } = await supabase.auth.setSession({
+      // Email confirmation đã tắt → auto sign in (fire-and-forget)
+      supabase.auth.setSession({
         access_token: r.body.access_token,
         refresh_token: r.body.refresh_token
-      })
-      if (error) {
-        console.error('[signUp setSession]', error)
-        showAuthMsg('⚠️ Tạo tài khoản OK nhưng đăng nhập tự động lỗi. Hãy đăng nhập thủ công.', 'error')
-        return
-      }
-      showAuthMsg('✓ Tạo tài khoản và đăng nhập thành công!', 'success')
+      }).catch(err => console.error('[signUp setSession ex]', err))
+      setTimeout(() => {
+        if (authBusy) {
+          authBusy = false
+          setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
+          supabase.auth.getSession().then(({ data }) => {
+            if (data?.session?.user) {
+              if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
+            } else {
+              showAuthMsg('⚠️ Tạo tài khoản có vẻ chậm — hãy reload trang.', 'error')
+            }
+          })
+        }
+      }, 4000)
     } else {
       // Cần xác nhận email
       showAuthMsg('✓ Đã tạo tài khoản. Mở Gmail và bấm link xác nhận, sau đó quay lại đăng nhập (kiểm tra Spam nếu chưa thấy).', 'success')
+      authBusy = false
+      setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
     }
   } catch(e) {
     console.error('[signUp ex]', e)
-    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng rồi thử lại.', 'error')
-    else showAuthMsg(translateAuthError(e.message), 'error')
-  } finally {
     authBusy = false
     setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
+    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng rồi thử lại.', 'error')
+    else showAuthMsg(translateAuthError(e.message), 'error')
   }
 }
 
@@ -2144,29 +2154,47 @@ window.doLogin = async () => {
     if (!r.ok) {
       const errMsg = r.body?.error_description || r.body?.msg || r.body?.error || ('HTTP ' + r.status)
       showAuthMsg(translateAuthError(errMsg), 'error')
+      authBusy = false
+      setSubmitLoading('btn-login', false, 'Đăng nhập')
       return
     }
     if (!r.body?.access_token || !r.body?.refresh_token) {
       showAuthMsg('⚠️ Server không trả về token đầy đủ. Hãy thử lại.', 'error')
+      authBusy = false
+      setSubmitLoading('btn-login', false, 'Đăng nhập')
       return
     }
-    const { error } = await supabase.auth.setSession({
+    // FIRE-AND-FORGET setSession — onAuthStateChange sẽ tự reset UI khi SIGNED_IN fire.
+    // Không await để tránh treo UI nếu supabase-js bị hang.
+    supabase.auth.setSession({
       access_token: r.body.access_token,
       refresh_token: r.body.refresh_token
+    }).catch(err => {
+      console.error('[signIn setSession ex]', err)
+      // Vẫn để onAuthStateChange handle thành công; nếu thật sự lỗi thì safety net sẽ reset
     })
-    if (error) {
-      console.error('[signIn setSession]', error)
-      showAuthMsg(translateAuthError(error.message), 'error')
-      return
-    }
-    showAuthMsg('✓ Đăng nhập thành công!', 'success')
+    // Fallback: nếu sau 4 giây vẫn không thấy SIGNED_IN fire → reset UI và báo lỗi mềm
+    setTimeout(() => {
+      if (authBusy) {
+        authBusy = false
+        setSubmitLoading('btn-login', false, 'Đăng nhập')
+        // Kiểm tra getSession để xem có thực sự đăng nhập được không
+        supabase.auth.getSession().then(({ data }) => {
+          if (data?.session?.user) {
+            // Đã có session — chắc do event chưa fire, đóng modal cưỡng chế
+            if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
+          } else {
+            showAuthMsg('⚠️ Đăng nhập có vẻ chậm — hãy reload trang nếu vẫn chưa vào được.', 'error')
+          }
+        })
+      }
+    }, 4000)
   } catch(e) {
     console.error('[signIn ex]', e)
-    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng.', 'error')
-    else showAuthMsg(translateAuthError(e.message), 'error')
-  } finally {
     authBusy = false
     setSubmitLoading('btn-login', false, 'Đăng nhập')
+    if (e.name === 'AbortError') showAuthMsg('⏱ Hết thời gian chờ (15s). Kiểm tra mạng.', 'error')
+    else showAuthMsg(translateAuthError(e.message), 'error')
   }
 }
 
@@ -2282,19 +2310,40 @@ function renderTopbarUser(profile, email) {
   }
 }
 
-// ========== ENSURE PROFILE ROW EXISTS ==========
+// ========== UI RESET (gọi ngay khi đăng nhập thành công) ==========
+function resetAuthLoadingUI(){
+  authBusy = false
+  setSubmitLoading('btn-login', false, 'Đăng nhập')
+  setSubmitLoading('btn-signup', false, 'Tạo tài khoản')
+}
+
+// ========== ENSURE PROFILE ROW EXISTS (with timeout) ==========
+function withRaceTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT:' + label)), ms))
+  ])
+}
+function makeFallbackProfile(user){
+  return {
+    id: user.id,
+    display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0] || 'Người chơi',
+    coins: 0,
+    stats: { games: 0, wins: 0 },
+    ownedTokens: [], ownedColors: [],
+    equippedTokens: null, equippedColors: null
+  }
+}
 async function ensureProfile(user){
   if (!user) return null
   try {
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .maybeSingle()  // không throw nếu 0 row
+    const { data: profile, error } = await withRaceTimeout(
+      supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
+      8000, 'profiles.select'
+    )
     if (error) {
       console.warn('[profile fetch]', error)
-      // fallback: trả profile rỗng để app vẫn chạy
-      return { id: user.id, display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0], coins: 0 }
+      return makeFallbackProfile(user)
     }
     if (profile) return profile
     // Profile chưa có → thử insert (có thể bị RLS chặn, không sao)
@@ -2303,49 +2352,97 @@ async function ensureProfile(user){
       display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0],
       coins: 0
     }
-    const { data: inserted, error: insErr } = await supabase.from('profiles').insert(newP).select('*').single()
-    if (insErr) {
-      console.warn('[profile insert]', insErr)
-      return newP   // fallback in-memory
+    try {
+      const { data: inserted, error: insErr } = await withRaceTimeout(
+        supabase.from('profiles').insert(newP).select('*').single(),
+        8000, 'profiles.insert'
+      )
+      if (insErr) {
+        console.warn('[profile insert]', insErr)
+        return makeFallbackProfile(user)
+      }
+      return inserted
+    } catch(e2) {
+      console.warn('[profile insert timeout]', e2)
+      return makeFallbackProfile(user)
     }
-    return inserted
   } catch(e) {
-    console.error('[ensureProfile ex]', e)
-    return { id: user.id, display_name: (user.email || '').split('@')[0], coins: 0 }
+    console.warn('[ensureProfile ex/timeout]', e)
+    return makeFallbackProfile(user)
   }
 }
 
 // ========== AUTH STATE CHANGE ==========
 let lastUserId = null
-supabase.auth.onAuthStateChange(async (event, session) => {
+supabase.auth.onAuthStateChange((event, session) => {
   console.log('[auth]', event, session?.user?.id || '(no user)')
+
+  // ===== Đăng nhập thành công =====
   if (session?.user) {
-    // Tránh re-render khi cùng user (TOKEN_REFRESHED không cần làm gì)
     if (event === 'TOKEN_REFRESHED' && lastUserId === session.user.id) return
     lastUserId = session.user.id
-    const profile = await ensureProfile(session.user)
-    window.currentUserProfile = { ...profile, email: session.user.email }
+
+    // 1) RESET UI NGAY LẬP TỨC — không đợi profile load
+    resetAuthLoadingUI()
+    showAuthMsg('✓ Đăng nhập thành công!', 'success')
+
+    // 2) Hiển thị topbar với thông tin cơ bản (chưa có profile từ DB)
+    const basicProfile = makeFallbackProfile(session.user)
+    window.currentUserProfile = { ...basicProfile, email: session.user.email }
     renderTopbarUser(window.currentUserProfile, session.user.email)
+
+    // 3) Ẩn login-required, hiện setup-area
     const lr = $('login-required-panel'); if (lr) lr.style.display = 'none'
     const sa = $('setup-area'); if (sa) sa.style.display = 'flex'
-    if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
+
+    // 4) Đóng modal sau 250ms (để user thấy thông báo thành công)
+    setTimeout(() => {
+      if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
+    }, 250)
+
     if (typeof renderSetup === 'function') {
       renderSetup()
       setTimeout(() => {
         const p0 = $('pname0')
-        if (p0 && profile?.display_name) p0.value = profile.display_name
+        if (p0 && basicProfile.display_name) p0.value = basicProfile.display_name
       }, 50)
     }
     if (typeof renderPersonalize === 'function') renderPersonalize()
+
+    // 5) Load profile thật từ DB ở chế độ background (không block UI)
+    ensureProfile(session.user).then(fullProfile => {
+      if (!fullProfile) return
+      window.currentUserProfile = { ...fullProfile, email: session.user.email }
+      renderTopbarUser(window.currentUserProfile, session.user.email)
+      if (typeof renderSetup === 'function') renderSetup()
+      if (typeof renderPersonalize === 'function') renderPersonalize()
+    }).catch(err => console.warn('[bg profile]', err))
+
   } else {
+    // ===== Đã đăng xuất hoặc không có session =====
     lastUserId = null
     window.currentUserProfile = null
+    resetAuthLoadingUI()
     renderTopbarUser(null, null)
     const lr = $('login-required-panel'); if (lr) lr.style.display = 'flex'
     const sa = $('setup-area'); if (sa) sa.style.display = 'none'
     if (typeof renderPersonalize === 'function') renderPersonalize()
   }
 })
+
+// ========== SAFETY NET: nếu setSession không resolve, vẫn detect SIGNED_IN ==========
+// Sau 5 giây kể từ khi submit, nếu nút vẫn loading nhưng đã có session → cưỡng chế reset UI
+setInterval(() => {
+  if (!authBusy) return
+  if (Date.now() - lastSubmit < 4000) return
+  supabase.auth.getSession().then(({ data }) => {
+    if (data?.session?.user) {
+      console.log('[auth safety] session present but UI still busy → force reset')
+      resetAuthLoadingUI()
+      if (typeof window.closeAuthModal === 'function') window.closeAuthModal()
+    }
+  }).catch(() => {})
+}, 1500)
 
 // ========== ANNOUNCE MODULE READY & FLUSH QUEUE ==========
 window.__authReady = true
