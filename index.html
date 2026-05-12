@@ -1738,12 +1738,23 @@ function addLog(text,highlight){
 }
 function showModal(title,bodyHtml,actions){
   const m=document.getElementById('modal-inner');
-  let actionsHtml='<div class="modal-actions">';
-  actions.forEach(a=>{
-    actionsHtml+=`<button class="${a.primary?'btn-yes':'btn-no'}" ${a.disabled?'disabled':''} onclick="(${a.fn})()">${a.label}</button>`;
+  // Build action buttons WITHOUT inline onclick (which loses closure when stringified)
+  const actionsContainer=document.createElement('div');
+  actionsContainer.className='modal-actions';
+  m.innerHTML=`<h3>${title}</h3>${bodyHtml}`;
+  m.appendChild(actionsContainer);
+  actions.forEach((a,idx)=>{
+    const btn=document.createElement('button');
+    btn.className=a.primary?'btn-yes':'btn-no';
+    if(a.disabled) btn.disabled=true;
+    btn.textContent=a.label;
+    // Attach handler giữ closure
+    btn.addEventListener('click',(e)=>{
+      try{ if(typeof a.fn==='function') a.fn(e); }
+      catch(err){ console.error('[modal action]',err); }
+    });
+    actionsContainer.appendChild(btn);
   });
-  actionsHtml+='</div>';
-  m.innerHTML=`<h3>${title}</h3>${bodyHtml}${actionsHtml}`;
   document.getElementById('modal').style.display='flex';
 }
 // Bind action buttons
