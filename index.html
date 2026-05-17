@@ -3485,9 +3485,9 @@ function newGame(){
 
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function cur(){ return G.players[G.currentPlayer]; }
-function curTile(){ return TILES[cur().pos]; }
-function activeHumans(){ return G.players.filter(p=>p.alive); }
+function cur(){ if(!G||!G.players) return null; return G.players[G.currentPlayer]; }
+function curTile(){ const c = cur(); return c ? TILES[c.pos] : null; }
+function activeHumans(){ if(!G||!G.players) return []; return G.players.filter(p=>p.alive); }
 
 /* ============ LOGGING ============ */
 function log(type, msg){
@@ -3742,7 +3742,17 @@ function renderSynergies(){
 
 function renderQuests(){
   const el = document.getElementById('quests-list');
+  if(!el) return;
+  // Guard: nếu chưa có game state (chưa bấm "Bắt Đầu Chơi Ngay") thì hiển thị trống.
+  if(!G || !G.players || !G.quests){
+    el.innerHTML = `<div class="empty-state">Chưa có nhiệm vụ — bắt đầu trận để xem!</div>`;
+    return;
+  }
   const p = cur();
+  if(!p){
+    el.innerHTML = `<div class="empty-state">Chưa có nhiệm vụ — bắt đầu trận để xem!</div>`;
+    return;
+  }
   el.innerHTML = G.quests.map(q=>{
     const done = q.check(p);
     return `<div class="quest ${done?'done':''}">
