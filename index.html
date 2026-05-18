@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cờ Tỉ Phú Di Sản Việt Nam — Heritage Race</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#d4af37">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
@@ -1506,6 +1510,177 @@
   font-size:10px; color:#888; cursor:pointer; padding:4px 0;
   text-align:center; text-decoration:underline;
 }
+
+/* ============ ENERGY & VIP ============ */
+.topbar-energy{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#3a1a55,#5b2c87);
+  color:#fff7d4;padding:6px 12px;border-radius:18px;
+  font-weight:800;font-size:13px;
+  box-shadow:0 3px 10px rgba(91,44,135,.35);
+  border:1px solid #7a4ab0;cursor:pointer;transition:transform .2s;
+  position:relative;
+}
+.topbar-energy:hover{transform:translateY(-2px)}
+.topbar-energy .e-ico{font-size:14px;filter:drop-shadow(0 0 4px #ffeb3b)}
+.topbar-energy.empty{background:linear-gradient(135deg,#6a1818,#a01515);border-color:#d4af37;animation:enPulse 1.4s ease-in-out infinite}
+@keyframes enPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,53,69,.6)}50%{box-shadow:0 0 0 6px rgba(220,53,69,0)}}
+.topbar-energy .e-timer{font-size:10px;opacity:.85;font-weight:600;margin-left:2px}
+.topbar-vip-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:linear-gradient(135deg,#ffd700,#ff9800);
+  color:#3d1a00;padding:3px 10px;border-radius:14px;
+  font-weight:900;font-size:11px;letter-spacing:.5px;
+  box-shadow:0 0 12px rgba(255,215,0,.5);
+  animation:vipShine 2.5s linear infinite;
+}
+@keyframes vipShine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.2)}}
+
+/* Energy / VIP shop modals share the existing #modal style */
+.e-shop-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+@media(min-width:560px){.e-shop-grid{grid-template-columns:1fr 1fr}}
+.e-shop-card{
+  background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+  border:1.5px solid rgba(212,175,55,.3);border-radius:12px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:8px;
+  transition:transform .15s,border-color .15s;
+}
+.e-shop-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.e-shop-card.featured{border-color:#ff9800;background:linear-gradient(135deg,rgba(255,152,0,.18),rgba(255,152,0,.04))}
+.e-shop-card .e-title{font-size:15px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:8px}
+.e-shop-card .e-desc{font-size:12px;color:#bba87a;line-height:1.5}
+.e-shop-card .e-price{font-size:14px;font-weight:800;color:#ffd700;margin-top:auto}
+.e-shop-card .e-price.ads{color:#7be395}
+.e-shop-card .e-buy{
+  background:linear-gradient(135deg,var(--gold),#b8941f);color:var(--bg-1);
+  border:none;padding:9px 14px;font-size:13px;font-weight:800;
+  border-radius:8px;cursor:pointer;width:100%;
+}
+.e-shop-card .e-buy.ads{background:linear-gradient(135deg,#27ae60,#1f8a4c);color:#fff}
+.e-shop-card .e-buy:disabled{opacity:.4;cursor:not-allowed}
+.e-shop-card .e-badge{
+  position:absolute;top:-8px;right:10px;background:#ff5722;color:#fff;
+  font-size:10px;padding:2px 8px;border-radius:10px;font-weight:800;letter-spacing:.5px;
+}
+.e-shop-card{position:relative}
+.energy-status-box{
+  background:linear-gradient(135deg,rgba(91,44,135,.18),rgba(91,44,135,.05));
+  border:1px solid rgba(122,74,176,.45);border-radius:10px;
+  padding:10px 14px;text-align:center;margin-bottom:6px;
+}
+.energy-status-box .en-now{font-size:24px;font-weight:900;color:#ffeb3b}
+.energy-status-box .en-cap{color:#a890c0;font-weight:700;font-size:14px}
+.energy-status-box .en-next{font-size:11px;color:#c4a8de;margin-top:4px}
+
+/* VIP modal */
+.vip-hero{
+  background:linear-gradient(135deg,#5b2c87,#a01585 60%,#ffb300);
+  border-radius:14px;padding:18px 16px;text-align:center;margin-bottom:14px;
+  border:1px solid rgba(255,215,0,.45);
+}
+.vip-hero h3{color:#fff;font-size:22px;font-weight:900;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.vip-hero p{color:#fff7d4;font-size:13px;opacity:.95}
+.vip-perks{list-style:none;padding:0;margin:0 0 12px}
+.vip-perks li{
+  padding:8px 10px;color:#e8d8b8;font-size:13px;line-height:1.5;
+  border-bottom:1px dashed rgba(212,175,55,.15);
+  display:flex;align-items:flex-start;gap:8px;
+}
+.vip-perks li:last-child{border-bottom:none}
+.vip-perks li::before{content:'✨';flex-shrink:0}
+.vip-buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.vip-buy-grid{grid-template-columns:1fr}}
+.vip-buy-card{
+  background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,152,0,.04));
+  border:1.5px solid rgba(255,215,0,.35);border-radius:12px;
+  padding:14px;cursor:pointer;text-align:center;transition:transform .15s,border-color .15s;
+}
+.vip-buy-card:hover{transform:translateY(-2px);border-color:#ffd700}
+.vip-buy-card.lifetime{border-color:#ff9800;background:linear-gradient(135deg,rgba(255,152,0,.18),rgba(255,87,34,.06))}
+.vip-buy-card .vb-name{font-size:15px;font-weight:800;color:var(--gold);margin-bottom:4px}
+.vip-buy-card .vb-price{font-size:18px;font-weight:900;color:#ffd700;margin:6px 0}
+.vip-buy-card .vb-saving{font-size:11px;color:#7be395;font-weight:700}
+.vip-buy-card .vb-cta{
+  background:linear-gradient(135deg,#ffd700,#ff9800);color:#3d1a00;
+  border:none;padding:8px 12px;font-weight:800;font-size:12px;
+  border-radius:8px;cursor:pointer;margin-top:8px;width:100%;
+}
+.vip-active-banner{
+  background:linear-gradient(135deg,#27ae60,#1f8a4c);color:#fff;
+  padding:12px 14px;border-radius:10px;text-align:center;
+  font-weight:800;margin-bottom:12px;
+}
+.skin-card-badge.badge-vip{background:linear-gradient(135deg,#ffd700,#ff9800);color:#3d1a00}
+.skin-card.vip-only{border-color:rgba(255,152,0,.4);background:linear-gradient(135deg,rgba(255,152,0,.06),rgba(255,215,0,.02))}
+.skin-card.vip-locked{opacity:.85}
+
+/* Ad simulation overlay (reuse-ish) */
+.ad-energy-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.92);
+  z-index:9999;display:flex;align-items:center;justify-content:center;
+}
+.ad-energy-box{
+  background:linear-gradient(135deg,#1a0a2e,#2d1240);
+  border:2px solid var(--gold);border-radius:14px;
+  padding:24px 26px;max-width:380px;width:90%;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+.ad-energy-box h3{color:var(--gold);font-size:18px;margin-bottom:6px;font-weight:800}
+.ad-energy-box .ad-fake{
+  background:linear-gradient(135deg,#3a1a55,#5b2c87);
+  border-radius:10px;padding:32px 16px;margin:14px 0;
+  color:#fff;font-size:13px;line-height:1.6;
+}
+.ad-energy-box .ad-fake .ad-big{font-size:48px;margin-bottom:8px}
+.ad-energy-box .ad-count{
+  display:inline-block;background:#a01515;color:#fff;
+  padding:6px 14px;border-radius:18px;font-weight:800;font-size:14px;
+  margin:8px 0;
+}
+.ad-energy-box .ad-claim{
+  background:linear-gradient(135deg,#27ae60,#1f8a4c);color:#fff;
+  border:none;padding:10px 20px;font-weight:800;font-size:14px;
+  border-radius:8px;cursor:pointer;margin-top:8px;
+}
+.ad-energy-box .ad-claim:disabled{opacity:.4;cursor:not-allowed;background:#555}
+
+/* Make personalize tabs work for new VIP tab — already inherits .skin-tab */
+
+/* ============ INGAME FULLSCREEN ============ */
+body.game-fullscreen{overflow:hidden}
+body.game-fullscreen .nav{display:none !important}
+body.game-fullscreen #game.page{
+  position:fixed;inset:0;z-index:9000;
+  background:var(--bg-1);
+  overflow:auto;
+  margin:0;padding:0;
+  display:block !important;
+}
+body.game-fullscreen #intro,
+body.game-fullscreen #rules,
+body.game-fullscreen #heritage,
+body.game-fullscreen #personalize{display:none !important}
+/* Floating exit button (shows only while in game) */
+.btn-exit-game{
+  background:linear-gradient(135deg,#c0392b,#7a1a14);color:#fff;border:none;
+  padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:800;
+  font-size:13px;box-shadow:0 4px 14px rgba(160,21,21,.45);
+  letter-spacing:.4px;display:inline-flex;align-items:center;gap:6px;
+  transition:transform .15s,filter .15s;
+}
+.btn-exit-game:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-exit-game .x-ico{font-size:14px}
+/* Show ingame indicator pill */
+.ingame-pill{
+  position:fixed;top:10px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(212,175,55,.95),rgba(184,148,31,.95));
+  color:#3d1a00;padding:6px 16px;border-radius:18px;
+  font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.4);
+  pointer-events:none;display:none;
+}
+body.game-fullscreen .ingame-pill{display:block;animation:ingameFade .4s ease}
+@keyframes ingameFade{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -1636,8 +1811,10 @@
   <div class="topbar-actions">
     <button class="btn-top" onclick="toggleHelp()">📖 Luật</button>
     <button class="btn-top danger" onclick="confirmRestart()">↻ Chơi lại</button>
+    <button class="btn-exit-game" id="btn-exit-game" onclick="confirmExitGame()" style="display:none"><span class="x-ico">🚪</span> Thoát Ván</button>
   </div>
 </div>
+<div class="ingame-pill">🎮 Đang trong ván đấu — Bấm "Thoát Ván" để rời khỏi</div>
 
 <!-- WELCOME OVERLAY -->
 <div class="welcome-overlay" id="welcome">
@@ -1823,6 +2000,7 @@
         <button class="skin-tab active" onclick="switchSkinTab('tokens',this)">🎭 Nhân vật</button>
         <button class="skin-tab" onclick="switchSkinTab('colors',this)">🎨 Màu sắc</button>
         <button class="skin-tab" onclick="switchSkinTab('quests',this)">🎯 Nhiệm vụ</button>
+        <button class="skin-tab" onclick="switchSkinTab('vip',this)">👑 VIP</button>
       </div>
 
       <div id="skin-panel-tokens" class="skin-panel">
@@ -1847,6 +2025,14 @@
           <div style="font-size:12.5px;color:#a09070">Hoàn thành để nhận xu và skin độc quyền</div>
         </div>
         <div id="quests-list"></div>
+      </div>
+
+      <div id="skin-panel-vip" class="skin-panel" style="display:none">
+        <div class="skin-section-head">
+          <div class="skin-section-title">👑 Đặc Quyền VIP</div>
+          <div style="font-size:12.5px;color:#a09070">Bỏ giới hạn năng lượng, mở skin độc quyền &amp; bonus xu mỗi ngày</div>
+        </div>
+        <div id="vip-panel-body"></div>
       </div>
     </div>
   </div>
@@ -1955,7 +2141,11 @@ const TOKEN_SKINS=[
   {id:'tok_food',name:'Ẩm Thực Việt',desc:'Phở, bánh mì và các món Việt nổi tiếng',icons:['🍜','🥖','🍚','🍡','🥟','🍢','🍥','🍙'],price:4000,quest:null},
   {id:'tok_legend',name:'Huyền Thoại 🌟',desc:'Bộ skin huyền thoại — chỉ nhận qua nhiệm vụ',icons:['👑','⚔️','🏛️','🎭','🪷','🎋','🍃','🌟'],price:null,quest:'q_win_3'},
   {id:'tok_emoji',name:'Mặt Cười',desc:'Cùng nhau cười suốt trận đấu',icons:['😀','😎','🤠','🥳','😺','🤖','👽','🤡'],price:1500,quest:null},
-  {id:'tok_animal',name:'Sở Thú',desc:'Bộ thú đáng yêu',icons:['🐶','🐱','🐼','🦊','🐨','🐸','🐵','🦁'],price:2500,quest:null}
+  {id:'tok_animal',name:'Sở Thú',desc:'Bộ thú đáng yêu',icons:['🐶','🐱','🐼','🦊','🐨','🐸','🐵','🦁'],price:2500,quest:null},
+  // ===== VIP EXCLUSIVE TOKEN SKINS =====
+  {id:'tok_vip_royal',name:'Hoàng Tộc 👑',desc:'Chỉ VIP — bộ quyền lực hoàng tộc',icons:['👑','🤴','👸','🧝','🧙','🧞','🦸','🐉'],price:0,quest:null,vipOnly:true},
+  {id:'tok_vip_mythic',name:'Thần Thoại Việt 🐉',desc:'Chỉ VIP — linh thú trong truyền thuyết Việt',icons:['🐉','🦅','🐢','🐅','🐘','🦌','🦚','🐎'],price:0,quest:null,vipOnly:true},
+  {id:'tok_vip_diamond',name:'Kim Cương 💎',desc:'Chỉ VIP — bộ kim cương rực rỡ',icons:['💎','💍','👑','🔱','⚜️','✨','🌟','💠'],price:0,quest:null,vipOnly:true}
 ];
 
 const COLOR_SKINS=[
@@ -1965,7 +2155,9 @@ const COLOR_SKINS=[
   {id:'col_gold',name:'Hoàng Kim 👑',desc:'4 sắc kim loại quý',colors:['#ffd700','#c0c0c0','#cd7f32','#e5e4e2'],price:6000,quest:null},
   {id:'col_ocean',name:'Đại Dương',desc:'Sắc xanh của biển Việt Nam',colors:['#006994','#0085a1','#52b2cf','#9eddf0'],price:2500,quest:null},
   {id:'col_sunset',name:'Hoàng Hôn',desc:'Màu hoàng hôn miền Trung',colors:['#ff6b35','#f7931e','#ffc857','#c1292e'],price:3000,quest:null},
-  {id:'col_jungle',name:'Rừng Nguyên Sinh 🌳',desc:'Sắc xanh rừng VQG — nhận từ nhiệm vụ',colors:['#2d5016','#73a942','#aad576','#f1faee'],price:null,quest:'q_play_10'}
+  {id:'col_jungle',name:'Rừng Nguyên Sinh 🌳',desc:'Sắc xanh rừng VQG — nhận từ nhiệm vụ',colors:['#2d5016','#73a942','#aad576','#f1faee'],price:null,quest:'q_play_10'},
+  // ===== VIP EXCLUSIVE COLOR SKINS =====
+  {id:'col_vip_royal',name:'Sắc Hoàng Tộc 👑',desc:'Chỉ VIP — tím vàng đỏ đen quyền lực',colors:['#7b1fa2','#ffd700','#c62828','#212121'],price:0,quest:null,vipOnly:true}
 ];
 
 const QUESTS=[
@@ -1984,19 +2176,30 @@ function _profileKey(){
   return 'heritage_skin_profile::'+id;
 }
 function loadProfile(){
+  let p=null;
   try{
     const raw=localStorage.getItem(_profileKey());
-    if(raw) return JSON.parse(raw);
+    if(raw) p=JSON.parse(raw);
   }catch(e){}
-  return {
-    coins:1000,
-    ownedTokens:['tok_default'],
-    ownedColors:['col_default'],
-    equippedTokens:'tok_default',
-    equippedColors:'col_default',
-    stats:{games:0,wins:0,maxMoney:0},
-    claimedQuests:[]
-  };
+  if(!p){
+    p = {
+      coins:1000,
+      ownedTokens:['tok_default'],
+      ownedColors:['col_default'],
+      equippedTokens:'tok_default',
+      equippedColors:'col_default',
+      stats:{games:0,wins:0,maxMoney:0},
+      claimedQuests:[]
+    };
+  }
+  // === Migration cho hệ thống năng lượng & VIP (thêm nếu chưa có) ===
+  if(p.energy==null) p.energy = 5;
+  if(p.lastEnergyAt==null) p.lastEnergyAt = Date.now();
+  if(p.vipTier==null) p.vipTier = 'none';      // 'none' | 'monthly' | 'lifetime'
+  if(p.vipUntil==null) p.vipUntil = 0;          // ms timestamp; 0 = none; very-large = lifetime
+  if(p.vipDailyClaimedAt==null) p.vipDailyClaimedAt = '';
+  if(p.lastAdAt==null) p.lastAdAt = 0;
+  return p;
 }
 function saveProfile(p){
   try{ localStorage.setItem(_profileKey(),JSON.stringify(p)); }catch(e){}
@@ -2005,13 +2208,426 @@ function getProfile(){
   if(!window._skinProfile) window._skinProfile=loadProfile();
   return window._skinProfile;
 }
-function persist(){ saveProfile(getProfile()); refreshCoinBar(); }
+function persist(){ saveProfile(getProfile()); refreshCoinBar(); refreshEnergyBar(); }
 function refreshCoinBar(){
   const coinTxt=getProfile().coins.toLocaleString('vi-VN');
   const el=document.getElementById('user-bar-coins');
   if(el) el.textContent=coinTxt;
   const el2=document.getElementById('topbar-coins');
   if(el2) el2.textContent=coinTxt;
+}
+
+/* ============================================================
+   ============== ENERGY & VIP SYSTEM ==========================
+   ============================================================ */
+const ENERGY_BASE_MAX = 5;
+const ENERGY_VIP_MAX  = 10;
+const ENERGY_REGEN_MS_BASE = 15 * 60 * 1000;   // 15 phút
+const ENERGY_REGEN_MS_VIP  = 7.5 * 60 * 1000;  // 7.5 phút (2x nhanh hơn)
+const ENERGY_COST_PER_GAME = 1;
+const AD_COOLDOWN_MS = 5 * 60 * 1000;          // 5 phút giữa các ads
+const VIP_DAILY_BONUS_COINS = 50;
+const VIP_PRICE_MONTHLY  = 5000;
+const VIP_PRICE_LIFETIME = 50000;
+const VIP_LIFETIME_TS    = 9999999999999;       // ms, very-large = "forever"
+
+function isVip(){
+  const p = getProfile();
+  if(!p) return false;
+  // Admin gets VIP automatically
+  if(window.currentUserProfile?.isAdmin) return true;
+  if(p.vipTier === 'lifetime') return true;
+  if(p.vipUntil && p.vipUntil > Date.now()) return true;
+  // Expired? clean up.
+  if(p.vipTier !== 'none' && p.vipUntil && p.vipUntil <= Date.now()){
+    p.vipTier = 'none'; p.vipUntil = 0;
+    saveProfile(p);
+  }
+  return false;
+}
+function getMaxEnergy(){ return isVip() ? ENERGY_VIP_MAX : ENERGY_BASE_MAX; }
+function getRegenMs(){ return isVip() ? ENERGY_REGEN_MS_VIP : ENERGY_REGEN_MS_BASE; }
+
+function tickEnergyRegen(){
+  const p = getProfile();
+  if(p.energy >= getMaxEnergy()){
+    p.lastEnergyAt = Date.now();
+    return;
+  }
+  const now = Date.now();
+  const ms = getRegenMs();
+  const elapsed = now - (p.lastEnergyAt||now);
+  if(elapsed >= ms){
+    const gained = Math.floor(elapsed / ms);
+    p.energy = Math.min(getMaxEnergy(), p.energy + gained);
+    p.lastEnergyAt = (p.lastEnergyAt||now) + gained * ms;
+    if(p.energy >= getMaxEnergy()) p.lastEnergyAt = now;
+    saveProfile(p);
+  }
+}
+function msUntilNextEnergy(){
+  const p = getProfile();
+  if(p.energy >= getMaxEnergy()) return 0;
+  const ms = getRegenMs();
+  const elapsed = Date.now() - (p.lastEnergyAt||Date.now());
+  return Math.max(0, ms - elapsed);
+}
+function fmtCountdown(ms){
+  if(ms <= 0) return '00:00';
+  const total = Math.ceil(ms/1000);
+  const m = Math.floor(total/60), s = total%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function consumeEnergy(n){
+  n = n||ENERGY_COST_PER_GAME;
+  tickEnergyRegen();
+  const p = getProfile();
+  if(p.energy < n) return false;
+  p.energy -= n;
+  // Khởi động lại bộ đếm regen nếu vừa từ FULL sang thiếu
+  if(p.energy + n >= getMaxEnergy()) p.lastEnergyAt = Date.now();
+  saveProfile(p);
+  refreshEnergyBar();
+  return true;
+}
+function addEnergy(n){
+  const p = getProfile();
+  p.energy = Math.min(getMaxEnergy(), (p.energy||0) + n);
+  saveProfile(p);
+  refreshEnergyBar();
+}
+
+function refreshEnergyBar(){
+  const el = document.getElementById('topbar-energy');
+  if(!el) return;
+  tickEnergyRegen();
+  const p = getProfile();
+  const max = getMaxEnergy();
+  const cur = p.energy;
+  el.classList.toggle('empty', cur<=0);
+  let timerHtml = '';
+  if(cur < max){
+    timerHtml = `<span class="e-timer">${fmtCountdown(msUntilNextEnergy())}</span>`;
+  }
+  el.innerHTML = `<span class="e-ico">⚡</span><span id="topbar-energy-val">${cur}/${max}</span>${timerHtml}`;
+  // Update energy modal if open
+  const box = document.getElementById('energy-status-live');
+  if(box) box.innerHTML = renderEnergyStatusInner();
+}
+// Tick UI countdown each second
+setInterval(()=>{ if(document.getElementById('topbar-energy')) refreshEnergyBar(); }, 1000);
+
+/* ============== ENERGY SHOP MODAL ============== */
+function renderEnergyStatusInner(){
+  const p = getProfile();
+  const max = getMaxEnergy();
+  const next = msUntilNextEnergy();
+  const vipNote = isVip() ? `<div style="font-size:11px;color:#ffd700;margin-top:2px">👑 VIP: tốc độ hồi 2× &amp; max ${ENERGY_VIP_MAX}</div>` : '';
+  return `
+    <div class="en-now">${p.energy}<span class="en-cap"> / ${max} ⚡</span></div>
+    <div class="en-next">${p.energy<max ? `Hồi thêm 1 ⚡ sau <b>${fmtCountdown(next)}</b>` : 'Năng lượng đã đầy!'}</div>
+    ${vipNote}`;
+}
+function openEnergyShop(){
+  initAudio();
+  tickEnergyRegen();
+  const p = getProfile();
+  const adReadyMs = Math.max(0, AD_COOLDOWN_MS - (Date.now() - (p.lastAdAt||0)));
+  const adReady = adReadyMs <= 0;
+  const max = getMaxEnergy();
+  const full = p.energy >= max;
+
+  const adBtnLabel = isVip()
+    ? `👑 NHẬN +1 ⚡ NGAY (VIP)`
+    : (adReady ? `▶️ Xem quảng cáo +1 ⚡` : `⏳ Chờ ${fmtCountdown(adReadyMs)}`);
+
+  const body = `
+    <div class="modal-body" style="text-align:left">
+      <div class="energy-status-box">
+        <div id="energy-status-live">${renderEnergyStatusInner()}</div>
+      </div>
+      <div style="font-size:13px;color:#bba87a;margin:8px 0">Hết năng lượng? Mua thêm bằng xu hoặc xem quảng cáo để chơi tiếp:</div>
+      <div class="e-shop-grid">
+        <div class="e-shop-card">
+          <div class="e-title">⚡ +1 Năng lượng</div>
+          <div class="e-desc">Mua nhanh 1 ⚡ — đủ cho 1 ván</div>
+          <div class="e-price">💰 50 xu</div>
+          <button class="e-buy" ${full?'disabled':''} onclick="buyEnergyWithCoins(1,50)">${full?'Đã đầy':'Mua 1'}</button>
+        </div>
+        <div class="e-shop-card featured">
+          <span class="e-badge">TIẾT KIỆM</span>
+          <div class="e-title">⚡⚡⚡⚡⚡ +5 Năng lượng</div>
+          <div class="e-desc">Combo 5 ⚡ — rẻ hơn 20%</div>
+          <div class="e-price">💰 200 xu</div>
+          <button class="e-buy" ${full?'disabled':''} onclick="buyEnergyWithCoins(5,200)">${full?'Đã đầy':'Mua combo 5'}</button>
+        </div>
+        <div class="e-shop-card featured">
+          <span class="e-badge">SIÊU HỜI</span>
+          <div class="e-title">⚡×10 Năng lượng</div>
+          <div class="e-desc">Combo lớn 10 ⚡ — rẻ hơn 30%</div>
+          <div class="e-price">💰 350 xu</div>
+          <button class="e-buy" ${full?'disabled':''} onclick="buyEnergyWithCoins(10,350)">${full?'Đã đầy':'Mua combo 10'}</button>
+        </div>
+        <div class="e-shop-card">
+          <div class="e-title">📺 Xem quảng cáo</div>
+          <div class="e-desc">${isVip()?'VIP: bỏ qua quảng cáo — nhận ngay':'Xem ads ~15s nhận 1 ⚡ (cooldown 5p)'}</div>
+          <div class="e-price ads">+1 ⚡ miễn phí</div>
+          <button class="e-buy ads" ${(!adReady && !isVip()) || full?'disabled':''} onclick="watchAdForEnergy()">${full?'Đã đầy':adBtnLabel}</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#8a7050;text-align:center;margin-top:6px">
+        ✨ Muốn không lo năng lượng? <a href="#" style="color:#ffd700" onclick="document.getElementById('modal').style.display='none';openVipShop();return false">Nâng cấp VIP</a>
+      </div>
+    </div>`;
+
+  showModal('⚡ Mua Năng Lượng', body, [
+    {label:'Đóng', fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+function buyEnergyWithCoins(amount, cost){
+  initAudio();
+  const p = getProfile();
+  if(p.energy >= getMaxEnergy()){ addToast('Năng lượng đã đầy'); return; }
+  const isAdm = !!(window.currentUserProfile?.isAdmin);
+  if(!isAdm && p.coins < cost){
+    addToast('Không đủ xu! Cần ' + cost + ' xu');
+    return;
+  }
+  if(!isAdm) p.coins -= cost;
+  p.energy = Math.min(getMaxEnergy(), p.energy + amount);
+  sfxBuy();
+  persist();
+  addToast(`✅ +${amount} ⚡ (-${isAdm?0:cost} xu)`);
+  // Re-render energy modal
+  const live = document.getElementById('energy-status-live');
+  if(live) openEnergyShop();
+  else refreshEnergyBar();
+}
+function watchAdForEnergy(){
+  initAudio();
+  const p = getProfile();
+  if(p.energy >= getMaxEnergy()){ addToast('Năng lượng đã đầy'); return; }
+  const vip = isVip();
+  if(!vip){
+    const sinceLast = Date.now() - (p.lastAdAt||0);
+    if(sinceLast < AD_COOLDOWN_MS){
+      addToast(`⏳ Chờ ${fmtCountdown(AD_COOLDOWN_MS - sinceLast)} để xem ads tiếp`);
+      return;
+    }
+  }
+  // Đóng modal mua năng lượng nếu đang mở
+  document.getElementById('modal').style.display='none';
+
+  if(vip){
+    // VIP auto-claim, không cần xem ads
+    p.lastAdAt = Date.now();
+    addEnergy(1);
+    saveProfile(p);
+    sfxCoin();
+    addToast('👑 VIP nhận +1 ⚡ (bỏ qua quảng cáo)');
+    refreshEnergyBar();
+    return;
+  }
+
+  // Tạo overlay ads giả lập (15s countdown)
+  const ov = document.createElement('div');
+  ov.className = 'ad-energy-overlay';
+  ov.innerHTML = `
+    <div class="ad-energy-box">
+      <h3>📺 Quảng cáo có thưởng</h3>
+      <div style="font-size:11px;color:#a890c0">Xem hết để nhận +1 ⚡</div>
+      <div class="ad-fake">
+        <div class="ad-big">🏖️</div>
+        <div><b>Cờ Tỉ Phú VN</b></div>
+        <div style="opacity:.8">Khám phá di sản Việt — chơi cùng bạn bè!</div>
+      </div>
+      <div class="ad-count" id="ad-energy-count">15s</div>
+      <button class="ad-claim" id="ad-energy-claim" disabled>Nhận +1 ⚡</button>
+    </div>`;
+  document.body.appendChild(ov);
+  let s = 15;
+  const cd = document.getElementById('ad-energy-count');
+  const claim = document.getElementById('ad-energy-claim');
+  const itv = setInterval(()=>{
+    s--;
+    if(cd) cd.textContent = s + 's';
+    if(s<=0){
+      clearInterval(itv);
+      if(cd) cd.textContent = 'Hoàn thành ✓';
+      if(claim){ claim.disabled = false; claim.style.background='linear-gradient(135deg,#ffd700,#ff9800)'; claim.style.color='#3d1a00'; }
+    }
+  }, 1000);
+  claim.addEventListener('click', ()=>{
+    const pp = getProfile();
+    pp.lastAdAt = Date.now();
+    saveProfile(pp);
+    addEnergy(1);
+    sfxCoin();
+    addToast('🎉 +1 ⚡ từ quảng cáo!');
+    ov.remove();
+    refreshEnergyBar();
+  });
+}
+
+/* ============== VIP SHOP MODAL & PURCHASE ============== */
+function vipExpiryLabel(){
+  const p = getProfile();
+  if(p.vipTier === 'lifetime' || p.vipUntil >= VIP_LIFETIME_TS) return 'VIP Vĩnh viễn 👑';
+  if(p.vipUntil > Date.now()){
+    const days = Math.ceil((p.vipUntil - Date.now())/(24*60*60*1000));
+    return `VIP còn ${days} ngày`;
+  }
+  return '';
+}
+function openVipShop(){
+  initAudio();
+  const vip = isVip();
+  const p = getProfile();
+  const banner = vip
+    ? `<div class="vip-active-banner">👑 Bạn đang là VIP — ${vipExpiryLabel()}</div>`
+    : '';
+  const buyGrid = vip
+    ? `<div style="text-align:center;color:#bba87a;font-size:13px;margin-top:8px">Mọi đặc quyền đã được kích hoạt. Hẹn gặp bạn trên bàn cờ! 🎲</div>`
+    : `
+      <div class="vip-buy-grid">
+        <div class="vip-buy-card">
+          <div class="vb-name">VIP Tháng</div>
+          <div style="font-size:11px;color:#bba87a">30 ngày đặc quyền</div>
+          <div class="vb-price">💰 ${VIP_PRICE_MONTHLY.toLocaleString('vi-VN')} xu</div>
+          <div class="vb-saving">Trải nghiệm tháng</div>
+          <button class="vb-cta" onclick="buyVip('monthly')">Mua tháng</button>
+        </div>
+        <div class="vip-buy-card lifetime">
+          <div class="vb-name">VIP Vĩnh Viễn 👑</div>
+          <div style="font-size:11px;color:#bba87a">Trọn đời — chỉ mua 1 lần</div>
+          <div class="vb-price">💰 ${VIP_PRICE_LIFETIME.toLocaleString('vi-VN')} xu</div>
+          <div class="vb-saving">⭐ Tiết kiệm 90% so với mua từng tháng</div>
+          <button class="vb-cta" onclick="buyVip('lifetime')">Mua vĩnh viễn</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#8a7050;margin-top:10px;text-align:center">Số xu hiện có: <b style="color:#ffd700">${p.coins.toLocaleString('vi-VN')} xu</b></div>`;
+
+  const body = `
+    <div class="modal-body" style="text-align:left">
+      <div class="vip-hero">
+        <h3>👑 Heritage VIP</h3>
+        <p>Mở khoá toàn bộ đặc quyền — không còn lo năng lượng!</p>
+      </div>
+      ${banner}
+      <ul class="vip-perks">
+        <li><span>Skin VIP độc quyền (4 bộ) — Hoàng Tộc 👑, Thần Thoại 🐉, Kim Cương 💎, Sắc Hoàng Tộc</span></li>
+        <li><span>Năng lượng tối đa <b>${ENERGY_VIP_MAX}</b> (gấp đôi) &amp; tốc độ hồi <b>2× nhanh</b> (7.5p / ⚡)</span></li>
+        <li><span>Bỏ qua quảng cáo — bấm "Nhận ⚡" là +1 ngay, không phải xem ads</span></li>
+        <li><span>Bonus <b>+${VIP_DAILY_BONUS_COINS} xu</b> đăng nhập mỗi ngày</span></li>
+        <li><span>Huy hiệu <b>VIP vàng</b> cạnh tên trong game &amp; bảng xếp hạng</span></li>
+      </ul>
+      ${buyGrid}
+    </div>`;
+  showModal('👑 Đặc Quyền VIP', body, [
+    {label:'Đóng', fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+function buyVip(tier){
+  initAudio();
+  const p = getProfile();
+  const isAdm = !!(window.currentUserProfile?.isAdmin);
+  const price = (tier==='lifetime') ? VIP_PRICE_LIFETIME : VIP_PRICE_MONTHLY;
+  if(isVip() && tier!=='lifetime'){
+    addToast('Bạn đã là VIP rồi');
+    return;
+  }
+  if(!isAdm && p.coins < price){
+    addToast(`Không đủ xu! Cần ${price.toLocaleString('vi-VN')} xu`);
+    return;
+  }
+  const niceName = tier==='lifetime' ? 'VIP Vĩnh Viễn 👑' : 'VIP Tháng';
+  showModal('Xác nhận nâng cấp', `<div class="modal-body">Mua <b style="color:#ffd700">${niceName}</b> với giá <b style="color:#ffd700">${isAdm?'MIỄN PHÍ (Admin)':price.toLocaleString('vi-VN')+' xu'}</b>?</div>`, [
+    {label:'Mua ngay', primary:true, fn:()=>{
+      document.getElementById('modal').style.display='none';
+      const pp = getProfile();
+      if(!isAdm) pp.coins -= price;
+      if(tier==='lifetime'){
+        pp.vipTier = 'lifetime';
+        pp.vipUntil = VIP_LIFETIME_TS;
+      } else {
+        pp.vipTier = 'monthly';
+        const base = Math.max(pp.vipUntil||0, Date.now());
+        pp.vipUntil = base + 30*24*60*60*1000;
+      }
+      // Nâng max energy lên ngay khi vào VIP (cộng phần chênh lệch)
+      pp.energy = Math.min(getMaxEnergy(), pp.energy + (ENERGY_VIP_MAX - ENERGY_BASE_MAX));
+      saveProfile(pp);
+      sfxWin();
+      persist();
+      renderTopbarVip();
+      if(typeof renderPersonalize==='function') renderPersonalize();
+      showModal('🎉 Chào mừng VIP!', `<div class="modal-body" style="text-align:center"><div style="font-size:48px">👑</div><div>Đặc quyền đã kích hoạt! Vào tab <b>VIP</b> để xem chi tiết.</div></div>`, [
+        {label:'Tuyệt!', primary:true, fn:()=>{document.getElementById('modal').style.display='none';}}
+      ]);
+    }},
+    {label:'Huỷ', fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+function claimDailyVipBonus(){
+  if(!isVip()) return;
+  const p = getProfile();
+  const today = new Date().toISOString().slice(0,10); // yyyy-mm-dd
+  if(p.vipDailyClaimedAt === today) return;
+  p.vipDailyClaimedAt = today;
+  p.coins += VIP_DAILY_BONUS_COINS;
+  saveProfile(p);
+  refreshCoinBar();
+  addToast(`👑 VIP daily: +${VIP_DAILY_BONUS_COINS} xu!`);
+}
+function renderTopbarVip(){
+  // Add a small VIP badge inside topbar-user (next to coin) if VIP
+  const tb = document.getElementById('topbar-user');
+  if(!tb) return;
+  // Remove existing badge first
+  tb.querySelectorAll('.topbar-vip-badge').forEach(e=>e.remove());
+  if(isVip()){
+    const b = document.createElement('span');
+    b.className = 'topbar-vip-badge';
+    b.title = vipExpiryLabel() || 'VIP';
+    b.textContent = '👑 VIP';
+    // Chèn vào đầu topbar-user
+    tb.insertBefore(b, tb.firstChild);
+  }
+}
+function renderVipPanel(){
+  const host = document.getElementById('vip-panel-body');
+  if(!host) return;
+  const vip = isVip();
+  const p = getProfile();
+  const today = new Date().toISOString().slice(0,10);
+  const dailyAvail = vip && p.vipDailyClaimedAt !== today;
+
+  if(vip){
+    host.innerHTML = `
+      <div class="vip-active-banner">👑 ${vipExpiryLabel()} — Cảm ơn bạn đã ủng hộ!</div>
+      <ul class="vip-perks">
+        <li><span>Năng lượng tối đa: <b>${ENERGY_VIP_MAX}</b> (gấp đôi)</span></li>
+        <li><span>Tốc độ hồi năng lượng: <b>2× nhanh</b> (7.5 phút / ⚡)</span></li>
+        <li><span>Bỏ qua quảng cáo — bấm Nhận là +1 ⚡ ngay</span></li>
+        <li><span>Bonus +${VIP_DAILY_BONUS_COINS} xu / ngày khi đăng nhập</span></li>
+        <li><span>Skin VIP độc quyền đã mở khoá trong tab "Nhân vật" / "Màu sắc"</span></li>
+      </ul>
+      <button class="btn-primary" style="width:100%;margin-top:10px" ${dailyAvail?'':'disabled'} onclick="claimDailyVipBonus();renderVipPanel()">
+        ${dailyAvail ? `🎁 Nhận +${VIP_DAILY_BONUS_COINS} xu hôm nay` : '✓ Đã nhận thưởng hôm nay'}
+      </button>
+    `;
+  } else {
+    host.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(91,44,135,.2),rgba(255,152,0,.1));border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:42px;margin-bottom:8px">👑</div>
+        <h3 style="color:var(--gold);font-size:18px;margin-bottom:6px">Bạn chưa là VIP</h3>
+        <p style="color:#bba87a;font-size:13px;line-height:1.6;margin-bottom:14px">
+          Mở khoá năng lượng không giới hạn, skin độc quyền và bonus xu daily — chỉ từ <b style="color:#ffd700">${VIP_PRICE_MONTHLY.toLocaleString('vi-VN')} xu/tháng</b>.
+        </p>
+        <button class="btn-primary" onclick="openVipShop()">👑 Xem đặc quyền VIP</button>
+      </div>
+    `;
+  }
 }
 
 function applyEquippedSkins(){
@@ -2027,10 +2643,11 @@ function switchSkinTab(tab,btn){
   initAudio();sfxClick();
   document.querySelectorAll('.skin-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  ['tokens','colors','quests'].forEach(t=>{
+  ['tokens','colors','quests','vip'].forEach(t=>{
     const el=document.getElementById('skin-panel-'+t);
     if(el) el.style.display=(t===tab)?'block':'none';
   });
+  if(tab==='vip') renderVipPanel();
 }
 
 function renderPersonalize(){
@@ -2056,6 +2673,7 @@ function renderPersonalize(){
   renderSkinGrid('tokens');
   renderSkinGrid('colors');
   renderQuests();
+  renderVipPanel();
 }
 
 function renderSkinGrid(kind){
@@ -2066,10 +2684,13 @@ function renderSkinGrid(kind){
   if(!grid) return;
   const p=getProfile();
   grid.innerHTML='';
+  const userIsVip = isVip();
   list.forEach(skin=>{
     const owned=p[ownedKey].includes(skin.id);
     const equipped=p[equippedKey]===skin.id;
-    const locked=!owned && skin.quest!==null && skin.price===null;
+    const isVipSkin = !!skin.vipOnly;
+    const locked=!owned && skin.quest!==null && skin.price===null && !isVipSkin;
+    const vipLocked = isVipSkin && !userIsVip;
     // preview
     let preview='';
     if(kind==='tokens'){
@@ -2081,6 +2702,7 @@ function renderSkinGrid(kind){
     let badge='';
     if(equipped) badge=`<span class="skin-card-badge badge-equipped">Đang dùng</span>`;
     else if(owned) badge=`<span class="skin-card-badge badge-owned">Đã sở hữu</span>`;
+    else if(isVipSkin) badge=`<span class="skin-card-badge badge-vip">👑 VIP</span>`;
     else if(locked) badge=`<span class="skin-card-badge badge-locked">Khoá</span>`;
     // footer
     let footer='';
@@ -2088,6 +2710,12 @@ function renderSkinGrid(kind){
       footer=`<span class="skin-price free">Đang trang bị</span>`;
     } else if(owned){
       footer=`<button class="skin-btn equip" onclick="equipSkin('${kind}','${skin.id}')">✓ Trang bị</button>`;
+    } else if(isVipSkin){
+      if(userIsVip){
+        footer=`<span class="skin-price free">👑 Miễn phí VIP</span><button class="skin-btn equip" onclick="claimVipSkin('${kind}','${skin.id}')">Mở khoá</button>`;
+      } else {
+        footer=`<span class="skin-price" style="color:#ffd700;font-size:12px">👑 Dành riêng VIP</span><button class="skin-btn" onclick="openVipShop()">Lên VIP</button>`;
+      }
     } else if(skin.price!==null){
       // Admin → luôn đủ xu, không bị disable
       const adm=!!(window.currentUserProfile?.isAdmin);
@@ -2099,7 +2727,8 @@ function renderSkinGrid(kind){
       footer=`<span class="skin-price" style="color:#ff9090;font-size:12px">🎯 ${q?q.name:'Nhiệm vụ'}</span>`;
     }
     const card=document.createElement('div');
-    card.className='skin-card'+(equipped?' equipped':(owned?' owned':(locked?' locked':'')));
+    card.className='skin-card'+(equipped?' equipped':(owned?' owned':(locked?' locked':'')))
+      + (isVipSkin?' vip-only':'') + (vipLocked?' vip-locked':'');
     card.innerHTML=`
       <div class="skin-card-header">
         <div class="skin-card-title">${skin.name}</div>
@@ -2110,6 +2739,23 @@ function renderSkinGrid(kind){
       <div class="skin-card-footer">${footer}</div>`;
     grid.appendChild(card);
   });
+}
+
+// Mở khoá skin VIP (miễn phí cho VIP)
+function claimVipSkin(kind,id){
+  initAudio();
+  if(!isVip()){ addToast('Bạn cần là VIP để mở skin này'); return; }
+  const p = getProfile();
+  const list = kind==='tokens' ? TOKEN_SKINS : COLOR_SKINS;
+  const ownedKey = kind==='tokens' ? 'ownedTokens' : 'ownedColors';
+  const skin = list.find(s=>s.id===id);
+  if(!skin || !skin.vipOnly) return;
+  if(p[ownedKey].includes(id)){ addToast('Đã sở hữu'); return; }
+  p[ownedKey].push(id);
+  sfxBuy();
+  persist();
+  addToast(`👑 Đã mở khoá: ${skin.name}`);
+  renderPersonalize();
 }
 
 function renderQuests(){
@@ -2484,6 +3130,18 @@ const selectedTokens=[0,1,2,3];
 
 function showPage(id,btnEl){
   initAudio();sfxClick();
+  // ===== Chặn chuyển tab khi đang trong ván đấu =====
+  if(window.gameInProgress && id !== 'game'){
+    if(typeof showModal==='function'){
+      showModal('🚪 Đang trong ván đấu', '<div class="modal-body">Bạn đang chơi một ván cờ. Hãy bấm <b>"🚪 Thoát Ván"</b> để rời khỏi trước khi chuyển sang tab khác.</div>', [
+        {label:'Thoát ván', primary:true, fn:()=>{ document.getElementById('modal').style.display='none'; if(typeof confirmExitGame==='function') confirmExitGame(); }},
+        {label:'Tiếp tục chơi', fn:()=>{document.getElementById('modal').style.display='none';}}
+      ]);
+    } else {
+      alert('Bạn đang trong ván đấu — bấm "Thoát Ván" để rời khỏi trước');
+    }
+    return;
+  }
   // ===== Chặn vào trang game khi chưa đăng nhập =====
   if(id==='game' && !window.currentUserProfile){
     if(typeof addToast==='function') addToast('⚠️ Vui lòng đăng nhập để chơi!');
@@ -2512,6 +3170,73 @@ function setNumPlayers(n,btn){
   btn.classList.add('selected');
   renderSetup();
 }
+
+/* ============================================================
+   ============== INGAME FULLSCREEN MODE =======================
+   ============================================================ */
+window.gameInProgress = false;
+
+function enterGameFullscreen(){
+  window.gameInProgress = true;
+  document.body.classList.add('game-fullscreen');
+  // Đảm bảo trang game đang active
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  const gp = document.getElementById('game');
+  if(gp) gp.classList.add('active');
+  // Hiển thị nút Thoát Ván trên topbar v2
+  const eb = document.getElementById('btn-exit-game');
+  if(eb) eb.style.display = 'inline-flex';
+  // Yêu cầu browser fullscreen (best-effort, có thể bị từ chối nếu không phải gesture)
+  try{
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if(req){
+      const pr = req.call(el);
+      if(pr && pr.catch) pr.catch(()=>{ /* user/policy denial — vẫn dùng CSS fullscreen */ });
+    }
+  }catch(e){ /* ignore */ }
+  // Cuộn về đầu để không bị lệch
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+
+function exitGameFullscreen(){
+  window.gameInProgress = false;
+  document.body.classList.remove('game-fullscreen');
+  const eb = document.getElementById('btn-exit-game');
+  if(eb) eb.style.display = 'none';
+  try{
+    if(document.fullscreenElement || document.webkitFullscreenElement){
+      const fn = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+      if(fn){ const pr = fn.call(document); if(pr && pr.catch) pr.catch(()=>{}); }
+    }
+  }catch(e){}
+}
+
+function confirmExitGame(){
+  if(typeof showModal!=='function'){
+    if(confirm('Thoát ván đấu hiện tại?')){ exitGameFullscreen(); location.reload(); }
+    return;
+  }
+  showModal('🚪 Thoát ván đấu?', `<div class="modal-body">
+    Ván đấu đang diễn ra sẽ <b style="color:#ff6b6b">không được lưu</b>.<br>
+    Năng lượng ⚡ đã dùng <b>không hoàn lại</b>.<br><br>
+    Bạn có chắc muốn thoát ván?
+  </div>`, [
+    {label:'🚪 Thoát ván', primary:true, fn:()=>{
+      document.getElementById('modal').style.display='none';
+      exitGameFullscreen();
+      // Reset toàn bộ state game v2 — đơn giản nhất là reload
+      location.reload();
+    }},
+    {label:'Tiếp tục chơi', fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+
+// Nếu user nhấn Escape thoát browser fullscreen, vẫn giữ CSS fullscreen (tab nav vẫn bị ẩn)
+// Nhưng nếu thoát CSS fullscreen thì cũng thoát browser fullscreen
+document.addEventListener('fullscreenchange', ()=>{
+  // Không tự exit CSS — user cần bấm nút "Thoát Ván"
+}, false);
 function renderSetup(){
   const el=document.getElementById('player-setup');
   if(!el) return; // v1 setup-area removed — game v2 replaces it
@@ -2537,6 +3262,21 @@ function startGame(){
     else alert('⚠️ Vui lòng đăng nhập để bắt đầu chơi!');
     if(typeof openAuthModal==='function') openAuthModal('login');
     return;
+  }
+  // ===== Kiểm tra năng lượng — tiêu thụ 1 ⚡ mỗi ván =====
+  if(typeof tickEnergyRegen==='function') tickEnergyRegen();
+  if(typeof getProfile==='function'){
+    const _p = getProfile();
+    if(_p.energy < ENERGY_COST_PER_GAME){
+      addToast('⚡ Hết năng lượng! Mua thêm để chơi tiếp.');
+      openEnergyShop();
+      return;
+    }
+    if(!consumeEnergy(ENERGY_COST_PER_GAME)){
+      addToast('⚡ Hết năng lượng!');
+      openEnergyShop();
+      return;
+    }
   }
   initAudio();sfxBuild();
   players=[];
@@ -4634,6 +5374,8 @@ function checkVictory(){
   }
 }
 function showVictory(winner){
+  // Ván đấu kết thúc → tự động thoát fullscreen để người chơi có thể chuyển tab
+  if(typeof exitGameFullscreen==='function') exitGameFullscreen();
   const body = document.getElementById('boss-modal-body');
   body.innerHTML = `
     <h2 style="color:var(--gold);font-size:32px">🏆 CHIẾN THẮNG 🏆</h2>
@@ -4751,6 +5493,21 @@ function startGame(){
     if(typeof openAuthModal==='function') openAuthModal('login');
     return;
   }
+  // ===== Kiểm tra năng lượng — tiêu thụ 1 ⚡ mỗi ván =====
+  if(typeof tickEnergyRegen==='function') tickEnergyRegen();
+  if(typeof getProfile==='function' && typeof ENERGY_COST_PER_GAME!=='undefined'){
+    const _p = getProfile();
+    if(_p.energy < ENERGY_COST_PER_GAME){
+      addToast('⚡ Hết năng lượng! Mua thêm để chơi tiếp.');
+      if(typeof openEnergyShop==='function') openEnergyShop();
+      return;
+    }
+    if(!consumeEnergy(ENERGY_COST_PER_GAME)){
+      addToast('⚡ Hết năng lượng!');
+      if(typeof openEnergyShop==='function') openEnergyShop();
+      return;
+    }
+  }
   document.getElementById('welcome').style.display = 'none';
   newGame();
   renderAll();
@@ -4758,6 +5515,8 @@ function startGame(){
   document.getElementById('hero-modal').classList.add('show');
   log('event', `🇻🇳 <b>VIỆT NAM HERITAGE RACE v2.0</b> bắt đầu! 4 người chơi, 40 vòng, 9 tộc hệ.`);
   log('event', `📜 Người chơi 1, hãy chọn anh hùng — 3 AI sẽ tự chọn.`);
+  // ===== Vào chế độ toàn màn hình & khoá tab nav =====
+  if(typeof enterGameFullscreen==='function') enterGameFullscreen();
 }
 
 window.addEventListener('resize', ()=>{ if(G) renderTokens(); });
@@ -5212,6 +5971,9 @@ function renderTopbarUser(profile, email) {
     const coinTitle = isAdm ? 'Xu của admin (không bao giờ về 0)' : 'Coin của bạn'
     tb.innerHTML = `
       ${adminBadgeTopbar}
+      <button id="topbar-energy" class="topbar-energy" onclick="openEnergyShop()" title="Năng lượng — bấm để mua/xem ads">
+        <span class="e-ico">⚡</span><span id="topbar-energy-val">5/5</span>
+      </button>
       <button class="${coinClass}" onclick="typeof showSkinShop==='function'&&showSkinShop()" title="${coinTitle}">
         🪙 <span id="topbar-coins">${coins}</span>
       </button>
@@ -5224,9 +5986,13 @@ function renderTopbarUser(profile, email) {
           </div>
           <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';typeof showLeaderboardModal==='function'&&showLeaderboardModal()">🏆 <span>Bảng xếp hạng</span></button>
           <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';typeof showSkinShop==='function'&&showSkinShop()">🎨 <span>Cửa hàng skin</span></button>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';openEnergyShop()">⚡ <span>Mua năng lượng</span></button>
+          <button class="ud-item" onclick="document.getElementById('user-dropdown').style.display='none';openVipShop()">👑 <span>Trở thành VIP</span></button>
           <button class="ud-item danger" onclick="document.getElementById('user-dropdown').style.display='none';doLogout()">🚪 <span>Đăng xuất</span></button>
         </div>
       </div>`
+    // Refresh widgets sau khi render
+    try { renderTopbarVip(); refreshEnergyBar(); claimDailyVipBonus(); } catch(e){ console.warn('[topbar refresh]', e); }
   } else {
     tb.innerHTML = `
       <button class="btn-login-top" onclick="openAuthModal('login')">
