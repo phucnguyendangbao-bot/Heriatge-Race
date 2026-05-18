@@ -573,36 +573,129 @@
 }
 
 
-#race-v2-root .panel {background:linear-gradient(180deg,rgba(45,18,0,.85),rgba(26,10,0,.85));
-  border:1px solid rgba(212,175,55,.3);border-radius:14px;padding:14px;
-  box-shadow:0 8px 24px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,210,140,.08);margin-bottom:14px}
+#race-v2-root .panel{
+  background:linear-gradient(180deg,rgba(45,18,0,.88),rgba(26,10,0,.88));
+  border:1px solid rgba(212,175,55,.28);
+  border-radius:12px;
+  padding:12px 14px 14px;
+  box-shadow:0 6px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,210,140,.08);
+  margin-bottom:12px;
+  position:relative;
+}
+#race-v2-root .panel::before{
+  content:'';
+  position:absolute; left:0; top:14px; bottom:14px; width:3px;
+  background:linear-gradient(180deg,var(--gold),transparent);
+  border-radius:0 2px 2px 0;
+}
+#race-v2-root .panel h3{
+  color:var(--gold);
+  font-size:12px;
+  letter-spacing:1.6px;
+  margin:0 0 10px;
+  text-transform:uppercase;
+  font-weight:800;
+  display:flex; align-items:center; gap:7px;
+  padding-bottom:0;
+  border-bottom:none;
+}
+#race-v2-root .panel h3::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,rgba(212,175,55,.35),transparent);
+  margin-left:4px;
+}
 
-#race-v2-root .panel h3 {color:var(--gold);font-size:13px;letter-spacing:1.5px;margin-bottom:10px;
-  text-transform:uppercase;font-weight:800;display:flex;align-items:center;gap:6px;
-  border-bottom:1px dashed rgba(212,175,55,.25);padding-bottom:6px}
 
 
+#race-v2-root .player{
+  display:grid;
+  grid-template-columns:42px 1fr auto;
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  row-gap:2px;
+  align-items:center;
+  padding:8px 10px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(0,0,0,.35),rgba(0,0,0,.2));
+  margin-bottom:6px;
+  border:1px solid rgba(212,175,55,.12);
+  transition:transform .2s, box-shadow .2s, border-color .2s;
+  position:relative;
+  overflow:hidden;
+}
+#race-v2-root .player:hover{ transform:translateX(2px) }
+#race-v2-root .player.active{
+  border-color:var(--gold);
+  background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.04));
+  box-shadow:0 0 0 1px rgba(212,175,55,.35), 0 4px 14px rgba(212,175,55,.18);
+}
+#race-v2-root .player.active::before{
+  content:'ĐANG ĐI';
+  position:absolute; top:6px; right:8px;
+  font-size:8px; font-weight:900; letter-spacing:1px;
+  color:#1a0a00; background:var(--gold);
+  padding:1px 5px; border-radius:3px;
+  animation:pulseDim 1.4s ease-in-out infinite;
+}
+@keyframes pulseDim{ 0%,100%{opacity:1} 50%{opacity:.55} }
 
-#race-v2-root .player {display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;
-  background:rgba(0,0,0,.3);margin-bottom:8px;border:1px solid rgba(212,175,55,.15);
-  transition:all .25s;position:relative;overflow:hidden}
+#race-v2-root .p-avatar{
+  grid-row:1 / span 2;
+  width:40px; height:40px;
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-size:20px; color:#fff; font-weight:900;
+  flex-shrink:0;
+  border:2px solid rgba(255,255,255,.25);
+  box-shadow:0 0 0 2px var(--player-ring,transparent), 0 3px 8px rgba(0,0,0,.5);
+}
+#race-v2-root .player.active .p-avatar{
+  box-shadow:0 0 0 2px var(--gold), 0 0 12px rgba(212,175,55,.5);
+}
 
-#race-v2-root .player.active {border-color:var(--gold);box-shadow:0 0 18px rgba(212,175,55,.4);background:rgba(212,175,55,.08)}
-
-#race-v2-root .player.active::before {content:'▶';position:absolute;left:-2px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:10px}
-
-#race-v2-root .p-avatar {width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
-  font-size:18px;color:#fff;font-weight:900;flex-shrink:0;border:2px solid rgba(255,255,255,.2)}
-
-#race-v2-root .p-info {flex:1;min-width:0}
-
-#race-v2-root .p-name {font-weight:700;font-size:13px;color:var(--gold-soft);display:flex;align-items:center;gap:5px}
-
-#race-v2-root .p-hero {font-size:10px;color:var(--muted);font-style:italic}
-
-#race-v2-root .p-money {font-size:14px;color:var(--gold);font-weight:800;margin-top:2px}
-
-#race-v2-root .p-properties {font-size:10px;color:var(--muted)}
+#race-v2-root .p-info{
+  grid-column:2;
+  grid-row:1 / span 2;
+  min-width:0;
+  display:flex; flex-direction:column; justify-content:center;
+  gap:1px;
+}
+#race-v2-root .p-name{
+  font-weight:800;
+  font-size:13px;
+  color:var(--gold-soft);
+  display:flex; align-items:center; gap:5px;
+  line-height:1.2;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#race-v2-root .p-hero{
+  font-size:10px;
+  color:var(--muted);
+  font-style:italic;
+  line-height:1.2;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#race-v2-root .p-money{
+  grid-column:3;
+  grid-row:1;
+  font-size:15px;
+  color:var(--gold);
+  font-weight:900;
+  text-align:right;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+#race-v2-root .p-properties{
+  grid-column:3;
+  grid-row:2;
+  font-size:10px;
+  color:var(--muted);
+  text-align:right;
+  line-height:1.2;
+  font-variant-numeric:tabular-nums;
+}
 
 
 
@@ -729,14 +822,30 @@
 
 
 
-#race-v2-root .log {max-height:280px;overflow-y:auto;font-size:11px;line-height:1.5;
-  background:rgba(0,0,0,.4);border-radius:8px;padding:8px;border:1px solid rgba(212,175,55,.1)}
-
-#race-v2-root .log::-webkit-scrollbar {width:6px}
-
-#race-v2-root .log::-webkit-scrollbar-thumb {background:rgba(212,175,55,.3);border-radius:3px}
-
-#race-v2-root .log-entry {padding:4px 6px;margin-bottom:2px;border-radius:4px;animation:slideIn .3s ease-out;border-left:2px solid transparent}
+#race-v2-root .log{
+  max-height:240px;
+  overflow-y:auto;
+  font-size:11px;
+  line-height:1.45;
+  background:rgba(0,0,0,.45);
+  border-radius:8px;
+  padding:6px;
+  border:1px solid rgba(212,175,55,.12);
+}
+#race-v2-root .log::-webkit-scrollbar{ width:5px }
+#race-v2-root .log::-webkit-scrollbar-thumb{
+  background:rgba(212,175,55,.35); border-radius:3px;
+}
+#race-v2-root .log::-webkit-scrollbar-track{ background:transparent }
+#race-v2-root .log-entry{
+  padding:3px 6px 3px 8px;
+  margin-bottom:1px;
+  border-radius:4px;
+  animation:slideIn .3s ease-out;
+  border-left:2px solid rgba(212,175,55,.2);
+  display:flex; gap:6px; align-items:baseline;
+}
+#race-v2-root .log-entry:hover{ background:rgba(255,255,255,.03) }
 
 @keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
 #race-v2-root .log-entry.synergy {background:rgba(255,68,68,.15);border-left-color:#ff4444;color:#ffcc88}
@@ -749,7 +858,18 @@
 
 #race-v2-root .log-entry.event {background:rgba(224,144,48,.12);border-left-color:#e09030}
 
-#race-v2-root .log-time {color:var(--muted);font-size:9px;margin-right:5px}
+#race-v2-root .log-time{
+  color:var(--gold);
+  font-size:9px;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  background:rgba(212,175,55,.1);
+  padding:1px 4px;
+  border-radius:3px;
+  flex-shrink:0;
+  margin-right:0;
+  letter-spacing:.3px;
+}
 
 
 
@@ -773,16 +893,53 @@
 
 
 
-#race-v2-root .quest {padding:8px;background:rgba(0,0,0,.3);border-radius:8px;margin-bottom:6px;
-  border:1px solid rgba(212,175,55,.2);font-size:11px;position:relative}
-
-#race-v2-root .quest.done {background:rgba(46,178,123,.15);border-color:#2eb27b}
-
-#race-v2-root .quest-title {font-weight:700;color:var(--gold-soft);margin-bottom:3px;display:flex;justify-content:space-between}
+#race-v2-root .quest{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:2px 10px;
+  padding:8px 10px;
+  background:linear-gradient(135deg,rgba(0,0,0,.32),rgba(0,0,0,.18));
+  border-radius:8px;
+  margin-bottom:5px;
+  border:1px solid rgba(212,175,55,.18);
+  font-size:11.5px;
+  position:relative;
+  transition:border-color .2s, background .2s;
+}
+#race-v2-root .quest:hover{ border-color:rgba(212,175,55,.35) }
+#race-v2-root .quest.done{
+  background:linear-gradient(135deg,rgba(46,178,123,.18),rgba(46,178,123,.06));
+  border-color:rgba(46,178,123,.5);
+}
+#race-v2-root .quest-title{
+  grid-column:1;
+  font-weight:700;
+  color:var(--gold-soft);
+  display:flex; align-items:center; gap:4px;
+  line-height:1.3;
+}
 
 #race-v2-root .quest-progress {font-size:10px;color:var(--muted)}
 
-#race-v2-root .quest-reward {color:var(--gold);font-size:10px;font-weight:700;margin-top:3px}
+#race-v2-root .quest-reward{
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  color:var(--gold);
+  font-size:11px;
+  font-weight:800;
+  margin-top:0;
+  white-space:nowrap;
+  background:rgba(212,175,55,.1);
+  padding:4px 8px;
+  border-radius:6px;
+  border:1px solid rgba(212,175,55,.25);
+}
+#race-v2-root .quest.done .quest-reward{
+  background:rgba(46,178,123,.15);
+  border-color:rgba(46,178,123,.4);
+  color:#7be395;
+}
 
 
 
@@ -4437,7 +4594,7 @@ function renderPlayers(){
     const heroBadge = p.hero ? `<span style="font-size:10px;color:var(--gold)">${p.hero.emoji}</span>` : '';
     const heroName = p.hero ? p.hero.name : '—';
     return `<div class="player ${i===G.currentPlayer?'active':''}">
-      <div class="p-avatar" style="background:${p.color}">${p.hero?p.hero.emoji:(i+1)}</div>
+      <div class="p-avatar" style="background:${p.color};--player-ring:${p.color}">${p.hero?p.hero.emoji:(i+1)}</div>
       <div class="p-info">
         <div class="p-name">${p.name} ${heroBadge}</div>
         <div class="p-hero">${heroName}${p.jailTurns?` · 🚓 Kiểm Lâm ${p.jailTurns}`:''}</div>
@@ -6584,6 +6741,769 @@ window.showLeaderboardModal = async () => {
 
   // initial render
   renderChat();
+})();
+</script>
+
+<!-- ============================================================
+     MEGA-FEATURE MODULE v2 — Heritage / Auction / Alliance / Skills / Seasons
+     Inserted as a separate IIFE so it can be enabled/disabled independently.
+     ============================================================ -->
+
+<!-- Modal styles for new features -->
+<style id="mega-feature-styles">
+.mf-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:9000;backdrop-filter:blur(4px)}
+.mf-overlay.show{display:flex;animation:mfFade .25s ease-out}
+@keyframes mfFade{from{opacity:0}to{opacity:1}}
+.mf-box{background:linear-gradient(180deg,#2a1300,#1a0a00);border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:18px 20px;min-width:340px;max-width:560px;color:#f0d9a8;box-shadow:0 12px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,210,140,.1);font-family:inherit;max-height:90vh;overflow-y:auto}
+.mf-box h3{margin:0 0 12px;color:#d4af37;font-size:15px;text-transform:uppercase;letter-spacing:1.4px;font-weight:800;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(212,175,55,.25);padding-bottom:8px}
+.mf-btn{padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.1);color:#f0d9a8;font-size:12px;transition:all .15s}
+.mf-btn:hover:not(:disabled){background:rgba(212,175,55,.25)}
+.mf-btn:disabled{opacity:.4;cursor:not-allowed}
+.mf-btn.primary{background:linear-gradient(135deg,#d4af37,#b8941f);color:#1a0a00;border:none}
+.mf-btn.danger{background:linear-gradient(135deg,#a0150e,#7a0a04);color:#fff;border:none}
+.mf-btn.success{background:linear-gradient(135deg,#2eb27b,#1f7a55);color:#fff;border:none}
+.mf-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:flex-end}
+.mf-bid-input{padding:8px 12px;border-radius:6px;border:1px solid rgba(212,175,55,.4);background:rgba(0,0,0,.4);color:#f0d9a8;font-size:13px;font-family:inherit;width:120px}
+.mf-quiz-opt{display:block;width:100%;text-align:left;padding:10px 14px;margin:6px 0;border-radius:8px;border:1px solid rgba(212,175,55,.3);background:rgba(0,0,0,.3);color:#f0d9a8;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s}
+.mf-quiz-opt:hover{background:rgba(212,175,55,.15);transform:translateX(3px)}
+.mf-quiz-opt.correct{background:rgba(46,178,123,.25);border-color:#2eb27b;color:#7be395}
+.mf-quiz-opt.wrong{background:rgba(220,80,80,.2);border-color:#dc5050;color:#ff9090}
+.mf-heritage-img{width:100%;height:160px;border-radius:10px;display:grid;place-items:center;font-size:64px;background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.05));border:1px solid rgba(212,175,55,.3);margin-bottom:12px}
+.mf-pill{display:inline-block;font-size:10px;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);padding:2px 7px;border-radius:10px;color:#d4af37;font-weight:700;letter-spacing:.5px;margin-right:4px}
+.mf-skill-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
+.mf-skill-card{padding:10px 12px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(212,175,55,.25);display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+.mf-skill-card.disabled{opacity:.5}
+.mf-skill-icon{font-size:24px}
+.mf-skill-name{font-weight:800;color:#d4af37;font-size:13px}
+.mf-skill-desc{font-size:11px;color:#aaa;line-height:1.35;margin-top:2px}
+.mf-cd{font-size:10px;background:#7a0a04;color:#fff;padding:2px 6px;border-radius:10px;font-weight:700}
+.mf-cd.ready{background:#2eb27b}
+.mf-season-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.04));border:1px solid rgba(212,175,55,.35);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#d4af37}
+.mf-alliance-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.mf-alliance-tag{font-size:10px;background:rgba(46,178,123,.15);border:1px solid rgba(46,178,123,.4);color:#7be395;padding:3px 7px;border-radius:10px;font-weight:700}
+#mf-season-bar{position:fixed;top:10px;right:10px;z-index:80;display:flex;flex-direction:column;gap:6px;align-items:flex-end;pointer-events:none}
+#mf-season-bar > *{pointer-events:auto}
+</style>
+
+<!-- Modal containers -->
+<div class="mf-overlay" id="mf-heritage-modal"><div class="mf-box" id="mf-heritage-body"></div></div>
+<div class="mf-overlay" id="mf-quiz-modal"><div class="mf-box" id="mf-quiz-body"></div></div>
+<div class="mf-overlay" id="mf-auction-modal"><div class="mf-box" id="mf-auction-body"></div></div>
+<div class="mf-overlay" id="mf-alliance-modal"><div class="mf-box" id="mf-alliance-body"></div></div>
+<div class="mf-overlay" id="mf-skill-modal"><div class="mf-box" id="mf-skill-body"></div></div>
+
+<!-- Floating season/event indicator -->
+<div id="mf-season-bar"></div>
+
+<script>
+/* ============================================================
+   MEGA-FEATURE MODULE — 4 nhóm tính năng nâng cấp gameplay
+   Hooks vào window/G state hiện có, không sửa core code.
+   ============================================================ */
+(function(){
+'use strict';
+
+// ───────────────────────────────────────────────────────────
+// 1. DATA: HERITAGE STORIES (gắn theo TILES[id])
+// ───────────────────────────────────────────────────────────
+const HERITAGE = {
+  1:  { era:'Hiện đại',     unesco:false, story:'Bãi Dài Phú Quốc dài 15km với cát trắng mịn, được Tạp chí Concierge xếp vào top 13 bãi biển hoang sơ đẹp nhất thế giới (2008). Vùng biển nơi đây là khu bảo tồn rạn san hô của vịnh Thái Lan.' },
+  2:  { era:'Lịch sử cận đại', unesco:false, story:'Côn Đảo từng là "địa ngục trần gian" với hệ thống nhà tù Pháp - Mỹ giam giữ hàng vạn chiến sĩ cách mạng. Ngày nay là khu di tích quốc gia đặc biệt và vườn quốc gia với hệ sinh thái biển độc đáo.' },
+  5:  { era:'Hiện đại',     unesco:false, story:'Mũi Né nổi tiếng với "đồi cát bay" và làng chài Phan Thiết, là một trong những điểm lướt ván diều (kitesurf) hàng đầu Đông Nam Á nhờ gió mùa ổn định.' },
+  6:  { era:'Hiện đại',     unesco:false, story:'Bãi biển Mỹ Khê được Forbes bình chọn là một trong 6 bãi biển quyến rũ nhất hành tinh (2005). Cát mịn vàng và độ thoải lý tưởng cho mọi hoạt động biển.' },
+  7:  { era:'Phố cổ',       unesco:false, story:'Đạp xe trong Hội An vào sáng sớm là "linh hồn" của trải nghiệm phố cổ — len lỏi qua những con hẻm vàng nghệ với hoa giấy rực rỡ, không tiếng động cơ.' },
+  9:  { era:'TK 15-19',     unesco:true,  story:'Hội An là thương cảng quốc tế sầm uất TK 16-17, nơi giao thoa văn hóa Nhật-Hoa-Việt-Âu. Phố cổ vẫn giữ nguyên kiến trúc nhà ống mái ngói âm dương và Chùa Cầu Nhật biểu tượng. UNESCO công nhận năm 1999.' },
+  11: { era:'TK 4-13',      unesco:true,  story:'Thánh địa Mỹ Sơn là quần thể đền tháp Hindu giáo lớn nhất Đông Nam Á, do người Chăm xây thờ thần Shiva. Hơn 70 ngọn tháp gạch nung không vữa kết dính — bí ẩn kỹ thuật cổ chưa giải mã. UNESCO 1999.' },
+  12: { era:'TK 7-13',      unesco:false, story:'Các tháp Chăm khác rải rác miền Trung minh chứng cho nền văn minh Chăm Pa rực rỡ, ảnh hưởng từ Ấn Độ giáo và Phật giáo Đại Thừa.' },
+  13: { era:'Tiền sử',      unesco:true,  story:'Vườn quốc gia Phong Nha-Kẻ Bàng có hệ thống hang động karst khổng lồ hình thành cách đây hơn 400 triệu năm — lâu đời nhất châu Á. UNESCO 2 lần (2003, 2015).' },
+  14: { era:'Tiền sử',      unesco:true,  story:'Hang Sơn Đoòng là hang động tự nhiên LỚN NHẤT THẾ GIỚI (theo BBC), phát hiện 1991 nhưng chỉ được thám hiểm 2009. Bên trong có rừng nguyên sinh, sông ngầm và mây hình thành ngay trong hang.' },
+  15: { era:'1601',         unesco:false, story:'Chùa Thiên Mụ bên sông Hương được chúa Nguyễn Hoàng cho dựng năm 1601. Tháp Phước Duyên 7 tầng là biểu tượng cố đô Huế, gắn với truyền thuyết "bà tiên áo đỏ" hiển linh.' },
+  17: { era:'1804-1945',    unesco:false, story:'Đại Nội Huế là Hoàng thành của triều Nguyễn, được thiết kế theo nguyên tắc phong thủy phương Đông và mô hình Tử Cấm Thành Bắc Kinh thu nhỏ. Hệ thống Ngọ Môn, điện Thái Hòa vẫn nguyên vẹn.' },
+  18: { era:'TK 19',        unesco:true,  story:'Quần thể di tích Cố đô Huế bao gồm Đại Nội, các lăng tẩm vua Nguyễn (Tự Đức, Minh Mạng, Khải Định) và Văn Miếu. UNESCO 1993 — di sản văn hóa đầu tiên của Việt Nam.' },
+  20: { era:'Tự nhiên',     unesco:true,  story:'Tràng An Ninh Bình là "Hạ Long trên cạn" với 31km² hang động và 50 hang xuyên thủy. Khu di sản hỗn hợp đầu tiên của Đông Nam Á (2014) — kết hợp giá trị tự nhiên và văn hóa Hoa Lư.' },
+  22: { era:'TK 15',        unesco:false, story:'Hồ Hoàn Kiếm gắn liền truyền thuyết vua Lê Thái Tổ trả gươm thần cho Rùa Vàng. Đền Ngọc Sơn giữa hồ và Tháp Rùa là biểu tượng Hà Nội ngàn năm văn hiến.' },
+  25: { era:'Tự nhiên',     unesco:true,  story:'Vịnh Hạ Long với 1969 đảo đá vôi nổi trên mặt nước được hình thành cách đây 500 triệu năm. Truyền thuyết: "Hạ Long" = "Rồng Hạ" — Ngọc Hoàng sai rồng phun ngọc tạo đảo chắn giặc. UNESCO 1994 & 2000.' },
+  28: { era:'TK 17',        unesco:false, story:'Phố cổ Đồng Văn nằm trên cao nguyên đá Hà Giang, độ cao 1000m, là nơi cư trú của người Tày-H\'Mông. Kiến trúc nhà trình tường, mái âm dương, được hình thành cách đây ~3 thế kỷ.' },
+  29: { era:'Tự nhiên',     unesco:false, story:'Đỉnh Fansipan 3147m — "Nóc nhà Đông Dương". Đỉnh quanh năm mây phủ, hệ sinh thái rừng nguyên sinh á nhiệt đới với hơn 2000 loài thực vật.' },
+  31: { era:'Văn hóa',      unesco:false, story:'Ruộng bậc thang Mù Cang Chải là kỳ quan nông nghiệp do người H\'Mông tạo ra qua nhiều thế hệ. Mùa lúa chín (tháng 9-10) là khoảnh khắc đẹp nhất, được CNN xếp top 10 ruộng bậc thang đẹp nhất thế giới.' }
+};
+
+// ───────────────────────────────────────────────────────────
+// 2. DATA: CULTURAL QUIZ BANK
+// ───────────────────────────────────────────────────────────
+const QUIZ = [
+  {q:'UNESCO công nhận Vịnh Hạ Long là Di sản Thiên nhiên Thế giới lần đầu năm nào?', opts:['1988','1994','2000','2003'], a:1, expl:'Vịnh Hạ Long được công nhận lần đầu năm 1994 và mở rộng năm 2000.'},
+  {q:'Hang động tự nhiên lớn nhất thế giới nằm ở đâu?', opts:['Phong Nha-Kẻ Bàng','Tràng An','Sa Pa','Hà Giang'], a:0, expl:'Hang Sơn Đoòng thuộc Phong Nha-Kẻ Bàng (Quảng Bình).'},
+  {q:'Thánh địa Mỹ Sơn là di sản của nền văn minh nào?', opts:['Đại Việt','Phù Nam','Chăm Pa','Khmer'], a:2, expl:'Mỹ Sơn là quần thể đền thờ Hindu giáo của vương quốc Chăm Pa.'},
+  {q:'Cố đô nào của Việt Nam là Di sản UNESCO đầu tiên?', opts:['Hà Nội','Huế','Hoa Lư','Thăng Long'], a:1, expl:'Cố đô Huế được công nhận UNESCO năm 1993.'},
+  {q:'Đỉnh Fansipan cao bao nhiêu mét?', opts:['2935m','3147m','3243m','3500m'], a:1, expl:'Fansipan cao chính xác 3147,3m — nóc nhà Đông Dương.'},
+  {q:'Ai là người trả gươm thần cho Rùa Vàng tại hồ Hoàn Kiếm?', opts:['Lý Thái Tổ','Trần Hưng Đạo','Lê Lợi','Nguyễn Huệ'], a:2, expl:'Vua Lê Thái Tổ (Lê Lợi) trả gươm sau khi đánh đuổi giặc Minh.'},
+  {q:'Phố cổ Hội An nằm bên bờ con sông nào?', opts:['Hương','Thu Bồn','Hàn','Trà Khúc'], a:1, expl:'Hội An nằm bên sông Thu Bồn — Quảng Nam.'},
+  {q:'Triều đại nào xây Hoàng thành Huế (Đại Nội)?', opts:['Lê','Tây Sơn','Nguyễn','Trần'], a:2, expl:'Triều Nguyễn xây Đại Nội năm 1804, hoàn thành 1833.'},
+  {q:'Ruộng bậc thang Mù Cang Chải chủ yếu do dân tộc nào canh tác?', opts:['Tày','Dao','H\'Mông','Thái'], a:2, expl:'Người H\'Mông tạo ra ruộng bậc thang Mù Cang Chải qua nhiều thế hệ.'},
+  {q:'Tháp Phước Duyên thuộc chùa nào?', opts:['Một Cột','Thiên Mụ','Bái Đính','Yên Tử'], a:1, expl:'Tháp Phước Duyên 7 tầng là biểu tượng chùa Thiên Mụ — Huế.'},
+  {q:'Vịnh Hạ Long có bao nhiêu hòn đảo (xấp xỉ)?', opts:['~900','~1500','~1969','~3000'], a:2, expl:'Vịnh có khoảng 1969 đảo lớn nhỏ.'},
+  {q:'Côn Đảo từng được Pháp gọi là gì?', opts:['Île Royale','Poulo Condore','Bao Lao','Île aux Reines'], a:1, expl:'Tên Pháp là "Poulo Condore" — phiên âm từ "Cù Lao Côn".'},
+  {q:'Lễ hội nào của người Chăm được tổ chức tại Mỹ Sơn?', opts:['Katê','Ramưwan','Cholchnam','Roya'], a:0, expl:'Lễ hội Katê (tháng 7 Chăm lịch) tôn vinh thần Shiva.'},
+  {q:'Phố cổ Đồng Văn nằm ở tỉnh nào?', opts:['Lai Châu','Lào Cai','Cao Bằng','Hà Giang'], a:3, expl:'Đồng Văn thuộc cao nguyên đá Hà Giang.'},
+  {q:'Hang Sơn Đoòng được phát hiện chính thức năm nào?', opts:['1991','2003','2009','1985'], a:0, expl:'Người dân địa phương Hồ Khanh phát hiện năm 1991, đoàn thám hiểm Anh khám phá 2009.'}
+];
+
+// ───────────────────────────────────────────────────────────
+// 3. DATA: HERO SKILLS (active + new passive layer)
+// ───────────────────────────────────────────────────────────
+const HERO_SKILLS = {
+  BA_TRIEU:    { name:'Khởi Nghĩa', icon:'⚔️', cd:5, desc:'Buộc 1 đối thủ bỏ qua lượt sau. Chọn mục tiêu giàu nhất.' },
+  QUANG_TRUNG: { name:'Thần Tốc',   icon:'🐎', cd:4, desc:'Lượt sau tung xúc xắc thứ 2, lấy max của 2 lần.' },
+  HO_QUY_LY:   { name:'Cải Cách Tiền Tệ', icon:'💼', cd:6, desc:'Đổi vị trí 1 ô đối thủ bằng giá gốc + 20% (mua ép).' },
+  NGUYEN_DU:   { name:'Thi Họa',    icon:'📜', cd:3, desc:'Rút thêm 1 thẻ Cơ Hội ngay lập tức.' },
+  YET_KIEU:    { name:'Lặn Bão',    icon:'🐟', cd:4, desc:'Miễn nhiễm 1 lần trả tiền thuê tới (max 5M).' },
+  VUA_HUNG:    { name:'Triệu Tổ',   icon:'👑', cd:7, desc:'Tất cả người chơi cùng đóng thuế 1M về kho, bạn lấy 50% kho.' }
+};
+
+// ───────────────────────────────────────────────────────────
+// 4. DATA: SEASONS & MAP EVENTS
+// ───────────────────────────────────────────────────────────
+const SEASONS = [
+  {id:'XUAN', name:'Mùa Xuân',  icon:'🌸', desc:'Quest văn hoá thưởng x1.5 — Du khách rộn ràng.', rentMod:1.0, questMul:1.5},
+  {id:'HA',   name:'Mùa Hạ',    icon:'☀️', desc:'Tiền thuê các ô Biển +25% — Cao điểm du lịch.',  rentMod:1.0, beachBonus:1.25},
+  {id:'THU',  name:'Mùa Thu',   icon:'🍂', desc:'Mua đất giảm 10% — Mùa thấp điểm.',             rentMod:1.0, buyDiscount:0.9},
+  {id:'DONG', name:'Mùa Đông',  icon:'❄️', desc:'Tiền thuê -15% trên toàn bản đồ — Khách thưa.',  rentMod:0.85}
+];
+const MAP_EVENTS = [
+  {id:'YAGI',    icon:'🌀', name:'Bão Yagi đổ bộ Miền Trung', dur:4, desc:'Ô Miền Trung giảm phí 50% và chủ ô phải trả 500k sửa chữa.',
+    onTickOwner:(owner,tile)=>{ if(tile.traits.includes('MIEN_TRUNG')&&owner) addMoneyExt(owner,-500); }, rentMod:t=>t.traits.includes('MIEN_TRUNG')?0.5:1 },
+  {id:'BOOM',    icon:'💸', name:'Bùng Nổ Du Lịch',  dur:3, desc:'Toàn bản đồ +25% tiền thuê — sóng khách quốc tế.', rentMod:t=>1.25 },
+  {id:'SALE',    icon:'🏷️', name:'Đại Hội Khuyến Mãi', dur:3, desc:'Mua đất giảm 20% — sale chớp nhoáng.', buyDiscount:0.8 },
+  {id:'LANTERN', icon:'🏮', name:'Lễ Hội Đèn Lồng',   dur:3, desc:'Phố Cổ phát thưởng: chủ ô PHO_CO nhận 800k mỗi vòng.',
+    onRound:(p)=>{ p.owned.forEach(idx=>{ const t=window.TILES[idx]; if(t.traits.includes('PHO_CO')) addMoneyExt(p,800); }); } },
+  {id:'WAVE',    icon:'🌊', name:'Sóng Thần Cảnh Báo', dur:2, desc:'Ô Biển đóng cửa: rent x0 trong 2 vòng.', rentMod:t=>t.traits.includes('BIEN')?0:1 }
+];
+
+// ───────────────────────────────────────────────────────────
+// HELPERS — proxy các function gốc
+// ───────────────────────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function getG(){ return window.G; }
+function curP(){ const G=getG(); return G && G.players ? G.players[G.currentPlayer] : null; }
+function logExt(type,msg){ if(typeof window.log==='function') window.log(type,msg); }
+function fmtK(n){ return typeof window.formatK==='function' ? window.formatK(n) : (n+''); }
+function addMoneyExt(p,amt){ if(typeof window.addMoney==='function') window.addMoney(p,amt); else if(p) p.money+=amt; }
+function renderAllExt(){ if(typeof window.renderAll==='function') window.renderAll(); }
+function showOverlay(id){ $(id).classList.add('show'); }
+function hideOverlay(id){ $(id).classList.remove('show'); }
+window.mfHide = hideOverlay;
+
+// ───────────────────────────────────────────────────────────
+// State extension: tự thêm field vào G khi newGame chạy
+// ───────────────────────────────────────────────────────────
+function ensureExtState(){
+  const G=getG(); if(!G) return false;
+  if(G._mfReady) return true;
+  G._mfReady = true;
+  G.season = SEASONS[0];               // bắt đầu Xuân
+  G.mapEvent = null;                   // map-wide event riêng (khác seasonal)
+  G.mapEventTurnsLeft = 0;
+  G.alliances = [];                    // [{a:idx,b:idx,turnsLeft:3}]
+  G.players.forEach(p=>{
+    p.skillCD = 0;
+    p.skillUses = 0;
+    p.heritageVisited = {};            // {tileId:true}
+    p.quizStreak = 0;
+    p.rentImmune = 0;                  // count remaining immunes
+    p.doubleRoll = false;              // QT skill
+  });
+  return true;
+}
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 1A — HERITAGE POPUP
+// ───────────────────────────────────────────────────────────
+window.mfShowHeritage = function(tileIdx){
+  const t = window.TILES[tileIdx];
+  const h = HERITAGE[tileIdx];
+  if(!h){
+    $('mf-heritage-body').innerHTML = `<h3>${t.icon} ${t.name}</h3>
+      <div style="font-style:italic;color:#aaa;padding:20px 0">Chưa có thông tin di sản chi tiết cho ô này.</div>
+      <div class="mf-row"><button class="mf-btn primary" onclick="mfHide('mf-heritage-modal')">Đóng</button></div>`;
+  } else {
+    const p = curP();
+    const isFirstVisit = p && !p.heritageVisited[tileIdx];
+    if(isFirstVisit) p.heritageVisited[tileIdx] = true;
+    const pills = [`<span class="mf-pill">${h.era}</span>`];
+    if(h.unesco) pills.push(`<span class="mf-pill" style="background:rgba(46,178,123,.15);border-color:#2eb27b;color:#7be395">🏛️ UNESCO</span>`);
+    $('mf-heritage-body').innerHTML = `
+      <h3>${t.icon} ${t.name} <span style="margin-left:auto;font-size:11px;color:#888">DI SẢN</span></h3>
+      <div class="mf-heritage-img">${t.icon}</div>
+      <div style="margin-bottom:8px">${pills.join('')}</div>
+      <div style="font-size:13px;line-height:1.55;color:#f0d9a8">${h.story}</div>
+      ${isFirstVisit?`<div style="margin-top:12px;padding:8px 12px;background:rgba(46,178,123,.12);border-left:3px solid #2eb27b;border-radius:6px;font-size:12px;color:#7be395"><b>Lần đầu khám phá!</b> +300k tiền thưởng văn hoá.</div>`:''}
+      <div class="mf-row"><button class="mf-btn primary" onclick="mfHide('mf-heritage-modal')">Tiếp tục</button></div>
+    `;
+    if(isFirstVisit && p){ addMoneyExt(p,300); logExt('event',`🏛️ ${p.name} lần đầu thăm <b>${t.name}</b> +300k`); renderAllExt(); }
+  }
+  showOverlay('mf-heritage-modal');
+};
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 1B — CULTURAL QUIZ
+// ───────────────────────────────────────────────────────────
+let _activeQuiz = null;
+window.mfStartQuiz = function(){
+  const p = curP(); if(!p) return;
+  const q = QUIZ[Math.floor(Math.random()*QUIZ.length)];
+  _activeQuiz = {q, player:p};
+  const G = getG();
+  const seasonMul = G.season && G.season.questMul ? G.season.questMul : 1;
+  const baseReward = 1500;
+  const reward = Math.round(baseReward * seasonMul);
+  $('mf-quiz-body').innerHTML = `
+    <h3>🎓 Câu Đố Văn Hoá</h3>
+    <div style="font-size:13px;color:#f0d9a8;line-height:1.5;margin-bottom:12px;padding:10px 12px;background:rgba(0,0,0,.3);border-radius:8px;border-left:3px solid #d4af37"><b>${q.q}</b></div>
+    <div id="mf-quiz-opts">
+      ${q.opts.map((o,i)=>`<button class="mf-quiz-opt" onclick="mfQuizAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:#888;text-align:center">
+      Đúng: <b style="color:#7be395">+${fmtK(reward)}</b> · Sai: <b style="color:#ff9090">−800k</b>
+      ${seasonMul>1?`<span class="mf-pill" style="margin-left:6px">${G.season.icon} ${G.season.name} x${seasonMul}</span>`:''}
+    </div>
+  `;
+  showOverlay('mf-quiz-modal');
+};
+window.mfQuizAnswer = function(idx){
+  if(!_activeQuiz) return;
+  const {q,player} = _activeQuiz;
+  const G = getG();
+  const correct = idx === q.a;
+  const opts = document.querySelectorAll('#mf-quiz-opts .mf-quiz-opt');
+  opts.forEach((o,i)=>{
+    o.disabled = true;
+    if(i===q.a) o.classList.add('correct');
+    if(i===idx && !correct) o.classList.add('wrong');
+  });
+  const seasonMul = G.season && G.season.questMul ? G.season.questMul : 1;
+  if(correct){
+    const reward = Math.round(1500*seasonMul);
+    player.quizStreak = (player.quizStreak||0)+1;
+    const streakBonus = player.quizStreak>=3 ? 1000 : 0;
+    addMoneyExt(player, reward+streakBonus);
+    logExt('event',`🎓 ${player.name} đáp đúng văn hoá +${fmtK(reward+streakBonus)}${streakBonus>0?' (streak '+player.quizStreak+'!)':''}`);
+  } else {
+    addMoneyExt(player, -800);
+    player.quizStreak = 0;
+    logExt('event',`📚 ${player.name} đáp sai văn hoá −800k`);
+  }
+  const explDiv = document.createElement('div');
+  explDiv.style.cssText = 'margin-top:12px;padding:10px;background:rgba(212,175,55,.08);border-radius:8px;font-size:12px;color:#f0d9a8;line-height:1.5';
+  explDiv.innerHTML = `<b style="color:#d4af37">💡 ${correct?'Chính xác!':'Đáp án đúng: '+q.opts[q.a]}</b><br>${q.expl}`;
+  $('mf-quiz-body').appendChild(explDiv);
+  const btn = document.createElement('div');
+  btn.className='mf-row';
+  btn.innerHTML=`<button class="mf-btn primary" onclick="mfHide('mf-quiz-modal');mfRefreshStatus();">Đóng</button>`;
+  $('mf-quiz-body').appendChild(btn);
+  _activeQuiz = null;
+  renderAllExt();
+};
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 2A — AUCTION
+// ───────────────────────────────────────────────────────────
+let _auctionState = null;
+window.mfStartAuction = function(tileIdx){
+  const G=getG(); if(!G) return;
+  const t = window.TILES[tileIdx];
+  if(!t || t.type==='corner') return;
+  const eligible = G.players.filter(p=>p.alive && p.money>=Math.round(t.price*0.5));
+  if(eligible.length<2){ logExt('event','🏷️ Đấu giá huỷ — không đủ người tham gia.'); return; }
+  _auctionState = { tile:tileIdx, currentBid:Math.round(t.price*0.5), topBidder:null, bidders:eligible.map(p=>p.idx), turn:0 };
+  mfRenderAuction();
+  showOverlay('mf-auction-modal');
+};
+function mfRenderAuction(){
+  const s = _auctionState; if(!s) return;
+  const G = getG();
+  const t = window.TILES[s.tile];
+  const bidder = G.players[s.bidders[s.turn % s.bidders.length]];
+  const topBidderName = s.topBidder!==null ? G.players[s.topBidder].name : '—';
+  $('mf-auction-body').innerHTML = `
+    <h3>🏷️ Đấu Giá: ${t.icon} ${t.name}</h3>
+    <div style="font-size:12px;color:#aaa;margin-bottom:8px">Giá khởi điểm: ${fmtK(Math.round(t.price*0.5))} · Giá gốc: ${fmtK(t.price)}</div>
+    <div style="background:rgba(212,175,55,.08);border-radius:8px;padding:10px 12px;margin-bottom:12px">
+      <div style="font-size:11px;color:#888">GIÁ HIỆN TẠI</div>
+      <div style="font-size:22px;color:#d4af37;font-weight:900">${fmtK(s.currentBid)}</div>
+      <div style="font-size:11px;color:#888;margin-top:4px">Cao nhất: <b style="color:#f0d9a8">${topBidderName}</b></div>
+    </div>
+    <div style="margin-bottom:10px;font-size:13px">Lượt bid: <b style="color:${bidder.color}">${bidder.name}</b> (${fmtK(bidder.money)})</div>
+    <div class="mf-row" style="margin-top:0">
+      <input id="mf-bid-amt" class="mf-bid-input" type="number" min="${s.currentBid+100}" step="100" value="${s.currentBid+200}" />
+      <button class="mf-btn primary" onclick="mfBid()">Bid +</button>
+      <button class="mf-btn" onclick="mfPassBid()">Bỏ qua</button>
+    </div>
+  `;
+}
+window.mfBid = function(){
+  const s=_auctionState; if(!s) return;
+  const G=getG();
+  const bidder = G.players[s.bidders[s.turn%s.bidders.length]];
+  const amt = parseInt($('mf-bid-amt').value,10);
+  if(!amt || amt<=s.currentBid || amt>bidder.money){ alert('Bid không hợp lệ (phải > giá hiện tại và ≤ tiền của bạn)'); return; }
+  s.currentBid = amt;
+  s.topBidder = bidder.idx;
+  s.turn++;
+  mfRenderAuction();
+};
+window.mfPassBid = function(){
+  const s=_auctionState; if(!s) return;
+  const G=getG();
+  const idx = s.bidders[s.turn%s.bidders.length];
+  s.bidders.splice(s.turn%s.bidders.length,1);
+  if(s.bidders.length<=1){
+    // Auction ends
+    mfFinishAuction();
+    return;
+  }
+  mfRenderAuction();
+};
+function mfFinishAuction(){
+  const s=_auctionState; const G=getG();
+  if(s.topBidder===null){ logExt('event','🏷️ Đấu giá kết thúc — không ai mua.'); hideOverlay('mf-auction-modal'); _auctionState=null; return; }
+  const winner = G.players[s.topBidder];
+  const t = window.TILES[s.tile];
+  addMoneyExt(winner, -s.currentBid);
+  winner.owned.push(s.tile);
+  if(!winner.levels) winner.levels={};
+  winner.levels[s.tile] = 1;
+  if(typeof window.recomputeTraits==='function') window.recomputeTraits(winner);
+  logExt('trade',`🏷️ Đấu giá: <b>${winner.name}</b> mua <b>${t.name}</b> với ${fmtK(s.currentBid)}`);
+  hideOverlay('mf-auction-modal');
+  _auctionState=null;
+  renderAllExt();
+}
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 2B — ALLIANCE
+// ───────────────────────────────────────────────────────────
+window.mfOpenAlliance = function(){
+  if(!ensureExtState()) return;
+  const G=getG();
+  const me = curP(); if(!me) return;
+  const others = G.players.filter(p=>p.alive && p.idx!==me.idx);
+  const existing = G.alliances.filter(al=>al.a===me.idx||al.b===me.idx);
+  $('mf-alliance-body').innerHTML = `
+    <h3>🤝 Liên Minh</h3>
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px">Liên minh 3 lượt: hai bên KHÔNG thu phí thuê lẫn nhau, chia 30% quest reward. Hết hạn tự huỷ. Có thể "phản bội" để cướp 1 ô của đối tác.</div>
+    ${existing.length>0 ? `
+      <div style="background:rgba(46,178,123,.08);border-radius:8px;padding:10px;margin-bottom:10px">
+        <div style="font-size:11px;color:#7be395;margin-bottom:6px;font-weight:700">LIÊN MINH ĐANG HOẠT ĐỘNG:</div>
+        ${existing.map(al=>{const other=G.players[al.a===me.idx?al.b:al.a]; return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px">
+          <span style="color:${other.color};font-weight:700">${other.name}</span>
+          <span style="color:#888">·</span>
+          <span>còn ${al.turnsLeft} lượt</span>
+          <button class="mf-btn danger" style="margin-left:auto;font-size:10px;padding:3px 8px" onclick="mfBetray(${other.idx})">Phản bội</button>
+        </div>`;}).join('')}
+      </div>
+    ` : ''}
+    <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:700">ĐỀ NGHỊ LIÊN MINH:</div>
+    ${others.map(o=>{
+      const existsBetween = G.alliances.some(al=>(al.a===me.idx&&al.b===o.idx)||(al.b===me.idx&&al.a===o.idx));
+      return `<button class="mf-btn" style="width:100%;text-align:left;margin:4px 0" onclick="mfPropose(${o.idx})" ${existsBetween?'disabled':''}>
+        🤝 Với <b style="color:${o.color}">${o.name}</b> (${fmtK(o.money)}) ${existsBetween?'<span style="float:right;color:#7be395">đã liên minh</span>':''}
+      </button>`;
+    }).join('')}
+    <div class="mf-row"><button class="mf-btn primary" onclick="mfHide('mf-alliance-modal')">Đóng</button></div>
+  `;
+  showOverlay('mf-alliance-modal');
+};
+window.mfPropose = function(otherIdx){
+  const G=getG(); const me=curP();
+  // AI accepts if its money < mine OR has fewer properties (simple heuristic)
+  const other = G.players[otherIdx];
+  const accepts = other.money <= me.money || other.owned.length <= me.owned.length || Math.random()<0.5;
+  if(accepts){
+    G.alliances.push({a:me.idx,b:otherIdx,turnsLeft:3});
+    logExt('trade',`🤝 Liên minh: <b>${me.name}</b> ↔ <b>${other.name}</b> (3 lượt)`);
+    mfOpenAlliance();
+    renderAllExt();
+  } else {
+    logExt('trade',`💢 ${other.name} từ chối đề nghị liên minh của ${me.name}.`);
+    mfOpenAlliance();
+  }
+};
+window.mfBetray = function(otherIdx){
+  const G=getG(); const me=curP();
+  G.alliances = G.alliances.filter(al=>!((al.a===me.idx&&al.b===otherIdx)||(al.b===me.idx&&al.a===otherIdx)));
+  // Steal 1 random tile from other
+  const other = G.players[otherIdx];
+  if(other.owned.length>0){
+    const stolenIdx = Math.floor(Math.random()*other.owned.length);
+    const stolen = other.owned.splice(stolenIdx,1)[0];
+    me.owned.push(stolen);
+    if(!me.levels) me.levels={};
+    me.levels[stolen] = (other.levels&&other.levels[stolen])||1;
+    if(typeof window.recomputeTraits==='function'){ window.recomputeTraits(me); window.recomputeTraits(other); }
+    logExt('synergy',`⚡ <b>${me.name} PHẢN BỘI ${other.name}</b> và cướp <b>${window.TILES[stolen].name}</b>!`);
+  } else {
+    logExt('synergy',`⚡ ${me.name} phản bội ${other.name} — nhưng đối thủ không còn ô để cướp.`);
+  }
+  // Other gets "betrayed" penalty: -2 trust (cosmetic), me gets reputation
+  me._betrayCount = (me._betrayCount||0)+1;
+  mfOpenAlliance();
+  renderAllExt();
+};
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 3 — HERO SKILLS
+// ───────────────────────────────────────────────────────────
+window.mfOpenSkill = function(){
+  if(!ensureExtState()) return;
+  const p = curP(); if(!p) return;
+  if(!p.hero){
+    $('mf-skill-body').innerHTML = `<h3>⚡ Kỹ Năng Tướng</h3>
+      <div style="padding:20px;text-align:center;color:#aaa">Bạn chưa chọn tướng.</div>
+      <div class="mf-row"><button class="mf-btn primary" onclick="mfHide('mf-skill-modal')">Đóng</button></div>`;
+    showOverlay('mf-skill-modal'); return;
+  }
+  const skill = HERO_SKILLS[p.hero.id];
+  if(!skill){
+    $('mf-skill-body').innerHTML = `<h3>⚡ Kỹ Năng Tướng</h3>
+      <div style="padding:20px;text-align:center;color:#aaa">Tướng ${p.hero.name} chưa có active skill.</div>
+      <div class="mf-row"><button class="mf-btn primary" onclick="mfHide('mf-skill-modal')">Đóng</button></div>`;
+    showOverlay('mf-skill-modal'); return;
+  }
+  const cd = p.skillCD||0;
+  const ready = cd<=0;
+  $('mf-skill-body').innerHTML = `
+    <h3>⚡ Kỹ Năng: ${p.hero.name}</h3>
+    <div class="mf-skill-grid">
+      <div class="mf-skill-card ${ready?'':'disabled'}">
+        <div class="mf-skill-icon">${skill.icon}</div>
+        <div>
+          <div class="mf-skill-name">${skill.name}</div>
+          <div class="mf-skill-desc">${skill.desc}</div>
+        </div>
+        <div class="mf-cd ${ready?'ready':''}">${ready?'SẴN SÀNG':'CD '+cd}</div>
+      </div>
+      <div class="mf-skill-card" style="opacity:.85">
+        <div class="mf-skill-icon">🛡️</div>
+        <div>
+          <div class="mf-skill-name" style="color:#7be395">Passive</div>
+          <div class="mf-skill-desc">${p.hero.passive}</div>
+        </div>
+        <div class="mf-cd ready">LUÔN BẬT</div>
+      </div>
+    </div>
+    <div class="mf-row">
+      ${ready?`<button class="mf-btn primary" onclick="mfUseSkill()">Kích hoạt</button>`:`<button class="mf-btn" disabled>Còn ${cd} lượt</button>`}
+      <button class="mf-btn" onclick="mfHide('mf-skill-modal')">Đóng</button>
+    </div>
+  `;
+  showOverlay('mf-skill-modal');
+};
+window.mfUseSkill = function(){
+  const G=getG(); const p=curP();
+  if(!p || !p.hero) return;
+  if((p.skillCD||0)>0) return;
+  const skill = HERO_SKILLS[p.hero.id];
+  if(!skill) return;
+  // Apply effect
+  switch(p.hero.id){
+    case 'BA_TRIEU': {
+      const targets = G.players.filter(x=>x.alive && x.idx!==p.idx);
+      if(targets.length===0) break;
+      const target = targets.reduce((a,b)=>(b.money>a.money?b:a));
+      target.jailTurns = Math.max(target.jailTurns||0, 1);
+      logExt('synergy',`⚔️ <b>${p.name}</b> Khởi Nghĩa — <b>${target.name}</b> bỏ lượt sau!`);
+      break;
+    }
+    case 'QUANG_TRUNG': {
+      p.doubleRoll = true;
+      logExt('synergy',`🐎 <b>${p.name}</b> Thần Tốc — lượt sau tung 2 lần lấy max.`);
+      break;
+    }
+    case 'HO_QUY_LY': {
+      const others = G.players.filter(x=>x.alive && x.idx!==p.idx && x.owned.length>0);
+      if(others.length===0){ logExt('event','💼 Không có ô đối thủ để mua ép.'); break; }
+      const tgt = others[Math.floor(Math.random()*others.length)];
+      const tileIdx = tgt.owned[Math.floor(Math.random()*tgt.owned.length)];
+      const price = Math.round(window.TILES[tileIdx].price*1.2);
+      if(p.money>=price){
+        addMoneyExt(p,-price);
+        addMoneyExt(tgt,price);
+        tgt.owned = tgt.owned.filter(i=>i!==tileIdx);
+        p.owned.push(tileIdx);
+        if(!p.levels) p.levels={}; p.levels[tileIdx]=1;
+        if(typeof window.recomputeTraits==='function'){ window.recomputeTraits(p); window.recomputeTraits(tgt); }
+        logExt('synergy',`💼 Cải Cách Tiền Tệ: <b>${p.name}</b> mua ép <b>${window.TILES[tileIdx].name}</b> từ ${tgt.name} (${fmtK(price)})`);
+      } else {
+        logExt('event','💼 Không đủ tiền để mua ép.');
+      }
+      break;
+    }
+    case 'NGUYEN_DU': {
+      if(typeof window.drawCardOf==='function') window.drawCardOf('CO_HOI', p);
+      else if(typeof window.autoDrawCard==='function') window.autoDrawCard(p);
+      logExt('synergy',`📜 <b>${p.name}</b> Thi Họa — rút thêm 1 thẻ.`);
+      break;
+    }
+    case 'YET_KIEU': {
+      p.rentImmune = (p.rentImmune||0)+1;
+      logExt('synergy',`🐟 <b>${p.name}</b> Lặn Bão — miễn 1 lần trả thuê tới.`);
+      break;
+    }
+    case 'VUA_HUNG': {
+      let pool = 0;
+      G.players.forEach(x=>{ if(x.alive && x.idx!==p.idx && x.money>=1000){ addMoneyExt(x,-1000); pool+=1000; } });
+      const share = Math.round(pool*0.5);
+      addMoneyExt(p, share);
+      logExt('synergy',`👑 <b>${p.name}</b> Triệu Tổ — thu thuế ${fmtK(pool)}, lấy 50% = ${fmtK(share)}.`);
+      break;
+    }
+  }
+  p.skillCD = skill.cd;
+  p.skillUses = (p.skillUses||0)+1;
+  hideOverlay('mf-skill-modal');
+  renderAllExt();
+};
+
+// ───────────────────────────────────────────────────────────
+// FEATURE 4 — SEASONS + MAP EVENTS
+// ───────────────────────────────────────────────────────────
+function advanceSeason(){
+  const G=getG(); if(!G) return;
+  const cur = G.season || SEASONS[0];
+  const idx = SEASONS.findIndex(s=>s.id===cur.id);
+  G.season = SEASONS[(idx+1)%SEASONS.length];
+  logExt('event',`${G.season.icon} <b>Mùa mới: ${G.season.name}</b> — ${G.season.desc}`);
+  mfRenderSeasonBar();
+}
+function maybeTriggerMapEvent(){
+  const G=getG(); if(!G) return;
+  if(G.mapEvent){ G.mapEventTurnsLeft--; if(G.mapEventTurnsLeft<=0){ logExt('event',`${G.mapEvent.icon} ${G.mapEvent.name} kết thúc.`); G.mapEvent=null; } }
+  if(!G.mapEvent && G.round%5===0 && Math.random()<0.7){
+    const ev = MAP_EVENTS[Math.floor(Math.random()*MAP_EVENTS.length)];
+    G.mapEvent = ev;
+    G.mapEventTurnsLeft = ev.dur;
+    logExt('event',`${ev.icon} <b>${ev.name}</b> — ${ev.desc} (${ev.dur} vòng)`);
+    if(ev.onRound) G.players.forEach(p=>{ if(p.alive) ev.onRound(p); });
+  }
+  mfRenderSeasonBar();
+}
+function mfRenderSeasonBar(){
+  const G=getG(); if(!G || !G.season){ $('mf-season-bar').innerHTML=''; return; }
+  const parts = [];
+  parts.push(`<div class="mf-season-badge" title="${G.season.desc}">${G.season.icon} ${G.season.name}</div>`);
+  if(G.mapEvent) parts.push(`<div class="mf-season-badge" style="background:linear-gradient(135deg,rgba(224,144,48,.22),rgba(224,144,48,.05));border-color:#e09030;color:#e09030" title="${G.mapEvent.desc}">${G.mapEvent.icon} ${G.mapEvent.name} (${G.mapEventTurnsLeft})</div>`);
+  if(G.alliances && G.alliances.length){
+    parts.push(`<div class="mf-season-badge" style="background:linear-gradient(135deg,rgba(46,178,123,.22),rgba(46,178,123,.05));border-color:#2eb27b;color:#7be395" title="Liên minh đang hoạt động">🤝 ${G.alliances.length} liên minh</div>`);
+  }
+  $('mf-season-bar').innerHTML = parts.join('');
+}
+window.mfRefreshStatus = mfRenderSeasonBar;
+
+// ───────────────────────────────────────────────────────────
+// HOOK INTO endTurn — tick cooldowns, alliances, events, seasons
+// ───────────────────────────────────────────────────────────
+function installEndTurnHook(){
+  if(window._mfEndTurnHooked) return;
+  if(typeof window.endTurn !== 'function') return;
+  const orig = window.endTurn;
+  window.endTurn = function(){
+    try{ ensureExtState(); }catch(e){}
+    try{
+      const G=getG();
+      const p=curP();
+      if(p){
+        if(p.skillCD>0) p.skillCD--;
+      }
+      // Tick alliances every round (when current player wraps)
+      if(G){
+        if(G.currentPlayer === G.players.length-1 || G.currentPlayer === G.players.filter(x=>x.alive).length-1){
+          // about to wrap → tick alliances
+          G.alliances = G.alliances.filter(al=>{
+            al.turnsLeft--;
+            if(al.turnsLeft<=0){
+              logExt('trade',`🤝 Liên minh ${G.players[al.a].name}↔${G.players[al.b].name} hết hạn.`);
+              return false;
+            }
+            return true;
+          });
+        }
+      }
+    }catch(e){console.warn('mf endTurn pre',e)}
+    const r = orig.apply(this, arguments);
+    try{
+      const G=getG();
+      if(G){
+        // Only tick events/season when ROUND changes (not every turn)
+        if(G.round !== G._lastTickRound){
+          G._lastTickRound = G.round;
+          // Advance season every 8 rounds
+          if(G.round>0 && G.round%8===0) advanceSeason();
+          // Map event check / tick (every round)
+          if(G.mapEvent){
+            G.mapEventTurnsLeft--;
+            if(G.mapEventTurnsLeft<=0){ logExt('event',`${G.mapEvent.icon} ${G.mapEvent.name} kết thúc.`); G.mapEvent=null; }
+          }
+          if(!G.mapEvent && G.round>0 && G.round%5===0 && Math.random()<0.7){
+            const ev = MAP_EVENTS[Math.floor(Math.random()*MAP_EVENTS.length)];
+            G.mapEvent = ev;
+            G.mapEventTurnsLeft = ev.dur;
+            logExt('event',`${ev.icon} <b>${ev.name}</b> — ${ev.desc} (${ev.dur} vòng)`);
+            if(ev.onRound) G.players.forEach(p=>{ if(p.alive) ev.onRound(p); });
+          }
+        }
+        mfRenderSeasonBar();
+      }
+    }catch(e){console.warn('mf endTurn post',e)}
+    return r;
+  };
+  window._mfEndTurnHooked = true;
+}
+
+// ───────────────────────────────────────────────────────────
+// HOOK INTO rent/buy — alliance immunity + skill immunity + season/event modifiers
+// ───────────────────────────────────────────────────────────
+function installRentHook(){
+  if(window._mfRentHooked) return;
+  if(typeof window.computeRent !== 'function') return;
+  const orig = window.computeRent;
+  window.computeRent = function(pos){
+    let rent = orig.apply(this, arguments);
+    try{
+      const G=getG(); if(!G) return rent;
+      const t = window.TILES[pos];
+      // Season modifiers
+      if(G.season){
+        if(G.season.rentMod) rent = Math.round(rent * G.season.rentMod);
+        if(G.season.beachBonus && t.traits && t.traits.includes('BIEN')) rent = Math.round(rent*G.season.beachBonus);
+      }
+      // Map event modifier
+      if(G.mapEvent && G.mapEvent.rentMod){
+        const mul = G.mapEvent.rentMod(t);
+        rent = Math.round(rent*mul);
+      }
+    }catch(e){console.warn('rent hook',e)}
+    return rent;
+  };
+  window._mfRentHooked = true;
+}
+
+// Patch alliance immunity into onLand → wraps existing rent payment by hooking addMoney transitively is hard.
+// Instead expose a check function that game core can call OR we wrap addMoney on payer side.
+// Pragmatic approach: poll right after orig endTurn runs we already adjusted state.
+// For alliance immunity & rent immune: check inside computeRent — if payer (currentPlayer) and owner are allies → 0.
+function installComputeRentAlliance(){
+  if(window._mfRentAlliance) return;
+  if(typeof window.computeRent !== 'function') return;
+  const prev = window.computeRent;
+  window.computeRent = function(pos){
+    let rent = prev.apply(this, arguments);
+    try{
+      const G=getG(); if(!G) return rent;
+      const payer = curP();
+      const ownerIdx = typeof window.findOwner==='function' ? window.findOwner(pos) : -1;
+      if(payer && ownerIdx>=0 && ownerIdx!==payer.idx){
+        const allied = G.alliances && G.alliances.some(al=>(al.a===payer.idx&&al.b===ownerIdx)||(al.b===payer.idx&&al.a===ownerIdx));
+        if(allied){ logExt('trade',`🤝 Đồng minh — miễn phí thuê (${window.TILES[pos].name}).`); return 0; }
+        if(payer.rentImmune>0){ payer.rentImmune--; logExt('synergy',`🐟 Lặn Bão miễn phí thuê tới.`); return 0; }
+      }
+    }catch(e){console.warn('alli rent',e)}
+    return rent;
+  };
+  window._mfRentAlliance = true;
+}
+
+// ───────────────────────────────────────────────────────────
+// HOOK INTO onLand — heritage popup + auction trigger
+// ───────────────────────────────────────────────────────────
+function installLandHook(){
+  if(window._mfLandHooked) return;
+  if(typeof window.onLand !== 'function') return;
+  const orig = window.onLand;
+  window.onLand = function(p){
+    const r = orig.apply(this, arguments);
+    try{
+      ensureExtState();
+      // Show heritage popup automatically when landing on UNESCO/property if first visit
+      if(p && p.pos!==undefined){
+        const t = window.TILES[p.pos];
+        if(t && t.type==='property' && HERITAGE[p.pos] && !p.heritageVisited[p.pos]){
+          // brief delay so it doesn't conflict with tile popup
+          setTimeout(()=>{ try{ window.mfShowHeritage(p.pos); }catch(e){} }, 600);
+        }
+      }
+    }catch(e){console.warn('land hook',e)}
+    return r;
+  };
+  window._mfLandHooked = true;
+}
+
+// ───────────────────────────────────────────────────────────
+// HOOK INTO rollDice — Quang Trung double roll
+// ───────────────────────────────────────────────────────────
+function installRollHook(){
+  if(window._mfRollHooked) return;
+  if(typeof window.rollDice !== 'function') return;
+  // Quang Trung's doubleRoll is consumed by giving extra roll flag (use existing extraRoll)
+  const origRoll = window.rollDice;
+  window.rollDice = function(){
+    try{
+      const p = curP();
+      if(p && p.doubleRoll){ p.extraRoll = true; p.doubleRoll = false; logExt('synergy',`🐎 Thần Tốc kích hoạt — bonus roll!`); }
+    }catch(e){}
+    return origRoll.apply(this, arguments);
+  };
+  window._mfRollHooked = true;
+}
+
+// ───────────────────────────────────────────────────────────
+// ADD ACTION BUTTONS (Skill / Alliance / Quiz)
+// ───────────────────────────────────────────────────────────
+function installActionButtons(){
+  // Find the actions panel
+  const actionsDiv = document.querySelector('#race-v2-root .panel .actions');
+  if(!actionsDiv) return false;
+  if(actionsDiv.querySelector('#mf-btn-skill')) return true; // already
+  const html = `
+    <button class="btn-action full" id="mf-btn-skill" onclick="mfOpenSkill()" style="background:linear-gradient(135deg,rgba(212,175,55,.25),rgba(212,175,55,.05));border-color:rgba(212,175,55,.6)">⚡ Kỹ Năng Tướng</button>
+    <button class="btn-action" id="mf-btn-alliance" onclick="mfOpenAlliance()" style="background:rgba(46,178,123,.12);border-color:rgba(46,178,123,.4);color:#7be395">🤝 Liên Minh</button>
+    <button class="btn-action" id="mf-btn-quiz" onclick="mfStartQuiz()" style="background:rgba(46,111,201,.12);border-color:rgba(46,111,201,.4);color:#9ec3ff">🎓 Quiz +tiền</button>
+  `;
+  actionsDiv.insertAdjacentHTML('beforeend', html);
+  return true;
+}
+
+// ───────────────────────────────────────────────────────────
+// AUCTION HOOK — replace "skip buy" behavior: when player skips buy, start auction
+// Hook by overriding buyTile path — simpler: expose explicit auction button on tile popup (future).
+// For now: bind to passing buy action via a global helper.
+// ───────────────────────────────────────────────────────────
+window.mfTriggerAuctionForCurrent = function(){
+  const p = curP(); if(!p) return;
+  if(typeof window.findOwner==='function' && window.findOwner(p.pos)===-1 && window.TILES[p.pos].type!=='corner'){
+    window.mfStartAuction(p.pos);
+  }
+};
+
+// ───────────────────────────────────────────────────────────
+// BOOT
+// ───────────────────────────────────────────────────────────
+function boot(){
+  installEndTurnHook();
+  installRentHook();
+  installComputeRentAlliance();
+  installLandHook();
+  installRollHook();
+  installActionButtons();
+  // ensure ext state once game starts
+  setInterval(()=>{
+    if(getG() && !getG()._mfReady){ ensureExtState(); mfRenderSeasonBar(); }
+    if(getG() && !document.querySelector('#mf-btn-skill')) installActionButtons();
+  }, 1500);
+}
+// Wait briefly for other scripts (chat IIFE) to finish wrapping endTurn
+setTimeout(boot, 1500);
+
 })();
 </script>
 
