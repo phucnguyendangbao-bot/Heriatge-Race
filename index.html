@@ -1693,6 +1693,23 @@
 .shop-buy:hover{ filter:brightness(1.1); }
 .shop-buy:disabled{ opacity:.4; cursor:not-allowed; filter:grayscale(.6); }
 
+.shop-wallet{
+  background:linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.05));
+  border:1px solid rgba(212,175,55,.35);
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:12px;
+  color:#e6d6a0;
+  margin-bottom:4px;
+}
+.shop-wallet b{ color:#ffd700; font-size:13px; }
+.shop-wallet-src{ color:#a09070; font-size:11px; margin-left:4px; }
+.shop-wallet-empty{
+  background:linear-gradient(135deg, rgba(255,140,0,.18), rgba(255,140,0,.08));
+  border-color:rgba(255,180,80,.45);
+  color:#ffd0a0;
+}
+
 /* AI suggestion banner shown in-game during turn */
 .ai-tip-banner{
   position:fixed; left:50%; top:80px; transform:translateX(-50%);
@@ -2000,6 +2017,10 @@ body.game-fullscreen .ingame-pill{display:block;animation:ingameFade .4s ease}
     <h2>Khám phá &amp; Chinh phục những kỳ quan</h2>
     <p class="hero-desc">Hành trình xuyên Việt qua những di sản thiên nhiên và văn hóa nổi tiếng nhất. Mua đất, xây dựng khu nghỉ dưỡng, thu phí du lịch và trở thành tỉ phú du lịch số một Việt Nam!</p>
     <button class="btn-primary" onclick="(function(){ if(!window.currentUserProfile){ if(typeof addToast==='function') addToast('⚠️ Vui lòng đăng nhập để chơi!'); else alert('⚠️ Vui lòng đăng nhập để chơi!'); if(typeof openAuthModal==='function') openAuthModal('login'); return; } showPage('game',document.querySelectorAll('.nav button')[2]); })()">🎲 Bắt Đầu Chơi Ngay</button>
+    <div class="hero-mp-row">
+      <button class="btn-mp-online" onclick="MP.openCreate()">🌐 Tạo phòng Online</button>
+      <button class="btn-mp-online ghost" onclick="MP.openJoin()">🔑 Vào phòng (Nhập PIN)</button>
+    </div>
     <div class="heritage-icons">
       <div class="hicon"><span class="hicon-img"><img src="https://cdn.jsdelivr.net/gh/phucnguyendangbao-bot/Heriatge-Race@main/images/halong.jpg" alt="Vịnh Hạ Long" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.textContent='🏝️'"></span>Vịnh Hạ Long</div>
       <div class="hicon"><span class="hicon-img"><img src="https://cdn.jsdelivr.net/gh/phucnguyendangbao-bot/Heriatge-Race@main/images/hoian.jpg" alt="Phố Cổ Hội An" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.textContent='🏮'"></span>Phố Cổ Hội An</div>
@@ -2178,6 +2199,7 @@ body.game-fullscreen .ingame-pill{display:block;animation:ingameFade .4s ease}
         <button class="btn-action primary full" id="btn-roll" onclick="rollDice()">🎲 Tung Xúc Xắc</button>
         <button class="btn-action full" id="btn-teleport" onclick="useTeleport()" disabled>✈️ Teleport (Tàu Hỏa)</button>
         <button class="btn-action full" id="btn-end" onclick="endTurn()">⏭️ Kết Thúc Lượt</button>
+        <button class="btn-action danger full" id="btn-go-home" onclick="confirmGoHome()" style="margin-top:6px">🏠 Trở Về Trang Chủ</button>
       </div>
     </div>
   </div>
@@ -2430,6 +2452,52 @@ function loadProfile(){
 function saveProfile(p){
   try{ localStorage.setItem(_profileKey(),JSON.stringify(p)); }catch(e){}
 }
+// ============== CLOUD SYNC (debounced) ==============
+let _cloudPushTimer = null
+let _cloudPushPending = false
+
+function profileToDb(p){
+  return {
+    coins: p.coins,
+    energy: p.energy,
+    last_energy_at: p.lastEnergyAt,
+    vip_tier: p.vipTier,
+    vip_until: p.vipUntil,
+    vip_daily_claimed_at: p.vipDailyClaimedAt,
+    last_ad_at: p.lastAdAt,
+    owned_tokens: p.ownedTokens,
+    owned_colors: p.ownedColors,
+    equipped_tokens: p.equippedTokens,
+    equipped_colors: p.equippedColors,
+    claimed_quests: p.claimedQuests,
+    stats: p.stats
+  }
+}
+
+async function pushProfileToCloud(){
+  if(!window.currentUserProfile?.id || !window.supabase) return
+  if(_cloudPushPending) return
+  _cloudPushPending = true
+  try {
+    const p = getProfile()
+    const { error } = await window.supabase
+      .from('profiles')
+      .update(profileToDb(p))
+      .eq('id', window.currentUserProfile.id)
+    if(error) console.warn('[cloud push]', error)
+  } catch(e){
+    console.warn('[cloud push ex]', e)
+  } finally {
+    _cloudPushPending = false
+  }
+}
+
+function schedulePushProfile(){
+  // Debounce 2 giây — gộp nhiều update liên tiếp thành 1 request
+  if(_cloudPushTimer) clearTimeout(_cloudPushTimer)
+  _cloudPushTimer = setTimeout(pushProfileToCloud, 2000)
+}
+
 function getProfile(){
   if(!window._skinProfile) window._skinProfile=loadProfile();
   return window._skinProfile;
@@ -3457,6 +3525,66 @@ function confirmExitGame(){
     {label:'Tiếp tục chơi', fn:()=>{document.getElementById('modal').style.display='none';}}
   ]);
 }
+
+// Trở về trang chủ — có xác nhận trước khi rời ván
+function confirmGoHome(){
+  // Nếu chưa vào ván cờ, đi về trang chủ luôn (không cần cảnh báo)
+  if(!window.gameInProgress){
+    goHomeNow();
+    return;
+  }
+  // Tóm tắt trạng thái ván hiện tại để người chơi cân nhắc
+  let summary = '';
+  try{
+    if(typeof G!=='undefined' && G && G.players){
+      const cp = G.players[G.currentPlayer];
+      const alive = G.players.filter(p=>p.alive!==false).length;
+      summary = `<div style="background:rgba(0,0,0,.25);border:1px solid rgba(212,175,55,.25);border-radius:8px;padding:10px 12px;margin:10px 0;font-size:13px;line-height:1.6">
+        <div>📍 Vòng hiện tại: <b style="color:#ffd700">${G.round||1}</b></div>
+        <div>🎮 Đang là lượt: <b style="color:#ffd700">${cp?cp.name:'?'}</b></div>
+        <div>👥 Số người còn trong ván: <b style="color:#ffd700">${alive}</b></div>
+      </div>`;
+    }
+  }catch(e){}
+
+  if(typeof showModal!=='function'){
+    if(confirm('Trở về trang chủ?\n\nVán đấu hiện tại sẽ KHÔNG được lưu.\nBạn có chắc muốn rời ván?')){
+      goHomeNow();
+    }
+    return;
+  }
+  showModal('🏠 Trở về trang chủ?', `<div class="modal-body">
+    Bạn đang trong một ván đấu.<br>
+    Nếu rời đi bây giờ, toàn bộ tiến trình sẽ <b style="color:#ff6b6b">bị mất</b> và không thể khôi phục.
+    ${summary}
+    <div style="font-size:12px;color:#a09070;margin-top:4px">Mẹo: bấm "Hủy" để quay lại ván và tiếp tục chơi.</div>
+  </div>`, [
+    {label:'✅ Xác nhận về trang chủ', primary:true, fn:()=>{
+      document.getElementById('modal').style.display='none';
+      goHomeNow();
+    }},
+    {label:'❌ Hủy — Tiếp tục chơi', fn:()=>{document.getElementById('modal').style.display='none';}}
+  ]);
+}
+
+function goHomeNow(){
+  // Đóng modal nếu còn mở
+  try{ const m=document.getElementById('modal'); if(m) m.style.display='none'; }catch(e){}
+  // Tắt fullscreen + dọn cờ ván đấu
+  try{ if(typeof exitGameFullscreen==='function') exitGameFullscreen(); }catch(e){}
+  window.gameInProgress = false;
+  // Ẩn nút Thoát Ván trên topbar
+  try{ const b=document.getElementById('btn-exit-game'); if(b) b.style.display='none'; }catch(e){}
+  // Đơn giản và an toàn nhất: reload về trang chủ
+  // (tránh phải reset hàng loạt state game v2)
+  try{
+    // Nếu trang chủ có id riêng, có thể dùng showPage('home') sau khi reset.
+    // Ở đây chọn reload để đảm bảo state sạch hoàn toàn.
+    location.href = location.pathname + location.search;
+  }catch(e){ location.reload(); }
+}
+window.confirmGoHome = confirmGoHome;
+window.goHomeNow = goHomeNow;
 
 // Nếu user nhấn Escape thoát browser fullscreen, vẫn giữ CSS fullscreen (tab nav vẫn bị ẩn)
 // Nhưng nếu thoát CSS fullscreen thì cũng thoát browser fullscreen
@@ -6257,6 +6385,7 @@ function withRaceTimeout(promise, ms, label){
   ])
 }
 function makeFallbackProfile(user){
+
   return {
     id: user.id,
     display_name: user.user_metadata?.display_name || (user.email || '').split('@')[0] || 'Người chơi',
@@ -6278,7 +6407,7 @@ async function ensureProfile(user){
       console.warn('[profile fetch]', error)
       return makeFallbackProfile(user)
     }
-    if (profile) return profile
+    if (profile) return dbToProfile(profile, user)
     // Profile chưa có → thử insert (có thể bị RLS chặn, không sao)
     const newP = {
       id: user.id,
@@ -6294,7 +6423,7 @@ async function ensureProfile(user){
         console.warn('[profile insert]', insErr)
         return makeFallbackProfile(user)
       }
-      return inserted
+      return dbToProfile(inserted, user)
     } catch(e2) {
       console.warn('[profile insert timeout]', e2)
       return makeFallbackProfile(user)
@@ -6343,22 +6472,35 @@ supabase.auth.onAuthStateChange((event, session) => {
     if (typeof renderPersonalize === 'function') renderPersonalize()
 
     // 5) Load profile thật từ DB ở chế độ background (không block UI)
-    ensureProfile(session.user).then(fullProfile => {
-      if (!fullProfile) return
-      window.currentUserProfile = {
-        ...fullProfile,
-        email: session.user.email,
-        isAdmin: window.isAdminEmail(session.user.email)
-      }
-      renderTopbarUser(window.currentUserProfile, session.user.email)
-      if (typeof renderSetup === 'function') renderSetup()
-      if (typeof renderPersonalize === 'function') renderPersonalize()
-    }).catch(err => console.warn('[bg profile]', err))
+     // ====== ĐỒNG BỘ vào _skinProfile để getProfile() trả về data cloud ======
+  window._skinProfile = {
+    coins: fullProfile.coins,
+    energy: fullProfile.energy,
+    lastEnergyAt: fullProfile.lastEnergyAt,
+    vipTier: fullProfile.vipTier,
+    vipUntil: fullProfile.vipUntil,
+    vipDailyClaimedAt: fullProfile.vipDailyClaimedAt,
+    lastAdAt: fullProfile.lastAdAt,
+    ownedTokens: fullProfile.ownedTokens,
+    ownedColors: fullProfile.ownedColors,
+    equippedTokens: fullProfile.equippedTokens,
+    equippedColors: fullProfile.equippedColors,
+    claimedQuests: fullProfile.claimedQuests,
+    stats: fullProfile.stats
+  }
+  saveProfile(window._skinProfile)  // cache localStorage
+  refreshCoinBar()
+  refreshEnergyBar()
+  renderTopbarUser(window.currentUserProfile, session.user.email)
+  if (typeof renderSetup === 'function') renderSetup()
+  if (typeof renderPersonalize === 'function') renderPersonalize()
+}).catch(err => console.warn('[bg profile]', err))
 
   } else {
     // ===== Đã đăng xuất hoặc không có session =====
     lastUserId = null
     window.currentUserProfile = null
+    window._skinProfile = null
     resetAuthLoadingUI()
     renderTopbarUser(null, null)
     const lr = $('login-required-panel'); if (lr) lr.style.display = 'flex'
@@ -6713,26 +6855,74 @@ window.showLeaderboardModal = async () => {
 
   // (API key UI removed — key now lives server-side in Vercel env var)
 
+  // ---------- WALLET HELPER ----------
+  // Picks the right money source:
+  //  - v2 game active  → G.players[G.currentPlayer].money   (stored in "k VND", so * 1000 to get VND)
+  //  - v1 game active  → players[currentPlayer].money       (stored directly in VND)
+  //  - logged-in user  → window.currentUserProfile.coins    (xu, 1 xu = 1 VND for shop)
+  function getShopWallet(){
+    if(typeof G!=='undefined' && G && G.players && G.players[G.currentPlayer] && G.players[G.currentPlayer].alive!==false){
+      const p = G.players[G.currentPlayer];
+      return {
+        source:'v2', name: p.name+' (trong ván)',
+        vnd: (p.money||0) * 1000,
+        payVnd(amt){ p.money = Math.max(0, p.money - amt/1000); },
+        refresh(){ if(typeof renderAll==='function') renderAll(); },
+        addItem(id){ if(!p.inventory) p.inventory=[]; p.inventory.push(id); }
+      };
+    }
+    if(typeof players!=='undefined' && players[currentPlayer]){
+      const p = players[currentPlayer];
+      return {
+        source:'v1', name: p.name+' (trong ván)',
+        vnd: p.money||0,
+        payVnd(amt){ p.money = Math.max(0, p.money - amt); },
+        refresh(){ if(typeof updateUI==='function') updateUI(); },
+        addItem(id){ if(!p.inventory) p.inventory=[]; p.inventory.push(id); }
+      };
+    }
+    if(window.currentUserProfile){
+      const prof = window.currentUserProfile;
+      return {
+        source:'profile', name:'Xu tài khoản',
+        vnd: prof.coins||0,
+        payVnd(amt){ prof.coins = Math.max(0, (prof.coins||0) - amt); },
+        refresh(){
+          if(typeof saveCurrentProfile==='function') saveCurrentProfile();
+          if(typeof refreshSkinUI==='function') refreshSkinUI();
+          const el=document.getElementById('stat-coins'); if(el) el.textContent=(prof.coins||0).toLocaleString('vi-VN');
+        },
+        addItem(id){ if(!prof.inventory) prof.inventory=[]; prof.inventory.push(id); }
+      };
+    }
+    return null;
+  }
+
   // ---------- SHOP RENDER ----------
   function renderShop(){
     const grid = document.getElementById('shopGrid');
     if(!grid) return;
     const items = SHOP_CATALOG[chatState.shopSub] || [];
-    const myGold = (typeof players!=='undefined' && players[currentPlayer]) ? players[currentPlayer].money : 0;
-    grid.innerHTML = items.map(it=>{
+    const wallet = getShopWallet();
+    const myVnd = wallet ? wallet.vnd : 0;
+    const walletInfo = wallet
+      ? `<div class="shop-wallet">💰 Ví: <b>${formatVnd(myVnd)}</b> <span class="shop-wallet-src">(${wallet.name})</span></div>`
+      : `<div class="shop-wallet shop-wallet-empty">⚠️ Hãy đăng nhập hoặc vào ván cờ để mua vật phẩm/đổi voucher.</div>`;
+    grid.innerHTML = walletInfo + items.map(it=>{
       const featured = it.featured ? ' featured' : '';
-      const canAfford = it.currency==='VND' ? true : (myGold >= it.price);
+      const canAfford = it.currency==='VND' ? true : (myVnd >= it.price);
       const priceText = it.currency==='VND'
         ? `${(it.price/1000).toFixed(0)}K <span class="currency">VND</span>`
         : `${(it.price/1000000).toFixed(1)}tr <span class="currency">vàng</span>`;
       const btnLabel = it.currency==='VND' ? 'Nạp' : (it.adRequired ? 'Xem ad + đổi' : 'Mua');
+      const btnDisabled = (it.currency!=='VND' && (!wallet || !canAfford));
       return `
         <div class="shop-card${featured}">
           <div class="shop-card-icon">${it.icon}</div>
           <div class="shop-card-body">
             <div class="shop-card-name">${it.name}</div>
             <div class="shop-card-desc">${it.desc}</div>
-            <button class="shop-buy" ${canAfford?'':'disabled'} onclick="buyShopItem('${chatState.shopSub}','${it.id}')">${btnLabel}</button>
+            <button class="shop-buy" ${btnDisabled?'disabled':''} onclick="buyShopItem('${chatState.shopSub}','${it.id}')">${btnLabel}</button>
           </div>
           <div class="shop-card-price">${priceText}</div>
         </div>
@@ -6745,45 +6935,49 @@ window.showLeaderboardModal = async () => {
     const item = (SHOP_CATALOG[cat]||[]).find(x=>x.id===id);
     if(!item) return;
 
-    // Top-up (VND)
+    // Top-up (VND) — payment gateway placeholder
     if(cat==='topup'){
       alert(`💳 Bạn sẽ được chuyển sang trang thanh toán MoMo/ZaloPay/VNPay (DEMO).\n\nGói: ${item.name}\nGiá: ${(item.price/1000).toFixed(0)}K VND\nNhận: +${(item.gold/1000000).toFixed(0)}tr vàng game\n\n(Payment gateway chưa kết nối — đây là demo. Liên hệ admin để tích hợp.)`);
       return;
     }
 
+    const wallet = getShopWallet();
+    if(!wallet){
+      alert('⚠️ Bạn chưa đăng nhập và chưa vào ván cờ.\n\nHãy đăng nhập (Cá Nhân Hóa) hoặc Bắt đầu một ván cờ để có ví thanh toán.');
+      return;
+    }
+    if(wallet.vnd < item.price){
+      alert('❌ Không đủ vàng.\nCần: '+formatVnd(item.price)+'\nBạn có: '+formatVnd(wallet.vnd)+'\nNguồn ví: '+wallet.name);
+      return;
+    }
+
     // Voucher with ad
     if(cat==='vouchers' && item.adRequired){
-      const myGold = (typeof players!=='undefined' && players[currentPlayer]) ? players[currentPlayer].money : 0;
-      if(myGold < item.price){ alert('❌ Không đủ vàng. Cần '+formatVnd(item.price)); return; }
-      if(!confirm(`Đổi voucher "${item.name}"?\n\n• Trừ ${formatVnd(item.price)} vàng\n• Xem 1 video ad 20s\n• Nhận mã giảm giá thật + affiliate link`)) return;
-      players[currentPlayer].money -= item.price;
-      if(typeof updateUI==='function') updateUI();
-      // Reuse sponsored ad mechanic to play short ad
-      if(typeof window.playSponsoredAd==='function'){
-        // simulate by showing voucher modal directly
-      }
+      if(!confirm(`Đổi voucher "${item.name}"?\n\n• Trừ ${formatVnd(item.price)} từ ${wallet.name}\n• Xem 1 video ad 20s\n• Nhận mã giảm giá thật + affiliate link`)) return;
+      wallet.payVnd(item.price);
+      wallet.refresh();
       setTimeout(()=>{
-        const w = window.open(item.affiliateUrl, '_blank');
-        alert(`✅ ĐÃ ĐỔI THÀNH CÔNG\n\nMã: HERITAGE-${item.id.toUpperCase()}\nLink đặt: ${item.affiliateUrl}\n\nMã đã được copy. Chúc đặt phòng vui!`);
+        if(item.affiliateUrl && item.affiliateUrl!=='#'){
+          try{ window.open(item.affiliateUrl, '_blank'); }catch(e){}
+        }
+        alert(`✅ ĐÃ ĐỔI THÀNH CÔNG\n\nMã: HERITAGE-${item.id.toUpperCase()}\n${item.affiliateUrl && item.affiliateUrl!=='#' ? 'Link đặt: '+item.affiliateUrl : ''}\n\nMã đã được lưu vào kho đồ. Chúc bạn dùng vui!`);
         if(typeof window.trackEvent==='function') window.trackEvent('voucher_redeem', item.name, item.id);
       }, 800);
+      wallet.addItem(item.id);
       renderShop();
       return;
     }
 
     // In-game items (vàng)
-    if(typeof players==='undefined' || !players[currentPlayer]){
-      alert('Vui lòng vào game trước khi mua vật phẩm.');
-      return;
+    if(!confirm(`Mua "${item.name}" với ${formatVnd(item.price)}? (${wallet.name})`)) return;
+    wallet.payVnd(item.price);
+    wallet.addItem(item.id);
+    wallet.refresh();
+    if(wallet.source==='v2' && typeof log==='function'){
+      log('event', `🎁 ${G.players[G.currentPlayer].name} đã mua: <b>${item.name}</b>`);
+    } else if(wallet.source==='v1' && typeof addLog==='function'){
+      addLog(`🎁 ${players[currentPlayer].name} đã mua: ${item.name}`);
     }
-    const p = players[currentPlayer];
-    if(p.money < item.price){ alert('❌ Không đủ vàng. Cần '+formatVnd(item.price)+', bạn có '+formatVnd(p.money)); return; }
-    if(!confirm(`Mua "${item.name}" với ${formatVnd(item.price)}?`)) return;
-    p.money -= item.price;
-    if(!p.inventory) p.inventory = [];
-    p.inventory.push(item.id);
-    if(typeof updateUI==='function') updateUI();
-    if(typeof addLog==='function') addLog(`🎁 ${p.name} đã mua: ${item.name}`);
     alert('✅ Đã thêm "'+item.name+'" vào kho đồ của bạn!');
     renderShop();
   };
@@ -7589,6 +7783,721 @@ function boot(){
 setTimeout(boot, 1500);
 
 })();
+</script>
+
+<!-- ============================================================
+     MULTIPLAYER MODULE — Supabase Realtime Broadcast/Presence
+     ============================================================ -->
+<style>
+  .hero-mp-row{ display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap }
+  .btn-mp-online{
+    background:linear-gradient(135deg,#1e3a5f,#0f1e3a);
+    color:#9ec3ff; border:1px solid rgba(120,180,255,.5);
+    padding:10px 18px; border-radius:10px; font-weight:700; font-size:13px;
+    cursor:pointer; transition:all .2s; font-family:inherit;
+  }
+  .btn-mp-online:hover{ background:linear-gradient(135deg,#2b4d77,#1a2c4a); transform:translateY(-1px) }
+  .btn-mp-online.ghost{ background:rgba(120,180,255,.08); color:#c0d8ff }
+
+  .mp-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:10000;
+    display:none; align-items:center; justify-content:center; padding:20px;
+    backdrop-filter:blur(4px);
+  }
+  .mp-overlay.show{ display:flex; animation:mpFade .25s }
+  @keyframes mpFade{ from{opacity:0} to{opacity:1} }
+  .mp-modal{
+    background:linear-gradient(180deg,#0f1e3a,#0a1428);
+    border:2px solid rgba(120,180,255,.4);
+    border-radius:16px; padding:24px; max-width:520px; width:100%;
+    max-height:90vh; overflow-y:auto;
+    box-shadow:0 24px 64px rgba(0,0,0,.7), 0 0 60px rgba(120,180,255,.15);
+    color:#e6e8f0;
+    font-family:inherit;
+  }
+  .mp-title{ font-size:20px; font-weight:800; color:#9ec3ff; margin-bottom:6px }
+  .mp-sub{ font-size:12px; color:#7a8aa3; margin-bottom:18px; letter-spacing:.5px; text-transform:uppercase }
+  .mp-section{ margin-bottom:16px }
+  .mp-label{ font-size:11px; font-weight:700; color:#9ec3ff; letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px }
+  .mp-input{
+    width:100%; padding:10px 12px; border-radius:8px;
+    background:rgba(0,0,0,.4); border:1px solid rgba(120,180,255,.3);
+    color:#e6e8f0; font-family:inherit; font-size:14px; box-sizing:border-box;
+  }
+  .mp-input:focus{ outline:none; border-color:#5d92d6; box-shadow:0 0 0 2px rgba(120,180,255,.2) }
+  .mp-pin-input{ font-size:24px; letter-spacing:6px; text-align:center; text-transform:uppercase; font-family:'Courier New',monospace; font-weight:900 }
+  .mp-pin-display{
+    font-size:38px; letter-spacing:10px; text-align:center;
+    font-family:'Courier New',monospace; font-weight:900;
+    color:#ffd700; background:rgba(212,175,55,.1);
+    border:2px dashed rgba(212,175,55,.5); border-radius:12px;
+    padding:18px; margin:10px 0;
+    user-select:all;
+  }
+  .mp-copy-btn{
+    background:rgba(212,175,55,.15); color:#ffd700;
+    border:1px solid rgba(212,175,55,.4); border-radius:8px;
+    padding:8px 14px; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px;
+    margin-top:6px;
+  }
+  .mp-copy-btn:hover{ background:rgba(212,175,55,.25) }
+  .mp-btn-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:18px }
+  .mp-btn{
+    flex:1; min-width:120px; padding:11px 16px; border-radius:9px; font-weight:800;
+    cursor:pointer; border:none; font-family:inherit; font-size:13px;
+    transition:all .15s;
+  }
+  .mp-btn.primary{ background:linear-gradient(135deg,#5d92d6,#3d6cb0); color:#fff }
+  .mp-btn.primary:hover:not(:disabled){ filter:brightness(1.1); transform:translateY(-1px) }
+  .mp-btn.primary:disabled{ opacity:.4; cursor:not-allowed }
+  .mp-btn.ghost{ background:rgba(120,180,255,.1); color:#c0d8ff; border:1px solid rgba(120,180,255,.3) }
+  .mp-btn.ghost:hover{ background:rgba(120,180,255,.2) }
+  .mp-btn.danger{ background:linear-gradient(135deg,#a0150e,#7a0a04); color:#fff }
+
+  .mp-status{
+    font-size:12px; padding:8px 12px; border-radius:7px;
+    background:rgba(120,180,255,.1); border:1px solid rgba(120,180,255,.25);
+    color:#9ec3ff; margin-bottom:10px;
+  }
+  .mp-status.ok{ background:rgba(46,178,123,.12); border-color:rgba(46,178,123,.4); color:#7be395 }
+  .mp-status.err{ background:rgba(255,68,68,.12); border-color:rgba(255,68,68,.4); color:#ff8888 }
+
+  .mp-player-list{ display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto }
+  .mp-player{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; background:rgba(120,180,255,.06);
+    border:1px solid rgba(120,180,255,.18); border-radius:8px;
+    font-size:13px;
+  }
+  .mp-player.is-host{ border-color:rgba(212,175,55,.45); background:rgba(212,175,55,.08) }
+  .mp-player.is-me{ box-shadow:0 0 0 1px rgba(46,178,123,.5) inset }
+  .mp-player-avatar{ font-size:18px; width:28px; text-align:center }
+  .mp-player-name{ flex:1; color:#e6e8f0; font-weight:700 }
+  .mp-player-tag{ font-size:10px; padding:2px 7px; border-radius:8px; font-weight:800; letter-spacing:.4px; text-transform:uppercase }
+  .mp-player-tag.host{ background:rgba(212,175,55,.25); color:#ffd700; border:1px solid rgba(212,175,55,.4) }
+  .mp-player-tag.you{ background:rgba(46,178,123,.2); color:#7be395; border:1px solid rgba(46,178,123,.4) }
+
+  .mp-chat{
+    background:rgba(0,0,0,.35); border:1px solid rgba(120,180,255,.2);
+    border-radius:8px; padding:6px; max-height:140px; overflow-y:auto;
+    font-size:11.5px; line-height:1.4;
+  }
+  .mp-chat-msg{ padding:3px 6px; margin-bottom:2px; border-radius:4px; background:rgba(255,255,255,.03) }
+  .mp-chat-msg b{ color:#9ec3ff }
+  .mp-chat-row{ display:flex; gap:6px; margin-top:6px }
+  .mp-chat-row input{ flex:1; padding:7px 10px; font-size:12px }
+  .mp-chat-row button{ padding:7px 12px; font-size:12px }
+
+  .mp-cfg-warn{
+    background:rgba(255,140,0,.12); border:1px solid rgba(255,180,80,.4);
+    border-radius:8px; padding:10px 12px; font-size:12px; color:#ffd0a0;
+    margin-bottom:12px; line-height:1.5;
+  }
+  .mp-cfg-warn code{ background:rgba(0,0,0,.4); padding:1px 5px; border-radius:3px; color:#ffe0b0 }
+
+  .mp-toast{
+    position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(135deg,#1e3a5f,#0f1e3a);
+    border:1px solid rgba(120,180,255,.5);
+    color:#9ec3ff; padding:10px 18px; border-radius:8px; font-weight:700; font-size:13px;
+    z-index:10001; box-shadow:0 8px 24px rgba(0,0,0,.5);
+    animation:mpToast 3s ease-in-out forwards;
+  }
+  @keyframes mpToast{
+    0%{ opacity:0; transform:translate(-50%,10px) }
+    10%,90%{ opacity:1; transform:translate(-50%,0) }
+    100%{ opacity:0; transform:translate(-50%,-10px) }
+  }
+</style>
+
+<div class="mp-overlay" id="mp-overlay" onclick="if(event.target===this) MP.closeModal()">
+  <div class="mp-modal" id="mp-modal-body"></div>
+</div>
+
+<!-- PeerJS (WebRTC P2P, free public signaling) -->
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<script>
+/* ============================================================
+   Multiplayer namespace — MP (PeerJS edition)
+   - PIN-based rooms, 2-4 players
+   - WebRTC P2P qua server signaling công cộng của PeerJS (miễn phí, không cần đăng ký)
+   - Star topology: host làm hub, guest đều nối với host
+   - End game if host leaves
+   ============================================================ */
+(function(){
+  'use strict';
+
+  // ---------- CONFIG ----------
+  // Người dùng sẽ cấu hình bằng MP.setConfig(url, key) trong UI; lưu vào localStorage.
+  const CFG_KEY = 'mp_supabase_config_v1';
+  function loadConfig(){
+    try{ const raw=localStorage.getItem(CFG_KEY); if(raw) return JSON.parse(raw); }catch(e){}
+    return { url:'', key:'' };
+  }
+  function saveConfig(c){ try{ localStorage.setItem(CFG_KEY, JSON.stringify(c)); }catch(e){} }
+
+  // ---------- STATE ----------
+  const state = {
+    client: null,        // supabase client
+    channel: null,       // joined realtime channel
+    pin: '',             // current room PIN
+    role: null,          // 'host' | 'guest' | null
+    myId: cryptoId(),    // unique per-tab session id
+    myName: '',          // player display name
+    players: {},         // { presenceKey: {id, name, role, ...} }
+    handlers: {},        // event listeners
+    chatMessages: [],
+    gameStartedAt: null,
+  };
+
+  function cryptoId(){
+    try{ return [...crypto.getRandomValues(new Uint8Array(8))].map(b=>b.toString(16).padStart(2,'0')).join(''); }
+    catch(e){ return 'id-'+Math.random().toString(36).slice(2,12); }
+  }
+
+  function genPin(){
+    // 6 ký tự alphanum không gây nhầm lẫn (bỏ 0/O/1/I)
+    const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s=''; for(let i=0;i<6;i++) s += A[Math.floor(Math.random()*A.length)];
+    return s;
+  }
+
+  function getDefaultName(){
+    if(window.currentUserProfile && window.currentUserProfile.email){
+      return (window.currentUserProfile.email.split('@')[0]||'Player').slice(0,16);
+    }
+    return 'Player-'+state.myId.slice(0,4).toUpperCase();
+  }
+
+  function toast(msg){
+    const t=document.createElement('div'); t.className='mp-toast'; t.textContent=msg;
+    document.body.appendChild(t); setTimeout(()=>t.remove(), 3000);
+  }
+
+  // ---------- SUPABASE CLIENT ----------
+  function ensureClient(){
+    if(state.client) return state.client;
+    const cfg = loadConfig();
+    if(!cfg.url || !cfg.key) return null;
+    if(typeof supabase==='undefined' || !supabase.createClient){
+      console.error('[MP] Supabase SDK not loaded');
+      return null;
+    }
+    state.client = supabase.createClient(cfg.url, cfg.key, {
+      realtime:{ params:{ eventsPerSecond: 10 } }
+    });
+    return state.client;
+  }
+
+  // ---------- MODAL UTILITIES ----------
+  function openOverlay(html){
+    const ov = document.getElementById('mp-overlay');
+    const body = document.getElementById('mp-modal-body');
+    body.innerHTML = html;
+    ov.classList.add('show');
+  }
+  function closeModal(){
+    document.getElementById('mp-overlay').classList.remove('show');
+  }
+
+  // ---------- SCREENS ----------
+  function screenConfig(returnTo){
+    const cfg = loadConfig();
+    openOverlay(`
+      <div class="mp-title">⚙️ Cấu hình Supabase</div>
+      <div class="mp-sub">Cần thiết lập một lần — dùng cho mọi phòng online</div>
+      <div class="mp-cfg-warn">
+        Tính năng online dùng <b>Supabase Realtime</b> (miễn phí). Bạn cần:<br>
+        1. Tạo project tại <code>supabase.com</code> (free tier)<br>
+        2. Vào <b>Settings → API</b>, lấy <code>Project URL</code> và <code>anon public key</code><br>
+        3. Dán vào dưới đây. Config được lưu trong trình duyệt này.
+      </div>
+      <div class="mp-section">
+        <div class="mp-label">Project URL</div>
+        <input class="mp-input" id="mp-cfg-url" placeholder="https://xxxxx.supabase.co" value="${escapeAttr(cfg.url||'')}">
+      </div>
+      <div class="mp-section">
+        <div class="mp-label">Anon Public Key</div>
+        <input class="mp-input" id="mp-cfg-key" placeholder="eyJhbGciOiJI..." value="${escapeAttr(cfg.key||'')}">
+      </div>
+      <div class="mp-btn-row">
+        <button class="mp-btn ghost" onclick="MP.closeModal()">Hủy</button>
+        <button class="mp-btn primary" onclick="MP._saveCfg('${returnTo||'menu'}')">💾 Lưu &amp; Tiếp tục</button>
+      </div>
+    `);
+  }
+
+  function screenChoice(){
+    openOverlay(`
+      <div class="mp-title">🌐 Chế độ Online</div>
+      <div class="mp-sub">Chơi cùng bạn bè qua mạng — tối đa 4 người</div>
+      <div class="mp-section">
+        <div class="mp-label">Tên hiển thị của bạn</div>
+        <input class="mp-input" id="mp-name" maxlength="16" value="${escapeAttr(state.myName||getDefaultName())}">
+      </div>
+      <div class="mp-btn-row">
+        <button class="mp-btn primary" onclick="MP._doCreate()">🆕 Tạo phòng mới</button>
+        <button class="mp-btn ghost" onclick="MP._showJoinInput()">🔑 Vào phòng có PIN</button>
+      </div>
+      <div class="mp-btn-row" style="margin-top:8px">
+        <button class="mp-btn ghost" onclick="MP._editCfg()" style="flex:0 0 auto;font-size:11px;padding:6px 12px">⚙️ Cấu hình Supabase</button>
+      </div>
+    `);
+  }
+
+  function screenJoinInput(){
+    openOverlay(`
+      <div class="mp-title">🔑 Vào phòng</div>
+      <div class="mp-sub">Nhập mã PIN 6 ký tự do người tạo phòng chia sẻ</div>
+      <div class="mp-section">
+        <div class="mp-label">Tên hiển thị</div>
+        <input class="mp-input" id="mp-name" maxlength="16" value="${escapeAttr(state.myName||getDefaultName())}">
+      </div>
+      <div class="mp-section">
+        <div class="mp-label">Mã PIN</div>
+        <input class="mp-input mp-pin-input" id="mp-pin-in" maxlength="6" placeholder="A3K9P2"
+               oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+      </div>
+      <div class="mp-btn-row">
+        <button class="mp-btn ghost" onclick="MP.openCreate()">← Quay lại</button>
+        <button class="mp-btn primary" onclick="MP._doJoin()">Vào phòng →</button>
+      </div>
+    `);
+  }
+
+  function screenLobby(){
+    const cfg = loadConfig();
+    const me = state.players[state.myId] || {};
+    const playerList = Object.values(state.players).map(p=>{
+      const isMe = p.id===state.myId;
+      const isHost = p.role==='host';
+      return `
+        <div class="mp-player ${isHost?'is-host':''} ${isMe?'is-me':''}">
+          <div class="mp-player-avatar">${isHost?'👑':'🎮'}</div>
+          <div class="mp-player-name">${escapeHtml(p.name||'Player')}</div>
+          ${isHost?'<span class="mp-player-tag host">Host</span>':''}
+          ${isMe?'<span class="mp-player-tag you">Bạn</span>':''}
+        </div>
+      `;
+    }).join('') || '<div style="text-align:center;color:#7a8aa3;padding:14px;font-size:12px">Đang chờ người chơi vào...</div>';
+
+    const chatHtml = state.chatMessages.map(m=>`<div class="mp-chat-msg"><b>${escapeHtml(m.name)}:</b> ${escapeHtml(m.text)}</div>`).join('');
+
+    const isHost = state.role==='host';
+    const playerCount = Object.keys(state.players).length;
+    const canStart = isHost && playerCount>=2;
+
+    openOverlay(`
+      <div class="mp-title">🎮 Phòng ${state.pin}</div>
+      <div class="mp-sub">${isHost?'Bạn là host':'Đang trong phòng'} • ${playerCount}/4 người chơi</div>
+
+      <div class="mp-section">
+        <div class="mp-label">Mã PIN (chia sẻ cho bạn bè)</div>
+        <div class="mp-pin-display" id="mp-pin-disp">${state.pin}</div>
+        <button class="mp-copy-btn" onclick="MP._copyPin()">📋 Sao chép PIN</button>
+      </div>
+
+      <div class="mp-section">
+        <div class="mp-label">Người chơi (${playerCount}/4)</div>
+        <div class="mp-player-list" id="mp-player-list">${playerList}</div>
+      </div>
+
+      <div class="mp-section">
+        <div class="mp-label">💬 Trò chuyện</div>
+        <div class="mp-chat" id="mp-chat">${chatHtml}</div>
+        <div class="mp-chat-row">
+          <input class="mp-input" id="mp-chat-in" placeholder="Nhập tin nhắn..." maxlength="120"
+                 onkeydown="if(event.key==='Enter') MP._sendChat()">
+          <button class="mp-btn primary" onclick="MP._sendChat()">Gửi</button>
+        </div>
+      </div>
+
+      <div class="mp-btn-row">
+        <button class="mp-btn danger" onclick="MP._leaveRoom()">🚪 Rời phòng</button>
+        ${isHost
+          ? `<button class="mp-btn primary" id="mp-start-btn" ${canStart?'':'disabled'} onclick="MP._startGame()">🚀 Bắt đầu ván ${canStart?'':'(cần ≥ 2 người)'}</button>`
+          : `<button class="mp-btn ghost" disabled>⏳ Chờ host bắt đầu...</button>`}
+      </div>
+    `);
+  }
+
+  function refreshLobby(){
+    const ov = document.getElementById('mp-overlay');
+    if(!ov || !ov.classList.contains('show')) return;
+    // Chỉ refresh nếu đang xem lobby
+    if(document.getElementById('mp-pin-disp')) screenLobby();
+  }
+
+  // ---------- ESCAPE HELPERS ----------
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  // ---------- ROOM ACTIONS ----------
+  function setName(){
+    const el = document.getElementById('mp-name');
+    if(el) state.myName = (el.value||'').trim().slice(0,16) || getDefaultName();
+    else state.myName = state.myName || getDefaultName();
+  }
+
+  async function createRoom(){
+    setName();
+    const cfg = loadConfig();
+    if(!cfg.url || !cfg.key){ screenConfig('create'); return; }
+    if(!ensureClient()){ toast('❌ Supabase chưa sẵn sàng'); return; }
+    state.pin = genPin();
+    state.role = 'host';
+    state.players = {};
+    state.chatMessages = [];
+    await subscribeChannel();
+    screenLobby();
+  }
+
+  async function joinRoom(pin){
+    setName();
+    const cfg = loadConfig();
+    if(!cfg.url || !cfg.key){ screenConfig('join'); return; }
+    if(!ensureClient()){ toast('❌ Supabase chưa sẵn sàng'); return; }
+    pin = String(pin||'').toUpperCase().trim();
+    if(!/^[A-Z0-9]{6}$/.test(pin)){ toast('❌ PIN không hợp lệ (cần 6 ký tự A-Z 0-9)'); return; }
+    state.pin = pin;
+    state.role = 'guest';
+    state.players = {};
+    state.chatMessages = [];
+    await subscribeChannel();
+    // Lobby sẽ tự cập nhật khi presence sync. Mở ngay để hiển thị "đang kết nối..."
+    screenLobby();
+  }
+
+  async function subscribeChannel(){
+    if(state.channel){ try{ await state.channel.unsubscribe(); }catch(e){} state.channel=null; }
+    const client = state.client;
+    const channelName = `heritage-${state.pin}`;
+    const ch = client.channel(channelName, {
+      config:{
+        broadcast:{ self:false, ack:false },
+        presence:{ key: state.myId }
+      }
+    });
+
+    ch.on('presence', { event:'sync' }, ()=>{
+      const newState = ch.presenceState();
+      state.players = {};
+      Object.entries(newState).forEach(([key, metas])=>{
+        const meta = metas[0]||{};
+        state.players[key] = {
+          id: key,
+          name: meta.name || 'Player',
+          role: meta.role || 'guest',
+          joinedAt: meta.joinedAt || Date.now()
+        };
+      });
+      refreshLobby();
+    });
+
+    ch.on('presence', { event:'join' }, ({ newPresences })=>{
+      if(newPresences && newPresences[0]){
+        const p = newPresences[0];
+        if(p.id !== state.myId){
+          pushChat({ name:'Hệ thống', text:`👋 ${p.name||'Người chơi mới'} đã vào phòng` });
+        }
+      }
+    });
+
+    ch.on('presence', { event:'leave' }, ({ leftPresences })=>{
+      if(leftPresences && leftPresences[0]){
+        const p = leftPresences[0];
+        // Host rời → end-game cho tất cả guest
+        if(p.role==='host' && state.role==='guest'){
+          alert('⚠️ Host đã rời phòng. Ván kết thúc.');
+          leaveRoom();
+          return;
+        }
+        pushChat({ name:'Hệ thống', text:`🚪 ${p.name||'Người chơi'} đã rời phòng` });
+      }
+    });
+
+    ch.on('broadcast', { event:'chat' }, ({ payload })=>{
+      pushChat(payload);
+    });
+
+    ch.on('broadcast', { event:'game' }, ({ payload })=>{
+      handleGameEvent(payload);
+    });
+
+    ch.on('broadcast', { event:'start' }, ({ payload })=>{
+      onGameStart(payload);
+    });
+
+    ch.subscribe(async (status)=>{
+      if(status==='SUBSCRIBED'){
+        // Track our presence
+        await ch.track({
+          id: state.myId,
+          name: state.myName,
+          role: state.role,
+          joinedAt: Date.now()
+        });
+      } else if(status==='CHANNEL_ERROR' || status==='TIMED_OUT'){
+        toast('❌ Không kết nối được kênh');
+      }
+    });
+
+    state.channel = ch;
+  }
+
+  async function leaveRoom(){
+    if(state.channel){
+      try{ await state.channel.untrack(); }catch(e){}
+      try{ await state.channel.unsubscribe(); }catch(e){}
+    }
+    state.channel = null;
+    state.pin = '';
+    state.role = null;
+    state.players = {};
+    state.chatMessages = [];
+    closeModal();
+  }
+
+  // ---------- CHAT ----------
+  function pushChat(msg){
+    state.chatMessages.push(msg);
+    if(state.chatMessages.length>50) state.chatMessages.shift();
+    // Nếu đang xem lobby, scroll chat
+    const chatEl = document.getElementById('mp-chat');
+    if(chatEl){
+      chatEl.innerHTML = state.chatMessages.map(m=>`<div class="mp-chat-msg"><b>${escapeHtml(m.name)}:</b> ${escapeHtml(m.text)}</div>`).join('');
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+  }
+
+  async function sendChat(text){
+    text = String(text||'').trim().slice(0,120);
+    if(!text || !state.channel) return;
+    const payload = { name: state.myName, text };
+    // Hiển thị local ngay (self:false)
+    pushChat(payload);
+    try{
+      await state.channel.send({ type:'broadcast', event:'chat', payload });
+    }catch(e){ console.error('[MP] chat send error', e); }
+  }
+
+  // ---------- GAME EVENTS (broadcast layer) ----------
+  // Cho phép code khác trong app phát/nhận event game qua MP.
+  function emit(eventName, data){
+    (state.handlers[eventName]||[]).forEach(fn=>{
+      try{ fn(data); }catch(e){ console.error('[MP] handler error', e); }
+    });
+  }
+
+  function on(eventName, handler){
+    if(!state.handlers[eventName]) state.handlers[eventName] = [];
+    state.handlers[eventName].push(handler);
+  }
+
+  async function broadcastGame(actionType, data){
+    if(!state.channel) return;
+    try{
+      await state.channel.send({
+        type:'broadcast', event:'game',
+        payload:{ action:actionType, from:state.myId, fromName:state.myName, data:data||{}, ts:Date.now() }
+      });
+    }catch(e){ console.error('[MP] broadcastGame error', e); }
+  }
+
+  function handleGameEvent(payload){
+    if(!payload || payload.from===state.myId) return; // ignore self
+    // Phát ra event để game logic bên ngoài có thể subscribe
+    emit('game:'+payload.action, payload);
+    emit('game:*', payload);
+  }
+
+  async function startGame(){
+    if(state.role!=='host') return;
+    const playerNames = Object.values(state.players).map(p=>({ id:p.id, name:p.name, role:p.role }));
+    state.gameStartedAt = Date.now();
+    try{
+      await state.channel.send({
+        type:'broadcast', event:'start',
+        payload:{ pin:state.pin, players:playerNames, ts:state.gameStartedAt }
+      });
+    }catch(e){ console.error('[MP] start broadcast error', e); }
+    onGameStart({ pin:state.pin, players:playerNames, ts:state.gameStartedAt });
+  }
+
+  function onGameStart(payload){
+    closeModal();
+    toast('🚀 Ván bắt đầu — Online mode!');
+    // Lưu danh sách player vào window để các handler khác đọc được
+    window.MP_GAME = {
+      pin: payload.pin,
+      players: payload.players,
+      startedAt: payload.ts,
+      isOnline: true,
+      isHost: state.role==='host',
+      myId: state.myId
+    };
+    emit('game:started', payload);
+    // Chuyển sang trang game nếu chưa ở đó
+    try{
+      if(typeof showPage==='function'){
+        const gameBtn = document.querySelectorAll('.nav button')[2];
+        showPage('game', gameBtn);
+      }
+    }catch(e){}
+  }
+
+  // ---------- BUTTON HANDLERS exposed for inline onclick ----------
+  function _saveCfg(returnTo){
+    const url = (document.getElementById('mp-cfg-url').value||'').trim();
+    const key = (document.getElementById('mp-cfg-key').value||'').trim();
+    if(!url || !key){ toast('❌ Vui lòng nhập đủ URL và Key'); return; }
+    saveConfig({url, key});
+    state.client = null; // force re-create with new config
+    toast('✅ Đã lưu cấu hình');
+    if(returnTo==='create') createRoom();
+    else if(returnTo==='join') screenJoinInput();
+    else screenChoice();
+  }
+
+  function _editCfg(){ screenConfig('menu'); }
+  function _showJoinInput(){ setName(); screenJoinInput(); }
+  function _doCreate(){ createRoom(); }
+  function _doJoin(){
+    const pin = (document.getElementById('mp-pin-in').value||'').toUpperCase().trim();
+    joinRoom(pin);
+  }
+  function _leaveRoom(){
+    if(confirm('Rời khỏi phòng?')) leaveRoom();
+  }
+  function _copyPin(){
+    try{
+      navigator.clipboard.writeText(state.pin);
+      toast('📋 Đã sao chép PIN '+state.pin);
+    }catch(e){
+      const r=document.createRange(); r.selectNode(document.getElementById('mp-pin-disp'));
+      window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+      try{ document.execCommand('copy'); toast('📋 Đã sao chép'); }catch(_){}
+    }
+  }
+  function _sendChat(){
+    const el = document.getElementById('mp-chat-in');
+    const text = el ? el.value : '';
+    if(text){ sendChat(text); el.value=''; }
+  }
+  function _startGame(){ startGame(); }
+
+  // ---------- PUBLIC API ----------
+  window.MP = {
+    openCreate(){ screenChoice(); },
+    openJoin(){ setName(); screenJoinInput(); },
+    closeModal,
+    isInRoom(){ return !!state.channel; },
+    isHost(){ return state.role==='host'; },
+    myId(){ return state.myId; },
+    pin(){ return state.pin; },
+    players(){ return {...state.players}; },
+    // Public hooks
+    broadcast: broadcastGame,
+    on: on,
+    leave: leaveRoom,
+    // internal for inline onclick (prefixed)
+    _saveCfg, _editCfg, _showJoinInput, _doCreate, _doJoin, _leaveRoom, _copyPin, _sendChat, _startGame
+  };
+
+  // ---------- HOOK GAME EVENTS (demo: dice & endTurn) ----------
+  // Khi đang online: host roll → broadcast → guest áp dụng số xúc xắc đó.
+  // Đây là demo nhỏ chứng minh kênh hoạt động. Việc đồng bộ toàn ván sẽ phát triển sau.
+  function installGameHooks(){
+    try{
+      if(typeof window.rollDice==='function' && !window.rollDice.__mpWrapped){
+        const orig = window.rollDice;
+        window.rollDice = function(forceD1, forceD2){
+          if(window.MP_GAME && window.MP_GAME.isOnline){
+            if(window.MP_GAME.isHost){
+              // Host roll bình thường, sau khi roll xong broadcast kết quả
+              const res = orig.apply(this, arguments);
+              // Đọc kết quả từ G.lastRoll nếu có
+              setTimeout(()=>{
+                try{
+                  if(typeof G!=='undefined' && G && G.lastRoll){
+                    broadcastGame('rollDice', { d1:G.lastRoll[0], d2:G.lastRoll[1] });
+                  }
+                }catch(e){}
+              }, 50);
+              return res;
+            } else {
+              toast('⏳ Chờ host tung xúc xắc...');
+              return;
+            }
+          }
+          return orig.apply(this, arguments);
+        };
+        window.rollDice.__mpWrapped = true;
+      }
+      if(typeof window.endTurn==='function' && !window.endTurn.__mpWrapped){
+        const orig = window.endTurn;
+        window.endTurn = function(){
+          if(window.MP_GAME && window.MP_GAME.isOnline){
+            if(window.MP_GAME.isHost){
+              const res = orig.apply(this, arguments);
+              broadcastGame('endTurn', {});
+              return res;
+            } else {
+              toast('⏳ Chỉ host được điều khiển trong demo này');
+              return;
+            }
+          }
+          return orig.apply(this, arguments);
+        };
+        window.endTurn.__mpWrapped = true;
+      }
+    }catch(e){ console.warn('[MP] hook install failed', e); }
+  }
+
+  // Subscribe to incoming game events on guest side
+  on('game:rollDice', (payload)=>{
+    if(!window.MP_GAME || !window.MP_GAME.isOnline) return;
+    if(window.MP_GAME.isHost) return; // host doesn't apply remote rolls
+    try{
+      if(typeof rollDice==='function'){
+        // Bypass wrapper bằng cách gọi underlying logic — chỗ này cần
+        // refactor logic rollDice để chấp nhận forced values. Tạm thời log.
+        pushChat({ name:'Hệ thống', text:`🎲 Host đã tung: ${payload.data.d1} + ${payload.data.d2}` });
+      }
+    }catch(e){}
+  });
+  on('game:endTurn', ()=>{
+    if(!window.MP_GAME || !window.MP_GAME.isOnline) return;
+    if(window.MP_GAME.isHost) return;
+    pushChat({ name:'Hệ thống', text:`⏭️ Host đã kết thúc lượt` });
+  });
+
+  // Cảnh báo khi tab đóng giữa lúc đang trong phòng (host) — guest không cần
+  window.addEventListener('beforeunload', (e)=>{
+    if(state.channel && state.role==='host'){
+      e.preventDefault();
+      e.returnValue = 'Bạn đang là host của phòng. Rời đi sẽ kết thúc ván cho mọi người.';
+    }
+  });
+
+  // Try installing hooks once game scripts have loaded
+  setTimeout(installGameHooks, 2500);
+  setTimeout(installGameHooks, 5000);
+
+  console.log('[MP] Multiplayer module loaded. Use MP.openCreate() / MP.openJoin()');
+})();
+window.addEventListener('beforeunload', () => {
+  if(_cloudPushTimer){
+    clearTimeout(_cloudPushTimer)
+    // sendBeacon dùng tốt hơn fetch khi đóng tab — nhưng Supabase REST cần header
+    // Fallback: gọi pushProfileToCloud sync-ish (không await được, best-effort)
+    pushProfileToCloud()
+  }
+})
+
 </script>
 
 </body>
