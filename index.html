@@ -825,50 +825,64 @@
 #race-v2-root .log{
   max-height:240px;
   overflow-y:auto;
-  font-size:11px;
-  line-height:1.45;
-  background:rgba(0,0,0,.45);
-  border-radius:8px;
-  padding:6px;
+  font-size:10.5px;
+  line-height:1.35;
+  background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.4));
+  border-radius:7px;
+  padding:3px;
   border:1px solid rgba(212,175,55,.12);
 }
-#race-v2-root .log::-webkit-scrollbar{ width:5px }
+#race-v2-root .log::-webkit-scrollbar{ width:4px }
 #race-v2-root .log::-webkit-scrollbar-thumb{
-  background:rgba(212,175,55,.35); border-radius:3px;
+  background:rgba(212,175,55,.35); border-radius:2px;
 }
 #race-v2-root .log::-webkit-scrollbar-track{ background:transparent }
 #race-v2-root .log-entry{
-  padding:3px 6px 3px 8px;
+  padding:2px 6px 2px 7px;
   margin-bottom:1px;
   border-radius:4px;
-  animation:slideIn .3s ease-out;
+  animation:slideIn .2s ease-out;
   border-left:2px solid rgba(212,175,55,.2);
-  display:flex; gap:6px; align-items:baseline;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:6px;
+  align-items:baseline;
 }
-#race-v2-root .log-entry:hover{ background:rgba(255,255,255,.03) }
+#race-v2-root .log-entry:nth-child(even){ background:rgba(255,255,255,.02) }
+#race-v2-root .log-entry:hover{ background:rgba(212,175,55,.06) }
+#race-v2-root .log-entry b{ color:var(--gold-2); font-weight:700 }
 
-@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
-#race-v2-root .log-entry.synergy {background:rgba(255,68,68,.15);border-left-color:#ff4444;color:#ffcc88}
+@keyframes slideIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+#race-v2-root .log-entry.synergy {background:rgba(255,68,68,.13);border-left-color:#ff4444;color:#ffcc88}
+#race-v2-root .log-entry.synergy .log-time{ background:rgba(255,68,68,.22); color:#ffb0b0; border-color:rgba(255,68,68,.35) }
 
 #race-v2-root .log-entry.trade {background:rgba(46,178,123,.1);border-left-color:#2eb27b}
+#race-v2-root .log-entry.trade .log-time{ background:rgba(46,178,123,.2); color:#7be395; border-color:rgba(46,178,123,.35) }
 
 #race-v2-root .log-entry.card {background:rgba(46,111,201,.1);border-left-color:#2e6fc9}
+#race-v2-root .log-entry.card .log-time{ background:rgba(46,111,201,.22); color:#8fb8ff; border-color:rgba(46,111,201,.4) }
 
 #race-v2-root .log-entry.boss {background:rgba(255,68,68,.2);border-left-color:#ff0000;color:#ff8888;font-weight:700}
+#race-v2-root .log-entry.boss .log-time{ background:rgba(255,0,0,.25); color:#ffb0b0; border-color:rgba(255,0,0,.45) }
 
 #race-v2-root .log-entry.event {background:rgba(224,144,48,.12);border-left-color:#e09030}
+#race-v2-root .log-entry.event .log-time{ background:rgba(224,144,48,.22); color:#ffc88a; border-color:rgba(224,144,48,.4) }
 
 #race-v2-root .log-time{
   color:var(--gold);
-  font-size:9px;
-  font-weight:700;
+  font-size:8.5px;
+  font-weight:800;
   font-variant-numeric:tabular-nums;
-  background:rgba(212,175,55,.1);
-  padding:1px 4px;
-  border-radius:3px;
-  flex-shrink:0;
-  margin-right:0;
+  background:rgba(212,175,55,.14);
+  padding:0 4px;
+  border-radius:7px;
+  border:1px solid rgba(212,175,55,.28);
   letter-spacing:.3px;
+  text-transform:uppercase;
+  min-width:22px;
+  text-align:center;
+  align-self:center;
+  line-height:1.5;
 }
 
 
@@ -895,50 +909,105 @@
 
 #race-v2-root .quest{
   display:grid;
-  grid-template-columns:1fr auto;
-  gap:2px 10px;
-  padding:8px 10px;
+  grid-template-columns:18px 1fr auto auto;
+  align-items:center;
+  column-gap:7px;
+  padding:5px 8px 6px;
   background:linear-gradient(135deg,rgba(0,0,0,.32),rgba(0,0,0,.18));
-  border-radius:8px;
-  margin-bottom:5px;
+  border-radius:7px;
+  margin-bottom:3px;
   border:1px solid rgba(212,175,55,.18);
-  font-size:11.5px;
+  font-size:10.5px;
   position:relative;
-  transition:border-color .2s, background .2s;
+  transition:border-color .15s, background .15s;
 }
-#race-v2-root .quest:hover{ border-color:rgba(212,175,55,.35) }
+#race-v2-root .quest:hover{ border-color:rgba(212,175,55,.4) }
 #race-v2-root .quest.done{
   background:linear-gradient(135deg,rgba(46,178,123,.18),rgba(46,178,123,.06));
   border-color:rgba(46,178,123,.5);
 }
+#race-v2-root .quest.near{ border-color:rgba(255,196,80,.5) }
+#race-v2-root .quest-icon{
+  grid-column:1; grid-row:1;
+  font-size:13px;
+  line-height:1;
+  text-align:center;
+}
 #race-v2-root .quest-title{
-  grid-column:1;
+  grid-column:2;
+  grid-row:1;
   font-weight:700;
   color:var(--gold-soft);
-  display:flex; align-items:center; gap:4px;
-  line-height:1.3;
-}
-
-#race-v2-root .quest-progress {font-size:10px;color:var(--muted)}
-
-#race-v2-root .quest-reward{
-  grid-column:2;
-  grid-row:1 / span 2;
-  align-self:center;
-  color:var(--gold);
   font-size:11px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#race-v2-root .quest-count{
+  grid-column:3;
+  grid-row:1;
+  font-size:10px;
+  color:#c4b48a;
   font-weight:800;
-  margin-top:0;
+  font-variant-numeric:tabular-nums;
+  padding:0 5px;
+}
+#race-v2-root .quest.done .quest-count{ color:#7be395 }
+#race-v2-root .quest-reward{
+  grid-column:4;
+  grid-row:1;
+  color:var(--gold);
+  font-size:10px;
+  font-weight:800;
   white-space:nowrap;
   background:rgba(212,175,55,.1);
-  padding:4px 8px;
-  border-radius:6px;
+  padding:2px 6px;
+  border-radius:5px;
   border:1px solid rgba(212,175,55,.25);
+  line-height:1.2;
+}
+#race-v2-root .quest-reward .qr-card{
+  font-size:9px;
+  font-weight:700;
+  color:#ffd700;
+  opacity:.9;
+  margin-left:3px;
 }
 #race-v2-root .quest.done .quest-reward{
   background:rgba(46,178,123,.15);
   border-color:rgba(46,178,123,.4);
   color:#7be395;
+}
+#race-v2-root .quest.done .quest-reward .qr-card{ color:#7be395 }
+#race-v2-root .quest-bar{
+  grid-column:1 / -1;
+  grid-row:2;
+  height:3px;
+  background:rgba(0,0,0,.45);
+  border-radius:2px;
+  overflow:hidden;
+  margin-top:3px;
+}
+#race-v2-root .quest-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold),#ffd700);
+  border-radius:2px;
+  transition:width .35s ease;
+}
+#race-v2-root .quest.done .quest-bar-fill{
+  background:linear-gradient(90deg,#2eb27b,#7be395);
+}
+#race-v2-root .quest-badge-done{
+  font-size:8.5px;
+  font-weight:800;
+  color:#2eb27b;
+  background:rgba(46,178,123,.15);
+  border:1px solid rgba(46,178,123,.4);
+  padding:0 5px;
+  border-radius:8px;
+  letter-spacing:.4px;
+  margin-left:4px;
 }
 
 
@@ -4388,7 +4457,7 @@ function activeHumans(){ if(!G||!G.players) return []; return G.players.filter(p
 
 /* ============ LOGGING ============ */
 function log(type, msg){
-  const t = new Date().toLocaleTimeString('vi-VN',{hour12:false}).slice(3);
+  const t = (G && G.round) ? ('V'+G.round) : '—';
   G.log.unshift({type, msg, t});
   if(G.log.length>80) G.log.pop();
   renderLog();
@@ -4637,6 +4706,14 @@ function renderSynergies(){
   }
 }
 
+const QUEST_META = {
+  UNESCO3: {icon:'🏛️', goal:3, count:(p)=>p.owned.filter(i=>TILES[i].traits&&TILES[i].traits.includes('UNESCO')).length},
+  RAIL4:   {icon:'🚂', goal:4, count:(p)=>p.owned.filter(i=>TILES[i].type==='rail').length},
+  NORTH5:  {icon:'🏔️', goal:5, count:(p)=>p.owned.filter(i=>TILES[i].traits&&TILES[i].traits.includes('MIEN_BAC')).length},
+  SEA4:    {icon:'🌊', goal:4, count:(p)=>p.owned.filter(i=>TILES[i].traits&&TILES[i].traits.includes('BIEN')).length},
+  CENTER5: {icon:'🏖️', goal:5, count:(p)=>p.owned.filter(i=>TILES[i].traits&&TILES[i].traits.includes('MIEN_TRUNG')).length},
+  SACRED3: {icon:'🛕', goal:3, count:(p)=>p.owned.filter(i=>TILES[i].traits&&TILES[i].traits.includes('TAM_LINH')).length}
+};
 function renderQuests(){
   const el = document.getElementById('quests-list');
   if(!el) return;
@@ -4651,10 +4728,17 @@ function renderQuests(){
     return;
   }
   el.innerHTML = G.quests.map(q=>{
-    const done = q.check(p);
-    return `<div class="quest ${done?'done':''}">
-      <div class="quest-title">${done?'✅':'📜'} ${q.desc} ${done?'<span style="color:#2eb27b">HOÀN THÀNH</span>':''}</div>
-      <div class="quest-reward">🎁 ${formatK(q.reward)}${q.rewardCard?' + 1 thẻ vàng':''}</div>
+    const meta = QUEST_META[q.id] || {icon:'📜', goal:1, count:()=>0};
+    const have = Math.min(meta.count(p), meta.goal);
+    const done = have >= meta.goal;
+    const near = !done && (meta.goal - have) === 1;
+    const pct = Math.round((have/meta.goal)*100);
+    return `<div class="quest ${done?'done':''} ${near?'near':''}">
+      <div class="quest-icon">${done?'✅':meta.icon}</div>
+      <div class="quest-title">${q.desc}${done?'<span class="quest-badge-done">XONG</span>':''}</div>
+      <div class="quest-count">${have}/${meta.goal}</div>
+      <div class="quest-reward">${formatK(q.reward)}${q.rewardCard?'<span class="qr-card">+🎴</span>':''}</div>
+      <div class="quest-bar"><div class="quest-bar-fill" style="width:${pct}%"></div></div>
     </div>`;
   }).join('');
 }
